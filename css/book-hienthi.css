@@ -234,7 +234,7 @@ body {
     background: #FAFAFA;
     padding: 16px;
     border-radius: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     border: 1px solid #ebebeb;
 }
 
@@ -263,17 +263,15 @@ body {
 }
 
 .promo-link-wrapper {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #ebebeb;
+    margin-bottom: 16px;
 }
 
 .promo-link {
     color: #0066CC;
     text-decoration: none;
     font-size: 13px;
-    display: inline-flex;
-    align-items: center;
+    display: flex;
+    align-items: start;
     gap: 4px;
 }
 

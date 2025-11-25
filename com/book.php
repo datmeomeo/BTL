@@ -125,7 +125,6 @@
                                 <span class="discount-badge">-<?php echo $sach['phan_tram_giam']; ?>%</span>
                             <?php endif; ?>
                         </div>
-
                         <div class="promo-link-wrapper">
                             <a href="#" class="promo-link">
                                 Chính sách khuyến mãi trên chỉ áp dụng tại Fahasa.com →
