@@ -29,7 +29,6 @@
 
         <!-- Product Detail Wrapper -->
         <div class="product-detail-wrapper">
-            <!-- LEFT COLUMN: Images + Shipping + Policy -->
             <div class="product-left-column">
                 <div class="product-images-card">
                     <!-- Main Image -->
