@@ -18,7 +18,7 @@ body {
 }
 
 .container {
-  max-width: 100%;
+  max-width: 95%;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -204,7 +204,7 @@ body {
 /* Responsive */
 @media (max-width: 1400px) {
   .sach-grid {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
   }
 }
 

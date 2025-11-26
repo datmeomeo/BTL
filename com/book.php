@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sản phẩm</title>
 </head>
+<html>
 
 <body>
     <div class="container-detail">
         <!-- Breadcrumb -->
         <div class="breadcrumb">
-            <a href="../giaodien/trangchu.php">SÁCH TIẾNG VIỆT</a>
+            <a href="../giaodien/trangchu.php">Trang chủ</a>
             <span>›</span>
 
             <?php if ($danh_muc_cha): ?>
@@ -125,11 +126,6 @@
                                 <span class="discount-badge">-<?php echo $sach['phan_tram_giam']; ?>%</span>
                             <?php endif; ?>
                         </div>
-                        <div class="promo-link-wrapper">
-                            <a href="#" class="promo-link">
-                                Chính sách khuyến mãi trên chỉ áp dụng tại Fahasa.com →
-                            </a>
-                        </div>
                     </div>
 
                     <!-- Stock Info -->
@@ -208,52 +204,49 @@
                         </div>
                     </div>
                 </div>
-                <!-- Description Section -->
-                <div class="description-section" style="max-width: 1400px;">
-                    <h2 class="section-title" style="color: #333">Mô tả sản phẩm</h2>
+            </div>
+        </div>
+        <div class="description-section">
+            <h2 class="section-title" style="color:#333;">✨ MÔ TẢ SẢN PHẨM ✨</h2>
 
-                    <div id="description-content" class="description-content collapsed">
-                        <h3><?php echo htmlspecialchars($sach['ten_sach']); ?></h3>
+            <div id="description-content" class="description-content collapsed">
+                <h3><?php echo htmlspecialchars($sach['ten_sach']); ?></h3>
 
-                        <div style="margin-bottom: 20px;">
-                            <?php echo nl2br(htmlspecialchars($sach['mo_ta'] ?? 'Đang cập nhật mô tả sản phẩm.')); ?>
+                <div style="margin-bottom: 20px;">
+                    <?php echo nl2br(htmlspecialchars($sach['mo_ta'] ?? 'Đang cập nhật mô tả sản phẩm.')); ?>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="toggleDescription" class="btn-toggle-description" onclick="toggleDescription()">
+                    Xem thêm ▼
+                </button>
+            </div>
+        </div>
+        <div class="reviews-section">
+            <h2 class="section-title" style="color: #333;">Đánh giá sản phẩm</h2>
+
+            <?php if (count($danh_gia_list) > 0): ?>
+                <?php foreach ($danh_gia_list as $dg): ?>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="reviewer-name"><?php echo htmlspecialchars($dg['ho_ten']); ?></span>
+                            <span class="review-date"><?php echo date('d/m/Y', strtotime($dg['ngay_danh_gia'])); ?></span>
+                        </div>
+                        <div class="review-stars">
+                            <?php echo str_repeat('★', $dg['diem_danh_gia']) . str_repeat('☆', 5 - $dg['diem_danh_gia']); ?>
+                        </div>
+                        <div class="review-content">
+                            <?php echo nl2br(htmlspecialchars($dg['noi_dung'])); ?>
                         </div>
                     </div>
-
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button id="toggleDescription" class="btn-toggle-description" onclick="toggleDescription()">
-                            Xem thêm ▼
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Reviews Section -->
-                <div class="reviews-section">
-                    <h2 class="section-title" style="color: #333">Đánh giá sản phẩm</h2>
-
-                    <?php if (count($danh_gia_list) > 0): ?>
-                        <?php foreach ($danh_gia_list as $dg): ?>
-                            <div class="review-item">
-                                <div class="review-header">
-                                    <span class="reviewer-name"><?php echo htmlspecialchars($dg['ho_ten']); ?></span>
-                                    <span class="review-date"><?php echo date('d/m/Y', strtotime($dg['ngay_danh_gia'])); ?></span>
-                                </div>
-                                <div class="review-stars">
-                                    <?php echo str_repeat('★', $dg['diem_danh_gia']) . str_repeat('☆', 5 - $dg['diem_danh_gia']); ?>
-                                </div>
-                                <div class="review-content">
-                                    <?php echo nl2br(htmlspecialchars($dg['noi_dung'])); ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p style="color: #999; text-align: center; padding: 40px 0;">
-                            Chưa có đánh giá nào cho sản phẩm này.
-                        </p>
-                    <?php endif; ?>
-                </div>
-
-            </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p style="color: #999; text-align: center; padding: 40px 0;">
+                    Chưa có đánh giá nào cho sản phẩm này.
+                </p>
+            <?php endif;
+            ?>
         </div>
     </div>
 </body>
