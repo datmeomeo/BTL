@@ -99,15 +99,46 @@ body{
     padding-left: 10px;
     text-align: center;
     transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
 }
 .header-icon:hover{
     color: var(--primary-red);
 }
+.header-icon:hover svg{
+    stroke: var(--primary-red);
+}
 .icon-symbol{
     font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-symbol svg{
+    transition: stroke 0.3s ease;
 }
 .icon-text{
     font-size: 11px;
+}
+
+/* SVG Icon Styles */
+.btn-search svg{
+    vertical-align: middle;
+}
+.social-icon svg{
+    width: 18px;
+    height: 18px;
+}
+.contact-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+}
+.contact-icon svg{
+    flex-shrink: 0;
 }
 
 /* MEGA MENU */

@@ -74,7 +74,7 @@ body {
     background: white;
     padding: 20px;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -82,7 +82,7 @@ body {
 .policy-card {
     background: white;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -91,7 +91,7 @@ body {
     background: white;
     padding: 24px;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Specifications Card */
@@ -99,7 +99,7 @@ body {
     background: white;
     padding: 24px;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Left: Images */
@@ -358,6 +358,15 @@ body {
     font-size: 20px;
     margin-right: 12px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.policy-icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .policy-text {
@@ -375,6 +384,13 @@ body {
     color: #999;
     font-size: 18px;
     margin-left: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.policy-arrow svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Quantity */
@@ -435,43 +451,42 @@ body {
     margin-bottom: 20px;
 }
 
-.btn-add-cart {
-    flex: 1;
-    background: white;
-    color: #C92127;
-    border: 1px solid #C92127;
-    padding: 12px 16px;
-    border-radius: 4px;
-    font-size: 15px;
-    font-weight: 400;
+/* Button Premium Look */
+.btn-action {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    display: flex;
+    font-size: 16px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    flex: 1;
+}
+
+.btn-add-cart {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
 }
 
 .btn-add-cart:hover {
-    background: #fff5f5;
+    background-color: #e0e0e0;
 }
 
 .btn-buy-now {
-    flex: 1;
-    background: #C92127;
+    background-color: #ff424e;
+    /* Màu đỏ Tiki/Shopee */
     color: white;
-    border: 1px solid #C92127;
-    padding: 12px 16px;
-    border-radius: 4px;
-    font-size: 15px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(255, 66, 78, 0.2);
 }
 
 .btn-buy-now:hover {
-    background: #a71d24;
-    border-color: #a71d24;
+    background-color: #e03844;
+    transform: translateY(-1px);
 }
 
 /* Specifications */
@@ -507,13 +522,24 @@ body {
     font-weight: 400;
 }
 
+/* Layout mới cho phần dưới */
+.product-bottom-section {
+    width: 100%;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* 2 phần mô tả, 1 phần review */
+    gap: 30px;
+}
+
 /* Description Section */
 .description-section {
     background: white;
     padding: 24px;
     border-radius: 5px;
-    margin: 16px auto;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .section-title {
@@ -550,7 +576,7 @@ body {
     left: 0;
     right: 0;
     height: 100px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }
 
 .btn-toggle-description {
@@ -575,8 +601,8 @@ body {
     background: white;
     padding: 24px;
     border-radius: 4px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    height: fit-content;
 }
 
 .review-item {
@@ -666,5 +692,10 @@ body {
 
     .spec-label {
         font-weight: 500;
+    }
+
+    .product-bottom-section {
+        grid-template-columns: 1fr;
+        /* Mobile stack dọc */
     }
 }
