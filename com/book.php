@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sản phẩm</title>
 </head>
+<html>
 
 <body>
     <div class="container-detail">
         <!-- Breadcrumb -->
         <div class="breadcrumb">
-            <a href="../giaodien/trangchu.php">SÁCH TIẾNG VIỆT</a>
+            <a href="../giaodien/trangchu.php">Trang chủ</a>
             <span>›</span>
 
             <?php if ($danh_muc_cha): ?>
@@ -133,11 +134,6 @@
                                 <span class="old-price"><?php echo number_format($sach['gia_goc'], 0, ',', '.'); ?>₫</span>
                                 <span class="discount-badge">-<?php echo $sach['phan_tram_giam']; ?>%</span>
                             <?php endif; ?>
-                        </div>
-                        <div class="promo-link-wrapper">
-                            <a href="#" class="promo-link">
-                                Chính sách khuyến mãi trên chỉ áp dụng tại Fahasa.com →
-                            </a>
                         </div>
                     </div>
 
