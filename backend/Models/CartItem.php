@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Cart;
+namespace Models;
 
 class CartItem
 {

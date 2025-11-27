@@ -1,7 +1,7 @@
 <?php
-namespace Domain\Cart;
+namespace Models;
 
-use Domain\Exception\DomainException;
+use Exception;
 
 class Cart
 {
@@ -11,7 +11,7 @@ class Cart
     public function addItem(CartItem $newItem): void
     {
         if ($newItem->getQuantity() <= 0) {
-            throw new DomainException("Quantity must be positive");
+            throw new Exception("Quantity must be positive");
         }
 
         $productId = $newItem->getProductId();
@@ -33,7 +33,7 @@ class Cart
         if (isset($this->items[$productId])) {
             $this->items[$productId]->updateQuantity($quantity);
         } else {
-            throw new DomainException("Product not found in cart");
+            throw new Exception("Product not found in cart");
         }
     }
 
