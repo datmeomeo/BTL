@@ -1,10 +1,9 @@
 <?php
-namespace Infrastructure\Persistence;
+namespace Repositories;
 
-use Domain\Cart\Cart;
-use Domain\Cart\CartRepositoryInterface;
+use Models\Cart;
 
-class SessionCartRepository implements CartRepositoryInterface
+class SessionCartRepository
 {
     public function __construct()
     {
@@ -27,5 +26,12 @@ class SessionCartRepository implements CartRepositoryInterface
             }
         }
         return new Cart();
+    }
+    
+    public function clear(): void
+    {
+        if (isset($_SESSION['cart'])) {
+            unset($_SESSION['cart']);
+        }
     }
 }
