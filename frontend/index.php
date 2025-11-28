@@ -15,7 +15,7 @@
     <?php elseif ($page === '' || $page === 'home'): ?>
         <link rel="stylesheet" href="./assets/css/goi-y.css">
     <?php elseif ($page === 'books'): ?>
-        <link rel="stylesheet" href="./assets/css/book-hienthi.css">
+        <link rel="stylesheet" href="./assets/css/book-detail.css">
     <?php elseif ($page === 'cart'): ?>
         <link rel="stylesheet" href="./assets/css/cart.css">
     <?php endif; ?>
@@ -27,12 +27,13 @@
         if ($page === '' || $page === 'home') {
             // Trang chủ (index.php hoặc index.php?page=home)
             include './pages/main.php';
-            include './components/goi-y-sach.php'; 
+            include './components/suggest-book.php'; 
             
         } elseif ($page === 'login') {
             include './components/login.php'; 
         } elseif ($page === 'book') {
             include './pages/book.php';
+            include './components/suggest-book.php'; 
         } elseif ($page === 'cart') {
             include './pages/cart.php';
         } else {
