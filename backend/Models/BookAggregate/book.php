@@ -10,7 +10,6 @@ class Book
     // ID có thể là null khi đối tượng được tạo lần đầu (trước khi lưu vào DB tự tăng)
     private ?string $id = null; 
     
-    // Các thuộc tính được đóng gói (private)
     private string $name;
     private int $publisherId; // ID của nhà xuất bản (khóa ngoại), phần này có thể mở rộng thành một Value Object.
     private int $numberOfPages;
@@ -168,12 +167,20 @@ class Book
             $this->status = Status::Available;
         }
     }
-    /**
-     * Tăng lượt xem của sách.
-     */
+    
     public function IncrementViews(): void
     {
         $this->viewCount++;
+    }
+
+    public function SetId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function GetId(): ?int
+    {
+        return $this->id;
     }
 
     /**
@@ -182,8 +189,77 @@ class Book
      */
     public function GetImages(): array
     {
-        // Trả về bản sao của mảng để bảo vệ sự đóng gói của Aggregate Root
         return $this->imageList;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getPublisherId(): int
+    {
+        return $this->publisherId;
+    }
+
+    public function getNumberOfPages(): int
+    {
+        return $this->numberOfPages;
+    }
+
+    public function getCoverType(): string
+    {
+        return $this->coverType;
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
+    public function getPublicationYear(): int
+    {
+        return $this->publicationYear;
+    }
+
+    public function getIsbnCode(): string
+    {
+        return $this->isbnCode;
+    }
+
+    public function getAddedDate(): DateTime
+    {
+        return $this->addedDate;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getSellingPrice(): float
+    {
+        return $this->sellingPrice;
+    }
+
+    public function getOriginalPrice(): float
+    {
+        return $this->originalPrice;
+    }
+
+    public function getStockQuantity(): int
+    {
+        return $this->stockQuantity;
+    }
+
+    public function getViewCount(): int
+    {
+        return $this->viewCount;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
     }
     
 }
