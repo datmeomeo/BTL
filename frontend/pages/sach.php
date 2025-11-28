@@ -18,9 +18,9 @@
 <body>
     <?php include '../com/header.php'; ?>
 
-    <?php include 'BACKEND_URL/book-hienthi.php'; ?>
+    <?php include '../backend/book-hienthi.php'; ?>
 
-    <?php include 'BACKEND_URL/goi-y-sach.php'; ?>
+    <?php include '../backend/goi-y-sach.php'; ?>
 
     <?php include '../com/footer.php'; ?>
 </body>

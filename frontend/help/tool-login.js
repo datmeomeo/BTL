@@ -87,7 +87,7 @@ async function handleLogin(e) {
     const password = document.getElementById('login-password').value;
 
     try {
-        const res = await fetch('BACKEND_URL/api.php?route=auth&action=login', {
+        const res = await fetch('../backend/api.php?route=auth&action=login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -132,7 +132,7 @@ async function handleRegister(e) {
     }
 
     try {
-        const res = await fetch('BACKEND_URL/api.php?route=auth&action=register', {
+        const res = await fetch('../backend/api.php?route=auth&action=register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ fullName, email, password })

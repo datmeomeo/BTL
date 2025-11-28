@@ -197,13 +197,13 @@
                         </span>
                         <span class="icon-text">Thông Báo</span>
                     </a>
-                    <a href="../giaodien/gio-hang.php" class="header-icon">
+                    <a href="index.php?page=cart" class="header-icon">
                         <span class="icon-symbol">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
                         </span>
                         <span class="icon-text">Giỏ Hàng</span>
                     </a>
-                    <a href="../giaodien/login.php" class="header-icon">
+                    <a href="index.php?page=login" class="header-icon">
                         <span class="icon-symbol">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg>
                         </span>

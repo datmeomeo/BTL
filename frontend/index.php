@@ -16,6 +16,8 @@
         <link rel="stylesheet" href="./assets/css/goi-y.css">
     <?php elseif ($page === 'books'): ?>
         <link rel="stylesheet" href="./assets/css/book-hienthi.css">
+    <?php elseif ($page === 'cart'): ?>
+        <link rel="stylesheet" href="./assets/css/cart.css">
     <?php endif; ?>
 </head>
 <body>
@@ -31,6 +33,8 @@
             include './components/login.php'; 
         } elseif ($page === 'book') {
             include './pages/book.php';
+        } elseif ($page === 'cart') {
+            include './pages/cart.php';
         } else {
             echo "<h1>Trang không tìm thấy</h1>";
         }
@@ -41,12 +45,15 @@
 
     <script src="./assets/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
     <script src="./help/tool-menu.js" defer></script>
+
     <?php if ($page === '' || $page === 'home'): ?>
         <script src="./help/tool-banner.js"></script>
     <?php elseif ($page === 'login'): ?>
         <script src="./help/tool-login.js"></script>
     <?php elseif ($page === 'books'): ?>
-        <script src="./help/tool-bookhienthi.js"></script>
+        <script src="./help/tool-detail.js"></script>
+    <?php elseif ($page === 'cart'): ?>
+        <script src="./help/tool-cart.js" defer></script>
     <?php endif; ?>
 </body>
 </html>

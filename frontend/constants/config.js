@@ -1,2 +1,2 @@
-BACKEND_URL='http://localhost/BTL/backend/'
+../backend='http://localhost/BTL/backend/'
 FRONTEND_URL='http://localhost/BTL/frontend/'
