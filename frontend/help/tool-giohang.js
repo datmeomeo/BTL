@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function loadCart() {
-    fetch('../backend/api.php?route=cart&action=get')
+    fetch('BACKEND_URL/api.php?route=cart&action=get')
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
@@ -68,7 +68,7 @@ function updateQuantity(productId, quantity) {
     quantity = parseInt(quantity);
     if (quantity < 1) return; // Or confirm remove
 
-    fetch('../backend/api.php?route=cart&action=update', {
+    fetch('BACKEND_URL/api.php?route=cart&action=update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId: productId, quantity: quantity })
@@ -87,7 +87,7 @@ function updateQuantity(productId, quantity) {
 function removeItem(productId) {
     if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
 
-    fetch('../backend/api.php?route=cart&action=remove', {
+    fetch('BACKEND_URL/api.php?route=cart&action=remove', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId: productId })

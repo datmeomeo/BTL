@@ -14,7 +14,7 @@
                     <!-- Company Info -->
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-logo">
-                            <img src="../img/fahasa-logo.jpg" alt="Fahasa Logo">
+                            <img src="./assets/img/fahasa-logo.jpg" alt="Fahasa Logo">
                         </div>
                         <div class="footer-company-info">
                             <p>Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCM</p>
@@ -23,7 +23,7 @@
                             <p class="mt-3">Fahasa.com nhận đặt hàng trực tuyến và giao hàng tận nơi. KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như tất cả Hệ Thống Fahasa trên toàn quốc.</p>
                         </div>
                         <div class="footer-certification">
-                            <img src="../img/logo-bo-cong-thuong-da-thong-bao1.jpg" alt="Đã thông báo Bộ Công Thương">
+                            <img src="./assets/img/logo-bo-cong-thuong-da-thong-bao1.jpg" alt="Đã thông báo Bộ Công Thương">
                         </div>
                         <div class="footer-social">
                             <a href="#" class="social-icon">
@@ -47,10 +47,10 @@
                         </div>
                         <div class="footer-apps">
                             <a href="#" class="app-badge">
-                                <img src="../img/ggplay.jpg" alt="Google Play">
+                                <img src="./assets/img/ggplay.jpg" alt="Google Play">
                             </a>
                             <a href="#" class="app-badge">
-                                <img src="../img/appstore.jpg" alt="App Store">
+                                <img src="./assets/img/appstore.jpg" alt="App Store">
                             </a>
                         </div>
                     </div>
@@ -114,13 +114,13 @@
                         </div>
                         <!-- Đối tác -->
                         <div class="footer-partners-vertical">
-                            <img src="../img/logo_lex.jpg" alt="LEX">
-                            <img src="../img/Logo_ninjavan.jpg" alt="Ninja Van">
-                            <img src="../img/vnpost1.jpg" alt="Vietnam Post">
-                            <img src="../img/vnpay_logo.jpg" alt="VNPay">
-                            <img src="../img/momopay.jpg" alt="MoMo">
-                            <img src="../img/shopeepay_logo.jpg" alt="ShopeePay">
-                            <img src="../img/logo_zalopay_2.jpg" alt="ZaloPay">
+                            <img src="./assets/img/logo_lex.jpg" alt="LEX">
+                            <img src="./assets/img/Logo_ninjavan.jpg" alt="Ninja Van">
+                            <img src="./assets/img/vnpost1.jpg" alt="Vietnam Post">
+                            <img src="./assets/img/vnpay_logo.jpg" alt="VNPay">
+                            <img src="./assets/img/momopay.jpg" alt="MoMo">
+                            <img src="./assets/img/shopeepay_logo.jpg" alt="ShopeePay">
+                            <img src="./assets/img/logo_zalopay_2.jpg" alt="ZaloPay">
                         </div>
                     </div>
                 </div>

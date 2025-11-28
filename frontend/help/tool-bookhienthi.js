@@ -102,7 +102,7 @@ async function addToCart(productId, quantity = 1, isBuyNow = false) {
             quantity: quantity
         };
 
-        const response = await fetch('../backend/api.php?route=cart&action=add', {
+        const response = await fetch(BACKEND_URL + '/api.php?route=cart&action=add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
