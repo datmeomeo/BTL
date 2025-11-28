@@ -1,5 +1,26 @@
 <?php
     $page = isset($_GET['page']) ? $_GET['page'] : 'home'; 
+    $assets = [
+        'login' => [
+            'css' => ['./assets/css/login.css'],
+            'js' => ['./pages/login.js']
+        ],
+        'home' => [
+            'css' => ['./assets/css/suggest-book.css'],
+            'js' => ['./pages/suggest-book.js']
+        ],
+        'book' => [
+            'css' => ['./assets/css/book-detail.css', './assets/css/suggest-book.css'],
+            'js' => ['./pages/book-detail.js', './pages/suggest-book.js'],
+        ],
+        'cart' => [
+            'css' => ['./assets/css/cart.css'],
+            'js' => ['./pages/cart.js'],
+            'js_defer' => true
+        ]
+    ];
+    $currentPage = ($page === '') ? 'home' : $page;
+    $currentAssets = $assets[$currentPage] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -10,51 +31,53 @@
     <title>FAHASA</title>
     <link rel="stylesheet" href="./assets/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/main.css">
-    <?php if ($page === 'login'): ?>
-        <link rel="stylesheet" href="./assets/css/login.css">
-    <?php elseif ($page === '' || $page === 'home'): ?>
-        <link rel="stylesheet" href="./assets/css/goi-y.css">
-    <?php elseif ($page === 'books'): ?>
-        <link rel="stylesheet" href="./assets/css/book-detail.css">
-    <?php elseif ($page === 'cart'): ?>
-        <link rel="stylesheet" href="./assets/css/cart.css">
-    <?php endif; ?>
+    
+    <?php 
+        if (isset($currentAssets['css'])): 
+            $cssFiles = is_array($currentAssets['css']) ? $currentAssets['css'] : [$currentAssets['css']];
+            foreach ($cssFiles as $cssFile):
+    ?>
+            <link rel="stylesheet" href="<?php echo $cssFile; ?>">
+    <?php 
+            endforeach;
+        endif; 
+    ?>
 </head>
 <body>
     <?php include './components/header.php'; ?>
-    
     <?php 
         if ($page === '' || $page === 'home') {
-            // Trang chủ (index.php hoặc index.php?page=home)
             include './pages/main.php';
             include './components/suggest-book.php'; 
-            
-        } elseif ($page === 'login') {
-            include './components/login.php'; 
         } elseif ($page === 'book') {
-            include './pages/book.php';
+            include './pages/book-detail.php';
             include './components/suggest-book.php'; 
+        } elseif ($page === 'login') {
+            include './pages/login.php'; 
         } elseif ($page === 'cart') {
             include './pages/cart.php';
         } else {
             echo "<h1>Trang không tìm thấy</h1>";
         }
     ?>
-    
     <?php include './components/footer.php'; ?>
 
-
     <script src="./assets/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./help/tool-menu.js" defer></script>
+    <script src="./components/header.js" defer></script>
 
-    <?php if ($page === '' || $page === 'home'): ?>
-        <script src="./help/tool-banner.js"></script>
-    <?php elseif ($page === 'login'): ?>
-        <script src="./help/tool-login.js"></script>
-    <?php elseif ($page === 'books'): ?>
-        <script src="./help/tool-detail.js"></script>
-    <?php elseif ($page === 'cart'): ?>
-        <script src="./help/tool-cart.js" defer></script>
+    <?php if (isset($currentAssets['js'])): ?>
+        <?php 
+            $defer = isset($currentAssets['js_defer']) && $currentAssets['js_defer'] ? 'defer' : '';
+        ?>
+        <?php 
+            $jsFiles = is_array($currentAssets['js']) ? $currentAssets['js'] : [$currentAssets['js']];
+            foreach ($jsFiles as $jsFile):
+        ?>
+            <script src="<?php echo $jsFile; ?>" <?php echo $defer; ?>></script>
+        <?php 
+            endforeach;
+        ?>
     <?php endif; ?>
+    
 </body>
 </html>

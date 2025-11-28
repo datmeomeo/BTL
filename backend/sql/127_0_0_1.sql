@@ -159,8 +159,8 @@ CREATE TABLE `hinh_anh_sach` (
 --
 
 INSERT INTO `hinh_anh_sach` (`ma_hinh_anh`, `ma_sach`, `duong_dan_hinh`, `la_anh_chinh`, `thu_tu`) VALUES
-(1, 1, '../img-book/book-doraemon/dora-hiepsikhonggian-2.jpg', 1, 0),
-(2, 1, '../img-book/book-doraemon/dora-hiepsikhonggian.jpg', 0, 1);
+(1, 1, './assets/img-book/book-doraemon/dora-hiepsikhonggian-2.jpg', 1, 0),
+(2, 1, './assets/img-book/book-doraemon/dora-hiepsikhonggian.jpg', 0, 1);
 
 -- --------------------------------------------------------
 

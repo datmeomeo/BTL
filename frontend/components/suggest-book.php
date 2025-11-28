@@ -28,7 +28,7 @@ $danhSachSach = $stmt->fetchAll();
         <div class="sach-grid">
             <?php foreach ($danhSachSach as $sach): ?>
                 <!-- ✅ ĐÃ SỬA: Thêm ?id= và <?php ?> -->
-                <a href="../giaodien/sach.php?id=<?php echo $sach['ma_sach']; ?>" class="sach-card">
+                <a href="index.php?page=book&id=<?php echo $sach['ma_sach']; ?>" class="sach-card">
                     <!-- Badge giảm giá -->
                     <?php if ($sach['phan_tram_giam'] > 0): ?>
                         <div class="discount-badge">
@@ -48,7 +48,7 @@ $danhSachSach = $stmt->fetchAll();
 
                     <!-- Hình ảnh -->
                     <img class="sach-image" 
-                            src="<?php echo $sach['duong_dan_hinh'] ?? '../img/no-image.jpg'; ?>" 
+                            src="<?php echo $sach['duong_dan_hinh'] ?? './assets/img/no-image.jpg'; ?>" 
                             alt="<?php echo htmlspecialchars($sach['ten_sach']); ?>"
                             loading="lazy">
 
