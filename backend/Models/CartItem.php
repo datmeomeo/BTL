@@ -58,3 +58,4 @@ class CartItem
         return $this->price * $this->quantity;
     }
 }
+?>

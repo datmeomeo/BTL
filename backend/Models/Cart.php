@@ -75,3 +75,4 @@ class Cart
         return empty($this->items);
     }
 }
+?>

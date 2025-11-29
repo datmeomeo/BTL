@@ -53,3 +53,4 @@ class User
         return $this->role === 'admin';
     }
 }
+?>

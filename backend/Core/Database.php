@@ -3,6 +3,7 @@ namespace Core;
 
 use PDO;
 use PDOException;
+use Exception;
 
 class Database {
     private static $instance = null;
@@ -19,8 +20,8 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
-            echo "Connection Error: " . $e->getMessage();
-            exit;
+            // Ném ngoại lệ để api.php có thể bắt và trả về lỗi JSON
+            throw new Exception("Database Connection Error: " . $e->getMessage());
         }
     }
 
