@@ -19,7 +19,7 @@
                         <label>Mật khẩu</label>
                         <div class="password-input">
                             <input type="password" class="form-control" placeholder="Nhập mật khẩu" id="login-password">
-                            <button type="button" class="toggle-password" onclick="togglePassword('login-password')">Hiện</button>
+                            <button type="button" class="toggle-password">Hiện</button>
                         </div>
                     </div>
 
@@ -54,7 +54,7 @@
                         <label>Mật khẩu</label>
                         <div class="password-input">
                             <input type="password" class="form-control" placeholder="Nhập mật khẩu" id="register-password">
-                            <button type="button" class="toggle-password" onclick="togglePassword('register-password')">Hiện</button>
+                            <button type="button" class="toggle-password">Hiện</button>
                         </div>
                     </div>
 
@@ -62,7 +62,7 @@
                         <label>Nhập lại Mật khẩu</label>
                         <div class="password-input">
                             <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" id="confirm-password">
-                            <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">Hiện</button>
+                            <button type="button" class="toggle-password">Hiện</button>
                         </div>
                     </div>
 

@@ -77,7 +77,8 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons" id="action-buttons">
-                    <!-- Buttons will be injected by JS -->
+                    <button class="btn-action btn-add-cart">Thêm vào giỏ hàng</button>
+                    <button class="btn-action btn-buy-now">Mua ngay</button>
                 </div>
             </section>
 

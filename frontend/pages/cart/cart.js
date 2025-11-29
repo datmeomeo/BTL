@@ -1,104 +1,95 @@
-document.addEventListener('DOMContentLoaded', function () {
-    loadCart();
+// frontend/pages/cart/cart.js
+
+import CartService from '../../services/cart-service.js';
+import CartUI from './cart.ui.js';
+// Assuming utils.js is loaded globally for escapeHTML and formatCurrency
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Tải và hiển thị giỏ hàng lần đầu
+    await loadAndRenderCart();
+
+    // Gắn các sự kiện UI
+    attachCartEventListeners();
 });
 
-function loadCart() {
-    fetch('../backend/api.php?route=cart&action=get')
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                renderCart(data.data);
-            } else {
-                console.error('Failed to load cart:', data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function renderCart(cartData) {
-    const tbody = document.getElementById('cart-items-body');
-    const totalEl = document.getElementById('cart-total');
-    const countEl = document.getElementById('cart-count');
-
-    countEl.textContent = cartData.totalQuantity;
-    totalEl.textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cartData.totalPrice);
-
-    if (cartData.items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-5">Giỏ hàng trống</td></tr>';
-        return;
+/**
+ * Tải dữ liệu giỏ hàng từ CartService và hiển thị lên UI.
+ */
+async function loadAndRenderCart() {
+    try {
+        CartUI.showLoading();
+        const cartData = await CartService.getCart();
+        CartUI.renderCart(cartData);
+    } catch (error) {
+        console.error("Lỗi khi tải giỏ hàng:", error);
+        CartUI.showError(error.message || 'Không thể tải giỏ hàng. Vui lòng thử lại.');
+    } finally {
+        CartUI.hideLoading();
     }
-
-    tbody.innerHTML = cartData.items.map(item => `
-        <tr>
-            <td>
-                <div class="d-flex align-items-center">
-                    <img src="${item.image || '../img/no-image.jpg'}" class="cart-item-img me-3" alt="${item.name}">
-                    <div>
-                        <h6 class="mb-0"><a href="sach.php?id=${item.productId}" class="text-decoration-none text-dark">${item.name}</a></h6>
-                    </div>
-                </div>
-            </td>
-            <td style="text-align:center;">${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>
-            <td style="text-align:center;">
-                <div class="quantity-control">
-                    <button onclick="updateQuantity(${item.productId}, ${item.quantity - 1})">-</button>
-                    <span class="qty-value">${item.quantity}</span>
-                    <button onclick="updateQuantity(${item.productId}, ${item.quantity + 1})">+</button>
-                </div>
-            </td>
-            <td style="text-align:center;" class="fw-bold text-danger">
-                ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.total)}
-            </td>
-            <td>
-                <div class="div-of-btn-remove-cart">
-                    <a onclick="cart.deleteItem('424379', event);" title="Remove Item" class="btn-remove-desktop-cart">
-                        <i class="fa fa-trash-o" style="font-size:22px">
-                        </i>
-                    </a>
-                </div>
-                <button class="btn btn-sm text-danger" onclick="removeItem(${item.productId})">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
-                </button>
-            </td>
-        </tr>
-    `).join('');
 }
 
-function updateQuantity(productId, quantity) {
-    quantity = parseInt(quantity);
-    if (quantity < 1) return; // Or confirm remove
-
-    fetch('../backend/api.php?route=cart&action=update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: productId, quantity: quantity })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                renderCart(data.data);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+/**
+ * Xử lý cập nhật số lượng sản phẩm.
+ * @param {string} productId ID sản phẩm.
+ * @param {number} newQuantity Số lượng mới.
+ */
+async function handleUpdateQuantity(productId, newQuantity) {
+    try {
+        CartUI.showLoading();
+        const updatedCart = await CartService.updateQuantity(productId, newQuantity);
+        CartUI.renderCart(updatedCart);
+    } catch (error) {
+        console.error("Lỗi khi cập nhật số lượng:", error);
+        if (error.message !== 'Hủy thao tác xóa.') { // Avoid showing error if user cancelled delete
+            alert(error.message || 'Không thể cập nhật số lượng sản phẩm.');
+        }
+        await loadAndRenderCart(); // Tải lại giỏ hàng để đảm bảo trạng thái đúng
+    } finally {
+        CartUI.hideLoading();
+    }
 }
 
-function removeItem(productId) {
-    if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
+/**
+ * Xử lý xóa sản phẩm khỏi giỏ hàng.
+ * @param {string} productId ID sản phẩm.
+ */
+async function handleRemoveItem(productId) {
+    try {
+        CartUI.showLoading();
+        const updatedCart = await CartService.removeItem(productId);
+        CartUI.renderCart(updatedCart);
+    } catch (error) {
+        console.error("Lỗi khi xóa sản phẩm:", error);
+        if (error.message !== 'Hủy thao tác xóa.') { // Avoid showing error if user cancelled delete
+            alert(error.message || 'Không thể xóa sản phẩm khỏi giỏ hàng.');
+        }
+        await loadAndRenderCart(); // Tải lại giỏ hàng để đảm bảo trạng thái đúng
+    } finally {
+        CartUI.hideLoading();
+    }
+}
 
-    fetch('../backend/api.php?route=cart&action=remove', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: productId })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                renderCart(data.data);
-            } else {
-                alert(data.message);
+/**
+ * Gắn các event listener cho các nút điều khiển số lượng và xóa sản phẩm.
+ */
+function attachCartEventListeners() {
+    if (CartUI.els.cartItemsBody) {
+        CartUI.els.cartItemsBody.addEventListener('click', async (event) => {
+            const target = event.target;
+            const productId = target.closest('[data-product-id]')?.dataset.productId; // Tìm productId từ nút hoặc thẻ cha
+
+            if (!productId) return;
+
+            const currentQtyElement = target.closest('.quantity-control')?.querySelector('.qty-value');
+            let currentQty = parseInt(currentQtyElement?.textContent || '1');
+
+            if (target.classList.contains('btn-qty-minus')) {
+                await handleUpdateQuantity(productId, currentQty - 1);
+            } else if (target.classList.contains('btn-qty-plus')) {
+                await handleUpdateQuantity(productId, currentQty + 1);
+            } else if (target.classList.contains('btn-remove-item')) {
+                await handleRemoveItem(productId);
             }
-        })
-        .catch(error => console.error('Error:', error));
+        });
+    }
 }

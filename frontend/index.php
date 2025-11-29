@@ -3,30 +3,26 @@
     $assets = [
         'login' => [
             'css' => ['./assets/css/login.css'],
-            'js' => ['./pages/login.js']
+            'js' => ['./pages/login/login.js']
         ],
         'home' => [
             'css' => ['./assets/css/suggest-book.css'],
             'js' => [
-                './components/suggest-book.js', 
-                './utils/utils.js'
+                './components/suggest-book/suggest-book.js', 
             ]
         ],
         'book' => [
             'css' => ['./assets/css/book-detail.css', './assets/css/suggest-book.css'],
             'js' => [
                 './pages/book-detail/book-detail.js', 
-                './pages/book-detail/book-detail.ui.js',
-                './services/book-service.js',
-                './components/suggest-book.js', 
-                './utils/utils.js'
-            ]
+                './components/suggest-book/suggest-book.js', 
+            ],
         ],
         'cart' => [
             'css' => ['./assets/css/cart.css'],
             'js' => [
                 './pages/cart/cart.js'
-            ]
+            ],
         ]
     ];
     $currentPage = ($page === '') ? 'home' : $page;
@@ -54,14 +50,14 @@
     ?>
 </head>
 <body>
-    <?php include './components/header.php'; ?>
+    <?php include './components/header/header.php'; ?>
     <?php 
         if ($page === '' || $page === 'home') {
             include './pages/main.php';
-            include './components/suggest-book.php'; 
+            include './components/suggest-book/suggest-book.php'; 
         } elseif ($page === 'book') {
             include './pages/book-detail/book-detail.php';
-            include './components/suggest-book.php'; 
+            include './components/suggest-book/suggest-book.php'; 
         } elseif ($page === 'login') {
             include './pages/login/login.php'; 
         } elseif ($page === 'cart') {
@@ -70,21 +66,20 @@
             echo "<h1>Trang không tìm thấy</h1>";
         }
     ?>
-    <?php include './components/footer.php'; ?>
+    <?php include './components/footer/footer.php'; ?>
 
     <script src="./assets/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./components/header.js" defer></script>
-
-    <?php if (isset($currentAssets['js'])): ?>
-        <?php 
+    <script src="./components/header/header.js" defer></script>
+    
+    <?php 
+        if (isset($currentAssets['js'])): 
             $jsFiles = is_array($currentAssets['js']) ? $currentAssets['js'] : [$currentAssets['js']];
             foreach ($jsFiles as $jsFile):
-        ?>
-            <script src="<?php echo $jsFile; ?>"></script>
-        <?php 
+    ?>
+            <script type="module" src="<?php echo $jsFile; ?>"></script>
+    <?php 
             endforeach;
-        ?>
-    <?php endif; ?>
-    
+        endif; 
+    ?>
 </body>
 </html>

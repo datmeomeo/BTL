@@ -37,3 +37,6 @@
         </div>
     </div>
 </div>
+
+<!-- Scripts for Cart Page -->
+<script type="module" src="./cart.js"></script>

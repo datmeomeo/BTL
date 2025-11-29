@@ -1,3 +1,6 @@
+import BookService from '../../services/book-service.js';
+import BookUI from './book-detail.ui.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Lấy ID
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,4 +24,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     } finally {
         BookUI.hideLoading();
     }
+
+    const toggleDescription = document.getElementById('toggleDescription');
+    toggleDescription.addEventListener('click', () => BookUI.toggleDescription());
+    const thumbnails = document.getElementsByClassName('thumbnail');
+    Array.from(thumbnails).forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            BookUI.changeImage(this.querySelector('.thumbnail-image').src, this);
+        });
+    });
 });
