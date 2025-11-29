@@ -13,10 +13,6 @@ class BookImage extends ValueObject {
         if (empty($url)) {
             throw new InvalidArgumentException("Đường dẫn hình ảnh không được để trống.");
         }
-        if ($order < 1) {
-            throw new InvalidArgumentException("Thứ tự hiển thị phải lớn hơn 0.");
-        }
-        
         $this->url = $url;
         $this->isMainImage = $isMainImage;
         $this->order = $order;

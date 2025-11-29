@@ -21,9 +21,15 @@ class BookRepository implements IBookRepository
     private function mapToBook(array $row, array $imagesData): Book
     {
         // Giả định BookImage đã được chuẩn hóa lại tên thuộc tính: url, isMainImage, order
-        $imageList = array_map(function($img) {
-            return new BookImage($img['url'], (bool)$img['is_main_image'], $img['order']);
-        }, $imagesData);
+        // Chuyển đổi mảng dữ liệu hình ảnh thành danh sách đối tượng BookImage
+        $imageList = [];
+        foreach ($imagesData as $img) {
+            $imageList[] = new BookImage(
+            $img['duong_dan_hinh'],                // Đường dẫn hình ảnh
+            (bool)$img['la_anh_chinh'],// Có phải ảnh chính không
+            $img['thu_tu']               // Thứ tự hiển thị
+            );
+        }
         
         // Tái tạo Book Aggregate Root
         return Book::reconstitute(

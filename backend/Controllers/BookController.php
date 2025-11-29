@@ -29,6 +29,9 @@ class BookController extends BaseController
     {
         try {
             switch ($action) {
+                case "increase_view":
+                    $this->increaseViewCount();
+                    break;
                 case 'page_detail':
                     $this->getPageDetail();
                     break;
@@ -43,10 +46,16 @@ class BookController extends BaseController
         }
     }
 
+    private function increaseViewCount()
+    {
+        $bookId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $this->bookService->IncrementViews($bookId);
+        $this->jsonResponse(['status' => 'success', 'message' => 'View count increased'], 200);
+    }
     private function getPageDetail()
     {
-        $bookId = $this->getInput('bookId');
-        $data = $this->bookDetailPageQuery->handle((int)$bookId);
+        $bookId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $data = $this->bookDetailPageQuery->handle($bookId);
         
         if (!$data) {
             $this->jsonResponse(['status'=> 'error','message'=> 'Data not found'], 404);
@@ -56,7 +65,7 @@ class BookController extends BaseController
             'status' => 'success',
             'message' => 'Lấy dữ liệu trang chi tiết sách thành công',
             'data' => $data
-        ], 200);
+        ]);
     }
 
     private function getSuggestBooks()
