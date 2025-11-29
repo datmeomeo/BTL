@@ -13,13 +13,11 @@ use RuntimeException; // Sử dụng RuntimeException cho lỗi không mong mu�
 class SqlBookRepository implements IBookRepository
 {
     private PDO $db;
-    
     public function __construct(PDO $db)
     {
         $this->db = $db;
     }
 
-    // --- LOGIC MAPPER (Ánh xạ) ---
     private function mapToBook(array $row, array $imagesData): Book
     {
         // Giả định BookImage đã được chuẩn hóa lại tên thuộc tính: url, isMainImage, order

@@ -9,11 +9,8 @@ namespace Models\BookAggregate;
 interface IBookRepository
 {
     public function findById(string $id): ?Book;
-
     public function add(Book $book): void;
-
     public function update(Book $book): void;
-
     public function delete(int $id): void;
     public function exists(string $id): bool;
 }
