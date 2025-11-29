@@ -4,21 +4,6 @@ const SUGGEST_API_URL = 'http://localhost/BTL/backend/api.php?route=book&action=
 const gridContainer = document.getElementById('goi-y-content');
 const loadMoreButton = document.getElementById('btn-xem-them');
 
-const escapeHTML = (str) => {
-    if (typeof str !== 'string') return '';
-    const div = document.createElement('div'); 
-    div.textContent = str;
-    return div.innerHTML;
-};
-
-const formatCurrency = (amount) => {
-    if (typeof amount !== 'number' || isNaN(amount)) return '0đ';
-    return new Intl.NumberFormat('vi-VN', { 
-        style: 'currency', 
-        currency: 'VND' 
-    }).format(amount).replace('₫', 'đ');
-};
-
 const createStarIconHTML = () => {
     return '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#ffc107" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
 };

@@ -100,7 +100,7 @@
                 <!-- Description will be injected by JS -->
             </div>
             <div style="text-align: center; margin-top: 20px;">
-                <button id="toggleDescription" class="btn-toggle-description" onclick="toggleDescription()">
+                <button id="toggleDescription" class="btn-toggle-description" onclick="BookUI.toggleDescription()">
                     Xem thêm ▼
                 </button>
             </div>

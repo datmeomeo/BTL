@@ -7,16 +7,26 @@
         ],
         'home' => [
             'css' => ['./assets/css/suggest-book.css'],
-            'js' => ['./components/suggest-book.js']
+            'js' => [
+                './components/suggest-book.js', 
+                './utils/utils.js'
+            ]
         ],
         'book' => [
             'css' => ['./assets/css/book-detail.css', './assets/css/suggest-book.css'],
-            'js' => ['./pages/book-detail.js', './components/suggest-book.js'],
+            'js' => [
+                './pages/book-detail/book-detail.js', 
+                './pages/book-detail/book-detail.ui.js',
+                './services/book-service.js',
+                './components/suggest-book.js', 
+                './utils/utils.js'
+            ]
         ],
         'cart' => [
             'css' => ['./assets/css/cart.css'],
-            'js' => ['./pages/cart.js'],
-            'js_defer' => true
+            'js' => [
+                './pages/cart/cart.js'
+            ]
         ]
     ];
     $currentPage = ($page === '') ? 'home' : $page;
@@ -50,12 +60,12 @@
             include './pages/main.php';
             include './components/suggest-book.php'; 
         } elseif ($page === 'book') {
-            include './pages/book-detail.php';
+            include './pages/book-detail/book-detail.php';
             include './components/suggest-book.php'; 
         } elseif ($page === 'login') {
-            include './pages/login.php'; 
+            include './pages/login/login.php'; 
         } elseif ($page === 'cart') {
-            include './pages/cart.php';
+            include './pages/cart/cart.php';
         } else {
             echo "<h1>Trang không tìm thấy</h1>";
         }
@@ -67,13 +77,10 @@
 
     <?php if (isset($currentAssets['js'])): ?>
         <?php 
-            $defer = isset($currentAssets['js_defer']) && $currentAssets['js_defer'] ? 'defer' : '';
-        ?>
-        <?php 
             $jsFiles = is_array($currentAssets['js']) ? $currentAssets['js'] : [$currentAssets['js']];
             foreach ($jsFiles as $jsFile):
         ?>
-            <script src="<?php echo $jsFile; ?>" <?php echo $defer; ?>></script>
+            <script src="<?php echo $jsFile; ?>"></script>
         <?php 
             endforeach;
         ?>
