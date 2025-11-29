@@ -1,7 +1,6 @@
 // suggest-books.js
 
-// const SUGGEST_API_URL = 'http://localhost/BTL/backend/api.php?route=book&action=suggest_book';
-const SUGGEST_API_URL = '../backend/api.php?route=book&action=suggest_book';
+const SUGGEST_API_URL = 'http://localhost/BTL/backend/api.php?route=book&action=suggest_book';
 const gridContainer = document.getElementById('goi-y-content');
 const loadMoreButton = document.getElementById('btn-xem-them');
 
@@ -90,7 +89,7 @@ async function loadSuggestedBooks() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const apiResponse = await response.json(); 
 
         if (apiResponse.status === 'error') {

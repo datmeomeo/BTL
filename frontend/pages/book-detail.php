@@ -73,7 +73,7 @@ $danh_gia_list = $stmt_danhgia->fetchAll();
 <div class="container-detail">
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-        <a href="../giaodien/trangchu.php">Trang chủ</a>
+        <a href="index.php">Trang chủ</a>
         <span>›</span>
 
         <?php if ($danh_muc_cha): ?>

@@ -2,10 +2,6 @@
 namespace Queries;
 use DateTime;
 
-/**
- * SuggestBookDto
- * DTO chứa thông tin sách gợi ý, bất biến (Immutable).
- */
 class SuggestBookDto
 {
     public function __construct(

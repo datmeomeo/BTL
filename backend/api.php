@@ -27,7 +27,8 @@ function BookAPI(string $action, PDO $db)
     $bookRepository = new BookRepository($db);
     $bookService = new BookService($bookRepository);
     $suggestBookQuery = new SuggestBookQuery($db);
-    $controller = new BookController($bookService, $suggestBookQuery);
+    $bookDetailPageQuery = new BookDetailPageQuery($db);
+    $controller = new BookController($bookService, $bookDetailPageQuery, $suggestBookQuery);
     $controller->handleRequest($action);
 }
 
