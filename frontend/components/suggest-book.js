@@ -87,48 +87,29 @@ async function loadSuggestedBooks() {
     
     try {
         const response = await fetch(SUGGEST_API_URL);
-        
-        // Lấy text trước để debug
-        const textResponse = await response.text();
-        console.log('Raw API Response:', textResponse);
-        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // Thử parse JSON
-        let apiResponse;
-        try {
-            apiResponse = JSON.parse(textResponse);
-        } catch (parseError) {
-            console.error('JSON Parse Error:', parseError);
-            console.error('Response was:', textResponse);
-            throw new Error('API trả về không phải JSON. Kiểm tra console để xem chi tiết.');
-        }
+        const apiResponse = await response.json(); 
 
         if (apiResponse.status === 'error') {
-            throw new Error(apiResponse.message || 'Unknown API error');
+            throw new Error(`API returned error: ${apiResponse.message}`);
         }
         
-        const books = apiResponse.data || [];
-
-        if (books.length === 0) {
-            gridContainer.innerHTML = '<p>Không tìm thấy sách gợi ý nào.</p>';
-            return;
-        }
+        const books = apiResponse.data || []; 
 
         const booksHtml = books.map(book => renderBookCardHTML(book)).join('');
-        gridContainer.innerHTML = booksHtml;
+
+        if (booksHtml.length > 0) {
+            gridContainer.innerHTML = booksHtml; 
+        } else {
+            gridContainer.innerHTML = '<p>Không tìm thấy sách gợi ý nào.</p>';
+        }
 
     } catch (error) {
-        console.error("Chi tiết lỗi:", error);
-        gridContainer.innerHTML = `
-            <p style="color: red;">
-                Không thể tải dữ liệu gợi ý.<br>
-                Lỗi: ${error.message}<br>
-                Kiểm tra Console để biết thêm chi tiết.
-            </p>
-        `;
+        console.error("Lỗi khi tải sách gợi ý:", error);
+        gridContainer.innerHTML = '<p style="color: red;">Không thể tải dữ liệu gợi ý. Vui lòng kiểm tra kết nối API.</p>';
     }
 }
 
