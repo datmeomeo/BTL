@@ -7,11 +7,11 @@
         ],
         'home' => [
             'css' => ['./assets/css/suggest-book.css'],
-            'js' => ['./pages/suggest-book.js']
+            'js' => ['./components/suggest-book.js']
         ],
         'book' => [
             'css' => ['./assets/css/book-detail.css', './assets/css/suggest-book.css'],
-            'js' => ['./pages/book-detail.js', './pages/suggest-book.js'],
+            'js' => ['./pages/book-detail.js', './components/suggest-book.js'],
         ],
         'cart' => [
             'css' => ['./assets/css/cart.css'],

@@ -5,7 +5,6 @@ use InvalidArgumentException;
 use Core\ValueObject;
 // Đây là Value Object đại diện cho hình ảnh sách
 class BookImage extends ValueObject {
-    // Thuộc tính chỉ được gán trong constructor (readonly)
     private string $url;
     private bool $isMainImage;
     private int $order;
@@ -48,4 +47,3 @@ class BookImage extends ValueObject {
         ];
     }
 }
-?>

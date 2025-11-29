@@ -10,7 +10,7 @@ use PDO;
 use PDOException;
 use RuntimeException; // Sử dụng RuntimeException cho lỗi không mong muốn
 
-class SqlBookRepository implements IBookRepository
+class BookRepository implements IBookRepository
 {
     private PDO $db;
     public function __construct(PDO $db)

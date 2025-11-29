@@ -1,49 +1,80 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // backend/api.php
 require_once 'autoload.php';
 
 use Core\Database;
+use Repositories\UserRepository;
+use Repositories\CartRepository;
+use Repositories\BookRepository;
+use Repositories\SessionCartRepository;
 
-// 1. Setup Core & DB
-$db = Database::getConnection();
+use Services\AuthService;
+use Services\CartService;
 
-// Start Session for API
+use Controllers\AuthController;
+use Controllers\CartController;
+use Controllers\BookController;
+use Services\BookService;
+use Queries\BookDetailPageQuery;
+use Queries\SuggestBookQuery;
+
+
+function BookAPI(string $action, PDO $db)
+{
+    $bookRepository = new BookRepository($db);
+    $bookService = new BookService($bookRepository);
+    $suggestBookQuery = new SuggestBookQuery($db);
+    $controller = new BookController($bookService, $suggestBookQuery);
+    $controller->handleRequest($action);
+}
+
+function CartAPI(string $action, PDO $db)
+{
+    $cartRepo = new CartRepository($db);
+    $sessionCartRepo = new SessionCartRepository();
+    $cartService = new CartService($cartRepo, $sessionCartRepo);
+    $controller = new CartController($cartService);
+    $controller->handleRequest($action);
+}
+
+function AuthAPI(string $action, PDO $db)
+{
+    $userRepo = new UserRepository($db);
+    $authService = new AuthService($userRepo);
+    $cartRepo = new CartRepository($db);
+
+    $cartRepo = new CartRepository($db);
+    $sessionCartRepo = new SessionCartRepository();
+    $cartService = new CartService($cartRepo, $sessionCartRepo);
+
+    $controller = new AuthController($authService, $cartService);
+    $controller->handleRequest($action);
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Instantiate Repositories (Inject DB connection)
-$userRepo = new \Repositories\UserRepository($db);
-$cartRepo = new \Repositories\CartRepository($db);
-$sessionCartRepo = new \Repositories\SessionCartRepository();
-
-// 3. Instantiate Services (Inject Repos)
-$authService = new \Services\AuthService($userRepo);
-
-// CartService receives both repos to decide where to save
-$cartService = new \Services\CartService($cartRepo, $sessionCartRepo);
-
-// 4. Routing Logic
 $route = $_GET['route'] ?? '';
 $action = $_GET['action'] ?? '';
 
+$apiHandlers = [
+    'auth' => 'AuthAPI',
+    'cart' => 'CartAPI',
+    'book' => 'BookAPI',
+];
+$db = Database::getConnection();
+
 try {
-    switch ($route) {
-        case 'auth':
-            // Inject AuthService and CartService (for merging)
-            $controller = new \Controllers\AuthController($authService, $cartService);
-            $controller->handleRequest($action);
-            break;
-
-        case 'cart':
-            $controller = new \Controllers\CartController($cartService);
-            $controller->handleRequest($action); 
-            break;
-
-        default:
-            http_response_code(404);
-            echo json_encode(['error' => 'Route not found']);
-            break;
+    if (isset($apiHandlers[$route])){
+        $handler = $apiHandlers[$route];
+        $handler($action, $db);
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'Route not found']);
     }
 } catch (Exception $e) {
     http_response_code(500);

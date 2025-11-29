@@ -5,6 +5,11 @@ use DateTime;
 use DomainException;
 use InvalidArgumentException;
 
+
+/**
+ * Lớp đại diện cho một cuốn sách trong hệ thống.
+ * Đây là Aggregate Root trong mô hình DDD.
+ */
 class Book
 {
     // ID có thể là null khi đối tượng được tạo lần đầu (trước khi lưu vào DB tự tăng)
@@ -18,6 +23,7 @@ class Book
     private int $publicationYear;
     private string $isbnCode;
     private DateTime $addedDate; 
+
     private string $description = "";
     private float $sellingPrice = 0;
     private float $originalPrice = 0;
@@ -261,6 +267,4 @@ class Book
     {
         return $this->status;
     }
-    
 }
-?>

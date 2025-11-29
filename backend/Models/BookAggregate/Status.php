@@ -5,4 +5,3 @@ enum Status: string{
     case OutOfStock = "out_of_stock";
     case Discontinued = "discontinued";
 }
-?>
