@@ -1,19 +1,23 @@
 <?php
 namespace Services;
 
+use Models\BookAggregate\IBookRepository;
 use Repositories\CartRepository;
 use Repositories\SessionCartRepository;
 use Models\CartItem;
 use Models\Cart;
+use Exception;
 
 class CartService
 {
-    private CartRepository $dbRepo;
+    private CartRepository $cartRepository;
+    private IBookRepository $bookRepository;
     private SessionCartRepository $sessionRepo;
 
-    public function __construct(CartRepository $dbRepo, SessionCartRepository $sessionRepo)
+    public function __construct(CartRepository $cartRepository, IBookRepository $bookRepository, SessionCartRepository $sessionRepo)
     {
-        $this->dbRepo = $dbRepo;
+        $this->cartRepository = $cartRepository;
+        $this->bookRepository = $bookRepository;
         $this->sessionRepo = $sessionRepo;
     }
 
@@ -33,15 +37,27 @@ class CartService
     public function getCart(): Cart
     {
         if ($this->isLogged()) {
-            return $this->dbRepo->getCart($this->getUserId());
+            return $this->cartRepository->getCart($this->getUserId());
         }
         return $this->sessionRepo->getCart();
     }
 
-    public function addToCart(int $productId, int $quantity, float $price, string $name, string $image): void
+    public function addToCart(int $productId, int $quantity): void
     {
+        $product = $this->bookRepository->findById($productId);
+        if (!$product) {
+            throw new Exception("Sản phẩm không tồn tại");
+        }
         $cart = $this->getCart();
-        $item = new CartItem($productId, $price, $quantity, $name, $image);
+
+        $imgUrl = '';
+        foreach ($product->getImages() as $img) {
+            if ($img->isMainImage()) {
+                $imgUrl = $img->getUrl();
+                break;
+            }
+        }
+        $item = new CartItem($productId, $product->getSellingPrice(), $quantity, $product->getName(), $imgUrl);
         $cart->addItem($item);
         $this->saveCart($cart);
     }
@@ -63,7 +79,7 @@ class CartService
     private function saveCart(Cart $cart): void
     {
         if ($this->isLogged()) {
-            $this->dbRepo->save($cart, $this->getUserId());
+            $this->cartRepository->save($cart, $this->getUserId());
         } else {
             $this->sessionRepo->save($cart);
         }
@@ -76,13 +92,13 @@ class CartService
             return;
         }
 
-        $userCart = $this->dbRepo->getCart($userId);
+        $userCart = $this->cartRepository->getCart($userId);
         
         foreach ($guestCart->getItems() as $item) {
             $userCart->addItem($item);
         }
 
-        $this->dbRepo->save($userCart, $userId);
+        $this->cartRepository->save($userCart, $userId);
         $this->sessionRepo->clear();
     }
 }

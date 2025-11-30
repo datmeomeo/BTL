@@ -1,6 +1,6 @@
+import { showToast } from "../utils/utils.js";
+
 // frontend/services/cart-service.js
-
-
 const CartService = {
     BASE_API: 'http://localhost/BTL/backend/api.php?route=cart',
     /**
@@ -18,10 +18,36 @@ const CartService = {
         }
         return data.data;
     },
+    /**
+     * Cập nhật số lượng sản phẩm trong giỏ hàng.
+     * @param {string} productId ID của sản phẩm sách.
+     * @param {number} quantity Số lượng mới.
+     * @returns {Promise<object>} Đã thêm vào giỏ hàng thành công.
+     */
+    addToCart: async (productId, quantity) => {
+        if (quantity < 1) throw new Error('Số lượng không hợp lệ.');
+
+        const response = await fetch(`${CartService.BASE_API}&action=add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: productId, quantity: quantity })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Lỗi mạng! Trạng thái: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.status !== 'success') {
+            throw new Error(`API trả về lỗi: ${data.message || 'Không thể thêm vào giỏ hàng'}`);
+        }
+        else{
+            showToast('Thêm vào giỏ hàng thành công!');
+        }
+    },
 
     /**
      * Cập nhật số lượng sản phẩm trong giỏ hàng.
-     * @param {string} productId ID của sản phẩm.
+     * @param {string} productId ID của sản phẩm sách.
      * @param {number} quantity Số lượng mới.
      * @returns {Promise<object>} Dữ liệu giỏ hàng đã cập nhật.
      */
@@ -49,10 +75,6 @@ const CartService = {
      * @returns {Promise<object>} Dữ liệu giỏ hàng đã cập nhật.
      */
     removeItem: async (productId) => {
-        if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-            throw new Error('Hủy thao tác xóa.');
-        }
-
         const response = await fetch(`${CartService.BASE_API}&action=remove`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
