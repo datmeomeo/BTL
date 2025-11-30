@@ -8,39 +8,11 @@ const CartUI = {
         cartCountElement: document.getElementById('cart-count')
     },
     /**
-     * Hiển thị trạng thái tải.
-     */
-    showLoading: () => {
-        if (this.els.cartItemsBody) {
-            this.els.cartItemsBody.innerHTML = '<tr><td colspan="5" class="text-center py-5">Đang tải giỏ hàng...</td></tr>';
-        }
-    },
-
-    /**
-     * Ẩn trạng thái tải.
-     */
-    hideLoading: () => {
-        if (this.els.cartItemsBody) {
-            this.els.cartItemsBody.innerHTML = '<tr><td colspan="5" class="text-center py-5">Không có sản phẩm trong giỏ hàng</td></tr>';
-        }
-    },
-
-    /**
-     * Hiển thị thông báo lỗi.
-     * @param {string} message Thông báo lỗi.
-     */
-    showError: (message) => {
-        if (this.els.cartItemsBody) {
-            this.els.cartItemsBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">${escapeHTML(message)}</td></tr>`;
-        }
-    },
-
-    /**
      * Render toàn bộ giỏ hàng lên giao diện.
      * @param {object} cartData Dữ liệu giỏ hàng.
      */
     renderCart: (cartData) => {
-        const { cartItemsBody, cartTotalElement, cartCountElement } = this.els;
+        const { cartItemsBody, cartTotalElement, cartCountElement } = CartUI.els;
 
         if (!cartItemsBody || !cartTotalElement || !cartCountElement) {
             console.error('Không tìm thấy các phần tử DOM cần thiết cho giỏ hàng.');
@@ -55,11 +27,12 @@ const CartUI = {
             return;
         }
 
+        console.log(cartData.items);
         cartItemsBody.innerHTML = cartData.items.map(item => `
             <tr>
                 <td>
                     <div class="d-flex align-items-center">
-                        <img src="${escapeHTML(item.image || './assets/img/no-image.jpg')}" class="cart-item-img me-3" alt="${escapeHTML(item.name)}">
+                        <img src="${escapeHTML(item.image || '')}" class="cart-item-img me-3" alt="${escapeHTML(item.name)}">
                         <div>
                             <h6 class="mb-0"><a href="index.php?page=book&id=${item.productId}" class="text-decoration-none text-dark">${escapeHTML(item.name)}</a></h6>
                         </div>

@@ -22,7 +22,7 @@ class CartController extends BaseController
                     $this->addToCart();
                     break;
                 case 'get':
-                    $this->getCart();
+                    $this->getCart('Lấy thông tin giỏ hàng thành công');
                     break;
                 case 'update':
                     $this->updateQuantity();
@@ -43,53 +43,16 @@ class CartController extends BaseController
         // Support both JSON and FormData
         $productId = $this->getInput('productId');
         $quantity = $this->getInput('quantity', 1);
-        
-        // In a real app, we might fetch price/name from DB here to be safe, 
-        // or trust the client if it's just a demo. 
-        // For now, let's assume we might need to fetch it or it's passed.
-        // The previous implementation fetched it in the Service or Repo?
-        // Actually, the previous `CartService::addToCart` took `productId` and `quantity`.
-        // But here `CartService::addToCart` requires price, name, image.
-        // So we should probably fetch the product details here or in the service.
-        // To keep it simple and consistent with previous logic, let's assume we need to fetch it.
-        // BUT, I don't have a ProductRepository ready in this plan.
-        // Let's check `CartService` again. It takes `productId, quantity, price, name, image`.
-        // So the Controller needs to provide these.
-        // Since I don't have a ProductRepo, I will rely on the client sending them for now (as per the `tool-bookhienthi.js` logic which sends `product_id` and `quantity`).
-        // WAIT: `tool-bookhienthi.js` ONLY sends `product_id` and `quantity`.
-        // So I MUST fetch product details from DB.
-        
-        // Quick fix: I'll add a quick query here or inject a ProductRepo later.
-        // For now, I'll use a direct DB query via the Database class to get product info.
-        // This breaks the pattern slightly but is pragmatic for this refactor step.
-        
-        $db = \Core\Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM sach WHERE ma_sach = ?");
-        $stmt->execute([$productId]);
-        $product = $stmt->fetch();
-
-        if (!$product) {
-            throw new Exception("Sản phẩm không tồn tại");
-        }
-
-        // Get image
-        $stmtImg = $db->prepare("SELECT duong_dan_hinh FROM hinh_anh_sach WHERE ma_sach = ? AND la_anh_chinh = 1");
-        $stmtImg->execute([$productId]);
-        $imgRow = $stmtImg->fetch();
-        $image = $imgRow['duong_dan_hinh'] ?? '';
 
         $this->cartService->addToCart(
             (int)$productId,
             (int)$quantity,
-            (float)$product['gia_ban'], // Or gia_khuyen_mai if exists
-            $product['ten_sach'],
-            $image
         );
 
-        $this->getCart(); // Return updated cart
+        $this->getCart('Thêm vào giỏ hàng thành công'); // Return updated cart
     }
 
-    private function getCart()
+    private function getCart(string $message = '')
     {
         $cart = $this->cartService->getCart();
         
@@ -101,7 +64,7 @@ class CartController extends BaseController
 
         foreach ($cart->getItems() as $item) {
             $data['items'][] = [
-                'product_id' => $item->getProductId(),
+                'productId' => $item->getProductId(),
                 'name' => $item->getName(),
                 'price' => $item->getPrice(),
                 'quantity' => $item->getQuantity(),
@@ -110,22 +73,26 @@ class CartController extends BaseController
             ];
         }
 
-        $this->jsonResponse($data);
+        $this->jsonResponse([
+            'status'=> 'success',
+            'message'=> $message,
+            'data'=> $data
+        ]);
     }
 
     private function updateQuantity()
     {
-        $productId = $this->getInput('product_id');
+        $productId = $this->getInput('productId');
         $quantity = $this->getInput('quantity');
 
         $this->cartService->updateQuantity((int)$productId, (int)$quantity);
-        $this->getCart();
+        $this->getCart('Cập nhật số lượng thành công');
     }
 
     private function removeItem()
     {
-        $productId = $this->getInput('product_id');
+        $productId = $this->getInput('productId');
         $this->cartService->removeItem((int)$productId);
-        $this->getCart();
+        $this->getCart('Xóa sản phẩm thành công');
     }
 }

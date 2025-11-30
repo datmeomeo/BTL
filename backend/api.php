@@ -36,7 +36,8 @@ function CartAPI(string $action, PDO $db)
 {
     $cartRepo = new CartRepository($db);
     $sessionCartRepo = new SessionCartRepository();
-    $cartService = new CartService($cartRepo, $sessionCartRepo);
+    $bookRepository = new BookRepository($db);
+    $cartService = new CartService($cartRepo, $bookRepository, $sessionCartRepo);
     $controller = new CartController($cartService);
     $controller->handleRequest($action);
 }
@@ -49,7 +50,8 @@ function AuthAPI(string $action, PDO $db)
 
     $cartRepo = new CartRepository($db);
     $sessionCartRepo = new SessionCartRepository();
-    $cartService = new CartService($cartRepo, $sessionCartRepo);
+    $bookRepository = new BookRepository($db);
+    $cartService = new CartService($cartRepo, $bookRepository, $sessionCartRepo);
 
     $controller = new AuthController($authService, $cartService);
     $controller->handleRequest($action);

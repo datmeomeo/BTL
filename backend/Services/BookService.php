@@ -11,7 +11,7 @@ class BookService
         $this->BookRepository = $BookRepository;
     }
 
-    public function IncrementViews(int $id)
+    public function incrementViews(int $id)
     {
         $book = $this->BookRepository->findById($id);
         $book->incrementViews();
