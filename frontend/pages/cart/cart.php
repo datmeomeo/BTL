@@ -19,7 +19,7 @@
                     <tbody id="cart-items-body">
                         <!-- Items will be loaded here via JS -->
                         <tr>
-                            <td colspan="5" class="text-center py-5">Đang tải giỏ hàng...</td>
+                            <td colspan="5" class="text-center py-5">Không có sản phẩm trong giỏ hàng</td>
                         </tr>
                     </tbody>
                 </table>
@@ -37,6 +37,3 @@
         </div>
     </div>
 </div>
-
-<!-- Scripts for Cart Page -->
-<script type="module" src="./cart.js"></script>

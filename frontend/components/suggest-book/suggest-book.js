@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function loadAndRenderSuggestedBooks() {
     try {
-        SuggestBookUI.showLoading();
         const books = await BookService.getSuggestedBooks();
         console.log("Sách gợi ý tải về:", books);
         SuggestBookUI.renderSuggestedBooks(books);

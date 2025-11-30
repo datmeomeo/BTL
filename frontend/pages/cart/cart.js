@@ -5,28 +5,17 @@ import CartUI from './cart.ui.js';
 // Assuming utils.js is loaded globally for escapeHTML and formatCurrency
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Tải và hiển thị giỏ hàng lần đầu
-    await loadAndRenderCart();
-
-    // Gắn các sự kiện UI
-    attachCartEventListeners();
-});
-
-/**
- * Tải dữ liệu giỏ hàng từ CartService và hiển thị lên UI.
- */
-async function loadAndRenderCart() {
     try {
-        CartUI.showLoading();
         const cartData = await CartService.getCart();
         CartUI.renderCart(cartData);
     } catch (error) {
         console.error("Lỗi khi tải giỏ hàng:", error);
         CartUI.showError(error.message || 'Không thể tải giỏ hàng. Vui lòng thử lại.');
-    } finally {
-        CartUI.hideLoading();
-    }
-}
+    } 
+
+    // Gắn các sự kiện UI
+    attachCartEventListeners();
+});
 
 /**
  * Xử lý cập nhật số lượng sản phẩm.
@@ -35,7 +24,6 @@ async function loadAndRenderCart() {
  */
 async function handleUpdateQuantity(productId, newQuantity) {
     try {
-        CartUI.showLoading();
         const updatedCart = await CartService.updateQuantity(productId, newQuantity);
         CartUI.renderCart(updatedCart);
     } catch (error) {
@@ -44,9 +32,7 @@ async function handleUpdateQuantity(productId, newQuantity) {
             alert(error.message || 'Không thể cập nhật số lượng sản phẩm.');
         }
         await loadAndRenderCart(); // Tải lại giỏ hàng để đảm bảo trạng thái đúng
-    } finally {
-        CartUI.hideLoading();
-    }
+    } 
 }
 
 /**
@@ -55,7 +41,6 @@ async function handleUpdateQuantity(productId, newQuantity) {
  */
 async function handleRemoveItem(productId) {
     try {
-        CartUI.showLoading();
         const updatedCart = await CartService.removeItem(productId);
         CartUI.renderCart(updatedCart);
     } catch (error) {

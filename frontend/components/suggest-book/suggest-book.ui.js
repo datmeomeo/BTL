@@ -7,15 +7,6 @@ const SuggestBookUI = {
     },
 
     /**
-     * Hiển thị trạng thái tải sách gợi ý.
-     */
-    showLoading: function() { // Use function keyword to get proper 'this' binding
-        if (this.els.gridContainer) {
-            this.els.gridContainer.innerHTML = '<p id="loading-message">Đang tải sách gợi ý...</p>';
-        }
-    },
-
-    /**
      * Hiển thị thông báo lỗi khi tải sách gợi ý.
      * @param {string} message Thông báo lỗi.
      */
@@ -36,7 +27,7 @@ const SuggestBookUI = {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         const isNew = diffDays <= 7;
         const publisherName = book.publisherName ?? 'NXB';
-        const imagePath = book.imagePath ?? './assets/img/no-image.jpg';
+        const imagePath = book.imagePath ?? '';
 
         const discountBadgeHTML = book.discountPercent > 0 ?
             `<div class="discount-badge">-${book.discountPercent}%</div>` : '';

@@ -22,16 +22,16 @@ const BookUI = {
     render(book) {
         document.title = book.bookName;
         
-        this.renderBreadcrumb(book);
-        this.renderImages(book);
-        this.els.title.textContent = book.bookName;
-        this.renderMeta(book);
-        this.renderRating(book);
-        this.renderPrice(book);
-        this.els.stock.textContent = `${book.stockQuantity} nhà sách còn hàng`;
-        this.renderSpecs(book);
-        this.renderDescription(book);
-        this.renderReviews(book.reviews);
+        BookUI.renderBreadcrumb(book);
+        BookUI.renderImages(book);
+        BookUI.els.title.textContent = book.bookName;
+        BookUI.renderMeta(book);
+        BookUI.renderRating(book);
+        BookUI.renderPrice(book);
+        BookUI.els.stock.textContent = `${book.stockQuantity} nhà sách còn hàng`;
+        BookUI.renderSpecs(book);
+        BookUI.renderDescription(book);
+        BookUI.renderReviews(book.reviews);
     },
 
     // === RENDER CHI TIẾT ===
@@ -40,17 +40,17 @@ const BookUI = {
         if (book.parentCategoryName) html += `<span>›</span><a href="#">${escapeHTML(book.parentCategoryName)}</a>`;
         if (book.categoryName) html += `<span>›</span><a href="#">${escapeHTML(book.categoryName)}</a>`;
         html += `<span>›</span><span>${escapeHTML(book.bookName)}</span>`;
-        this.els.breadcrumb.innerHTML = html;
+        BookUI.els.breadcrumb.innerHTML = html;
     },
 
     renderImages(book) {
         // Ảnh chính
-        this.els.mainImage.src = book.mainImage || '../img/no-image.jpg';
+        BookUI.els.mainImage.src = book.mainImage || '../img/no-image.jpg';
         
         // Thumbnails
         if (book.thumbnails && book.thumbnails.length > 0) {
-            this.els.thumbnails.innerHTML = book.thumbnails.map((thumb, index) => `
-                <div class="thumbnail ${index === 0 ? 'active' : ''}", this)">
+            BookUI.els.thumbnails.innerHTML = book.thumbnails.map((thumb, index) => `
+                <div class="thumbnail ${index === 0 ? 'active' : ''}", BookUI)">
                     <img class="thumbnail-image" src="${escapeHTML(thumb)}" alt="Thumbnail">
                 </div>
             `).join('');
@@ -58,7 +58,7 @@ const BookUI = {
     },
 
     renderMeta(book) {
-        this.els.meta.innerHTML = `
+        BookUI.els.meta.innerHTML = `
             <div class="meta-item"><span class="meta-label">Nhà cung cấp:</span><span class="meta-value">${escapeHTML(book.supplierName)}</span></div>
             <div class="meta-item"><span class="meta-label">Nhà xuất bản:</span><span class="meta-value">${escapeHTML(book.publisherName)}</span></div>
             <div class="meta-item"><span class="meta-label">Tác giả:</span><span class="meta-value">${escapeHTML(book.authorName)}</span></div>
@@ -69,7 +69,7 @@ const BookUI = {
     renderRating(book) {
         const full = Math.round(book.averageRating || 0);
         const sold = Math.floor(Math.random() * 200) + 10;
-        this.els.rating.innerHTML = `
+        BookUI.els.rating.innerHTML = `
             <div class="stars">${'★'.repeat(full)}${'☆'.repeat(5 - full)}</div>
             <span class="rating-text">(${book.reviewCount} đánh giá)</span>
             <span class="rating-text"> | Đã bán ${sold}</span>
@@ -81,19 +81,19 @@ const BookUI = {
             `<span class="old-price">${formatCurrency(book.originalPrice)}</span>
              <span class="discount-badge">-${book.discountPercent}%</span>` : '';
         
-        this.els.price.innerHTML = `
+        BookUI.els.price.innerHTML = `
             <div><span class="current-price">${formatCurrency(book.sellingPrice)}</span>${oldPrice}</div>
         `;
     },
 
     renderSpecs(book) {
-        this.els.specs.innerHTML = `
-            ${this._row('Mã hàng', book.isbn)}
-            ${this._row('Nhà Cung Cấp', book.supplierName)}
-            ${this._row('Tác giả', book.authorName)}
-            ${this._row('NXB', book.publisherName)}
-            ${this._row('Năm XB', book.publishYear)}
-            ${this._row('Số trang', book.pageCount)}
+        BookUI.els.specs.innerHTML = `
+            ${BookUI._row('Mã hàng', book.isbn)}
+            ${BookUI._row('Nhà Cung Cấp', book.supplierName)}
+            ${BookUI._row('Tác giả', book.authorName)}
+            ${BookUI._row('NXB', book.publisherName)}
+            ${BookUI._row('Năm XB', book.publishYear)}
+            ${BookUI._row('Số trang', book.pageCount)}
         `;
     },
 
@@ -102,7 +102,7 @@ const BookUI = {
     },
 
     renderDescription(book) {
-        this.els.desc.innerHTML = `
+        BookUI.els.desc.innerHTML = `
             <h3>${escapeHTML(book.bookName)}</h3>
             <div>${(book.description || '').replace(/\n/g, '<br>')}</div>
         `;
@@ -110,10 +110,10 @@ const BookUI = {
 
     renderReviews(reviews) {
         if (!reviews || reviews.length === 0) {
-            this.els.reviews.innerHTML = '<p style="text-align:center; color:#999">Chưa có đánh giá nào.</p>';
+            BookUI.els.reviews.innerHTML = '<p style="text-align:center; color:#999">Chưa có đánh giá nào.</p>';
             return;
         }
-        this.els.reviews.innerHTML = reviews.map(rv => `
+        BookUI.els.reviews.innerHTML = reviews.map(rv => `
             <div class="review-item">
                 <div class="review-header">
                     <span class="reviewer-name">${escapeHTML(rv.reviewerName)}</span>
@@ -127,29 +127,29 @@ const BookUI = {
 
     // === INTERACTION (Được gọi từ HTML) ===
     changeImage(src, element) {
-        this.els.mainImage.src = src;
+        BookUI.els.mainImage.src = src;
         document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
         element.classList.add('active');
     },
 
     toggleDescription() {
-        this.els.desc.classList.toggle('collapsed');
-        const isCollapsed = this.els.desc.classList.contains('collapsed');
+        BookUI.els.desc.classList.toggle('collapsed');
+        const isCollapsed = BookUI.els.desc.classList.contains('collapsed');
         document.getElementById('toggleDescription').textContent = isCollapsed ? 'Xem thêm ▼' : 'Thu gọn ▲';
     },
 
     showLoading() {
-        this.els.container.style.opacity = '0.5';
-        this.els.container.style.pointerEvents = 'none';
+        BookUI.els.container.style.opacity = '0.5';
+        BookUI.els.container.style.pointerEvents = 'none';
     },
 
     hideLoading() {
-        this.els.container.style.opacity = '1';
-        this.els.container.style.pointerEvents = 'auto';
+        BookUI.els.container.style.opacity = '1';
+        BookUI.els.container.style.pointerEvents = 'auto';
     },
 
     showError(msg) {
-        this.els.container.innerHTML = `<div style="text-align:center; padding:50px; color:red;"><h3>⚠️ Lỗi</h3><p>${msg}</p></div>`;
+        BookUI.els.container.innerHTML = `<div style="text-align:center; padding:50px; color:red;"><h3>⚠️ Lỗi</h3><p>${msg}</p></div>`;
     }
 };
 

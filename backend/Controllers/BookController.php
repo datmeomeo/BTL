@@ -49,7 +49,7 @@ class BookController extends BaseController
     private function increaseViewCount()
     {
         $bookId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        $this->bookService->IncrementViews($bookId);
+        $this->bookService->incrementViews($bookId);
         $this->jsonResponse(['status' => 'success', 'message' => 'View count increased'], 200);
     }
     private function getPageDetail()
