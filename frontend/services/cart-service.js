@@ -32,7 +32,6 @@ const CartService = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ productId: productId, quantity: quantity })
         });
-
         if (!response.ok) {
             throw new Error(`Lỗi mạng! Trạng thái: ${response.status}`);
         }
@@ -89,6 +88,7 @@ const CartService = {
         }
         return data.data;
     }
+    
 };
 
 export default CartService;
