@@ -64,7 +64,7 @@ class CartController extends BaseController
 
         foreach ($cart->getItems() as $item) {
             $data['items'][] = [
-                'product_id' => $item->getProductId(),
+                'productId' => $item->getProductId(),
                 'name' => $item->getName(),
                 'price' => $item->getPrice(),
                 'quantity' => $item->getQuantity(),
@@ -82,7 +82,7 @@ class CartController extends BaseController
 
     private function updateQuantity()
     {
-        $productId = $this->getInput('product_id');
+        $productId = $this->getInput('productId');
         $quantity = $this->getInput('quantity');
 
         $this->cartService->updateQuantity((int)$productId, (int)$quantity);
@@ -91,7 +91,7 @@ class CartController extends BaseController
 
     private function removeItem()
     {
-        $productId = $this->getInput('product_id');
+        $productId = $this->getInput('productId');
         $this->cartService->removeItem((int)$productId);
         $this->getCart('Xóa sản phẩm thành công');
     }

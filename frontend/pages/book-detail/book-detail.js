@@ -1,6 +1,7 @@
 import BookService from '../../services/book-service.js';
 import BookUI from './book-detail.ui.js';
 import CartService from '../../services/cart-service.js';
+import { showToast } from '../../utils/utils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const bookId = urlParams.get('id');
 
         if (!bookId) {
-            BookUI.showError('Không tìm thấy ID sách trong đường dẫn.');
+            showToast('Không tìm thấy ID sách trong đường dẫn.', 'error');
             return;
         }
 
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const bookData = await BookService.getDetail(bookId);
         BookUI.render(bookData);
     } catch (error) {
-        BookUI.showError('Không thể tải dữ liệu. Vui lòng thử lại sau.');
+        showToast('Không thể tải dữ liệu. Vui lòng thử lại sau.', 'error');
     } finally {
         BookUI.hideLoading();
     }

@@ -8,16 +8,6 @@ const CartUI = {
         cartCountElement: document.getElementById('cart-count')
     },
     /**
-     * Hiển thị thông báo lỗi.
-     * @param {string} message Thông báo lỗi.
-     */
-    showError: (message) => {
-        if (CartUI.els.cartItemsBody) {
-            CartUI.els.cartItemsBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">${escapeHTML(message)}</td></tr>`;
-        }
-    },
-
-    /**
      * Render toàn bộ giỏ hàng lên giao diện.
      * @param {object} cartData Dữ liệu giỏ hàng.
      */

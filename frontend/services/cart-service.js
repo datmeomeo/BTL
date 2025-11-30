@@ -75,10 +75,6 @@ const CartService = {
      * @returns {Promise<object>} Dữ liệu giỏ hàng đã cập nhật.
      */
     removeItem: async (productId) => {
-        if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-            throw new Error('Hủy thao tác xóa.');
-        }
-
         const response = await fetch(`${CartService.BASE_API}&action=remove`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

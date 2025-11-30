@@ -1,8 +1,8 @@
 // frontend/components/suggest-book/suggest-book.js
 
 import BookService from '../../services/book-service.js';
+import { showToast } from '../../utils/utils.js';
 import SuggestBookUI from './suggest-book.ui.js';
-// Assuming utils.js is loaded globally for escapeHTML and formatCurrency
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadAndRenderSuggestedBooks();
@@ -17,10 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadAndRenderSuggestedBooks() {
     try {
         const books = await BookService.getSuggestedBooks();
-        console.log("Sách gợi ý tải về:", books);
         SuggestBookUI.renderSuggestedBooks(books);
     } catch (error) {
         console.error("Lỗi khi tải sách gợi ý:", error);
-        SuggestBookUI.showError(error.message || 'Không thể tải dữ liệu gợi ý. Vui lòng kiểm tra kết nối API.');
+        showToast(error.message || 'Không thể tải dữ liệu gợi ý. Vui lòng kiểm tra kết nối API.');
     }
 }

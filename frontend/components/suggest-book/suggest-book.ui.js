@@ -7,16 +7,6 @@ const SuggestBookUI = {
     },
 
     /**
-     * Hiển thị thông báo lỗi khi tải sách gợi ý.
-     * @param {string} message Thông báo lỗi.
-     */
-    showError: function(message) { // Use function keyword
-        if (this.els.gridContainer) {
-            this.els.gridContainer.innerHTML = `<p style="color: red;">${escapeHTML(message)}</p>`;
-        }
-    },
-
-    /**
      * Render một thẻ sách (book card) HTML.
      * @param {object} book Dữ liệu sách.
      * @returns {string} Chuỗi HTML của thẻ sách.

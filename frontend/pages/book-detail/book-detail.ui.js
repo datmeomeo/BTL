@@ -147,10 +147,6 @@ const BookUI = {
         BookUI.els.container.style.opacity = '1';
         BookUI.els.container.style.pointerEvents = 'auto';
     },
-
-    showError(msg) {
-        BookUI.els.container.innerHTML = `<div style="text-align:center; padding:50px; color:red;"><h3>⚠️ Lỗi</h3><p>${msg}</p></div>`;
-    }
 };
 
 export default BookUI;
