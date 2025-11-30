@@ -41,7 +41,7 @@ class CartController extends BaseController
     private function addToCart()
     {
         // Support both JSON and FormData
-        $productId = $this->getInput('product_id');
+        $productId = $this->getInput('productId');
         $quantity = $this->getInput('quantity', 1);
         
         // In a real app, we might fetch price/name from DB here to be safe, 

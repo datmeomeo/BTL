@@ -68,7 +68,7 @@
                         <a class="btn-subtract-qty">
                             <img style="width: 12px; height: auto;vertical-align: middle;" src="https://cdn1.fahasa.com/skin//frontend/ma_vanese/fahasa/images/ico_minus2x.png">
                         </a>
-                        <input type="text" class="qty-carts" value="1">
+                        <input type="number" class="qty-carts" value="1" id="qty-carts">
                         <a class="btn-add-qty">
                             <img style="width: 12px; height: auto;vertical-align: middle;" src="https://cdn1.fahasa.com/skin/frontend/ma_vanese/fahasa/images/ico_plus2x.png">
                         </a>
@@ -77,7 +77,7 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons" id="action-buttons">
-                    <button class="btn-action btn-add-cart">Thêm vào giỏ hàng</button>
+                    <button class="btn-action btn-add-cart" id="btn-add-to-cart">Thêm vào giỏ hàng</button>
                     <button class="btn-action btn-buy-now">Mua ngay</button>
                 </div>
             </section>

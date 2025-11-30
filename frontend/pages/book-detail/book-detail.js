@@ -1,6 +1,6 @@
 import BookService from '../../services/book-service.js';
 import BookUI from './book-detail.ui.js';
-
+import CartService  from '../../services/cart-service.js';
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Lấy ID
     const urlParams = new URLSearchParams(window.location.search);
@@ -24,7 +24,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     } finally {
         BookUI.hideLoading();
     }
-
+    const btnAddCart = document.getElementById('btn-add-to-cart');
+    btnAddCart.addEventListener('click',() => { 
+        const quantity = document.getElementById('qty-carts');
+        CartService.addToCart(bookId, quantity.value);
+        console.log(quantity.value);
+    });
     const toggleDescription = document.getElementById('toggleDescription');
     toggleDescription.addEventListener('click', () => BookUI.toggleDescription());
     const thumbnails = document.getElementsByClassName('thumbnail');

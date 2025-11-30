@@ -1,6 +1,4 @@
 // frontend/services/cart-service.js
-
-
 const CartService = {
     BASE_API: 'http://localhost/BTL/backend/api.php?route=cart',
     /**
@@ -15,6 +13,22 @@ const CartService = {
         const data = await response.json();
         if (data.status !== 'success') {
             throw new Error(`API trả về lỗi: ${data.message || 'Không thể tải giỏ hàng'}`);
+        }
+        return data.data;
+    },
+    addToCart: async (productId,quantity) => {
+        const response = await fetch(`${CartService.BASE_API}&action=add`,{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: productId, quantity: quantity })
+        });
+        if (!response.ok) {
+            throw new Error(`Lỗi mạng! Trạng thái: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        if (data.status !== 'success') {
+            throw new Error(`API trả về lỗi: ${data.message || 'Không thể thêm vào giỏ hàng'}`);
         }
         return data.data;
     },
@@ -67,6 +81,7 @@ const CartService = {
         }
         return data.data;
     }
+    
 };
 
 export default CartService;
