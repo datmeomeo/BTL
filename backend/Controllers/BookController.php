@@ -38,6 +38,9 @@ class BookController extends BaseController
                 case 'suggest_book':
                     $this->getSuggestBooks();
                     break;
+                case 'search':
+                    $this->getSearch();
+                    break;
                 default:
                     throw new Exception("Action not found");
             }
@@ -49,9 +52,10 @@ class BookController extends BaseController
     private function increaseViewCount()
     {
         $bookId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        $this->bookService->IncrementViews($bookId);
+        $this->bookService->incrementViews($bookId);
         $this->jsonResponse(['status' => 'success', 'message' => 'View count increased'], 200);
     }
+
     private function getPageDetail()
     {
         $bookId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -77,4 +81,5 @@ class BookController extends BaseController
             'data' => $data
         ]);
     }
+
 }

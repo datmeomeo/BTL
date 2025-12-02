@@ -372,7 +372,7 @@ body {
 .policy-text {
     flex: 1;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.5; 
 }
 
 .policy-text strong {
