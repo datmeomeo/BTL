@@ -23,7 +23,15 @@
             'js' => [
                 './pages/cart/cart.js'
             ],
+        ],
+        'searchProduct'=> [
+            'css' => ['./assets/css/search-product.css'],
+            'js'=> [
+                './pages/search-product/search-product.js',
+                './components/suggest-book/suggest-book.js', 
+            ],
         ]
+        
     ];
     $currentPage = ($page === '') ? 'home' : $page;
     $currentAssets = $assets[$currentPage] ?? [];
@@ -62,7 +70,10 @@
             include './pages/login/login.php'; 
         } elseif ($page === 'cart') {
             include './pages/cart/cart.php';
-        } else {
+        } elseif ($page == 'searchproduct'){
+            include './pages/search-product/search-product.php';
+        } 
+        else {
             echo "<h1>Trang không tìm thấy</h1>";
         }
     ?>
