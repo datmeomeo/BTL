@@ -24,7 +24,7 @@
                 './pages/cart/cart.js'
             ],
         ],
-        'searchProduct'=> [
+        'search_product'=> [
             'css' => ['./assets/css/search-product.css'],
             'js'=> [
                 './pages/search-product/search-product.js',
@@ -45,7 +45,6 @@
     <title>FAHASA</title>
     <link rel="stylesheet" href="./assets/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/main.css">
-    
     <?php 
         if (isset($currentAssets['css'])): 
             $cssFiles = is_array($currentAssets['css']) ? $currentAssets['css'] : [$currentAssets['css']];
@@ -70,7 +69,7 @@
             include './pages/login/login.php'; 
         } elseif ($page === 'cart') {
             include './pages/cart/cart.php';
-        } elseif ($page == 'searchproduct'){
+        } elseif ($page == 'search_product'){
             include './pages/search-product/search-product.php';
         } 
         else {

@@ -38,9 +38,6 @@ class BookController extends BaseController
                 case 'suggest_book':
                     $this->getSuggestBooks();
                     break;
-                case 'search':
-                    $this->getSearch();
-                    break;
                 default:
                     throw new Exception("Action not found");
             }
