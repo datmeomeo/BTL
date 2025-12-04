@@ -1,40 +1,59 @@
 <div class="container py-4">
     <div class="row">
-        <div class="col-lg-3 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-bottom-0 pt-3">
-                    <h5 class="fw-bold m-0"><i class="bi bi-funnel"></i> Bộ lọc tìm kiếm</h5>
+        <div class="col-lg-3 mb-4 filter-sidebar">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold m-0"><i class="bi bi-funnel-fill text-primary"></i> Bộ lọc tìm kiếm</h5>
                 </div>
                 <div class="card-body">
+                    
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">Từ khóa</label>
-                        <input type="text" id="filter-keyword" class="form-control" placeholder="Nhập tên sách...">
+                        <label class="form-label fw-bold">Danh mục sản phẩm</label>
+                        <div id="category-tree" class="category-tree filter-scroll-box">
+                            <p class="text-muted small">Đang tải...</p>
+                        </div>
                     </div>
+                    <hr class="text-muted opacity-25">
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">Danh mục</label>
-                        <div id="filter-category" class="filter-scroll-box custom-scrollbar">
-                            <p class="text-muted small">Đang tải danh mục...</p>
+                        <label class="form-label fw-bold">Giá bán</label>
+                        <div class="price-list">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price_filter" value="all" id="price-all" checked>
+                                <label class="form-check-label" for="price-all">Tất cả khoảng giá</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price_filter" value="0-150000" id="p1">
+                                <label class="form-check-label" for="p1">0đ - 150.000đ</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price_filter" value="150000-300000" id="p2">
+                                <label class="form-check-label" for="p2">150.000đ - 300.000đ</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price_filter" value="300000-500000" id="p3">
+                                <label class="form-check-label" for="p3">300.000đ - 500.000đ</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price_filter" value="500000-700000" id="p4">
+                                <label class="form-check-label" for="p4">500.000đ - 700.000đ</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price_filter" value="700000-10000000" id="p5">
+                                <label class="form-check-label" for="p5">Trên 700.000đ</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tác giả</label>
+                        <div id="filter-author" class="filter-scroll-box">
+                            <p class="text-muted small">Đang tải...</p>
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">Tác giả</label>
-                        <div id="filter-author" class="filter-scroll-box custom-scrollbar">
-                            <p class="text-muted small">Đang tải tác giả...</p>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">Khoảng giá</label>
-                        <div class="d-flex align-items-center gap-2">
-                            <input type="number" id="min-price" class="form-control form-control-sm" placeholder="Từ">
-                            <span>-</span>
-                            <input type="number" id="max-price" class="form-control form-control-sm" placeholder="Đến">
-                        </div>
-                    </div>
-
-                    <button id="btn-apply-filter" class="btn btn-primary w-100">
+                    <button id="btn-apply-filter" class="btn btn-primary w-100 fw-bold shadow-sm">
                         Áp dụng bộ lọc
                     </button>
                 </div>
@@ -42,29 +61,21 @@
         </div>
 
         <div class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
-                <h1 class="h5 fw-bold mb-0">Kết quả tìm kiếm</h1>
-                <div class="d-flex align-items-center">
-                    <span class="me-2 text-muted">Sắp xếp:</span>
-                    <select id="sort-select" class="form-select form-select-sm" style="width: 180px;">
-                        <option value="newest">Mới nhất</option>
-                        <option value="price_asc">Giá tăng dần</option>
-                        <option value="price_desc">Giá giảm dần</option>
-                        <option value="name_asc">Tên A-Z</option>
-                        <option value="view_desc">Xem nhiều nhất</option>
-                    </select>
-                </div>
+            <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border">
+                <h5 class="fw-bold mb-0 text-dark">Kết quả (<span id="total-books-count">0</span>)</h5>
+                <select id="sort-select" class="form-select form-select-sm border-secondary" style="width: 180px;">
+                    <option value="newest">Mới nhất</option>
+                    <option value="price_asc">Giá tăng dần</option>
+                    <option value="price_desc">Giá giảm dần</option>
+                </select>
             </div>
 
-            <div id="product-list-container" class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                <div class="col-12 text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
+            <div id="product-list-container" class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3">
                 </div>
-            </div>
 
-            <div id="pagination" class="mt-4 d-flex justify-content-center"></div>
+            <nav class="mt-5">
+                <ul id="pagination-container" class="pagination justify-content-center"></ul>
+            </nav>
         </div>
     </div>
 </div>

@@ -8,118 +8,112 @@ const SearchProductPage = {
         filters: {
             keyword: '',
             category_id: '',
-            price_min: '',
+            price_min: '', 
             price_max: '',
+            author: '', // Thêm filter author
             sort: 'newest'
         },
-        page: 1,
-        limit: 12
+        pagination: { page: 1, limit: 20, total_pages: 1 }
     },
 
-    async init() {
-        // 1. Lấy tham số từ URL (ví dụ: người dùng search từ header)
+    init() {
         const urlParams = new URLSearchParams(window.location.search);
-        // Lưu ý: url của bạn có thể là index.php?page=search_product&keyword=abc
         this.state.filters.keyword = urlParams.get('keyword') || '';
-        
-        // Cập nhật ô input search nếu có
-        const searchInput = document.querySelector('input[name="search_query"]'); // ID input trên header hoặc trong trang
-        if (searchInput && this.state.filters.keyword) {
-            searchInput.value = this.state.filters.keyword;
-        }
-
-        // 2. Load dữ liệu ban đầu
-        await Promise.all([
-            this.loadCategories(),
-            this.loadAuthors(),
-            this.loadBooks()
-        ]);
-
-        // 3. Gắn sự kiện (Event Listeners)
+        this.loadCategories();
+        this.loadAuthors();
+        this.loadBooks();
         this.bindEvents();
     },
 
     async loadBooks() {
-        // Hiển thị loading (nếu có UI loading)
-        // document.getElementById('product-list-container').innerHTML = 'Loading...';
-
-        const books = await SearchProductService.getBooks({
-            page: this.state.page,
-            limit: this.state.limit,
+        const data = await SearchProductService.getBooks({
+            page: this.state.pagination.page,
+            limit: this.state.pagination.limit,
             sort: this.state.filters.sort,
-            filters: this.state.filters
+            ...this.state.filters
         });
-        
-        SearchProductUI.renderListBooks(books);
+
+        if (data) {
+            this.state.pagination.total_pages = data.pagination.total_pages;
+            this.state.pagination.total = data.pagination.total;
+            SearchProductUI.renderBooks(data.books);
+            SearchProductUI.renderPagination(this.state.pagination);
+        }
     },
 
     async loadCategories() {
         const categories = await SearchProductService.getCategories();
-        SearchProductUI.renderCategories(categories);
+        if(categories) SearchProductUI.renderCategoryTree(categories);
     },
-
     async loadAuthors() {
         const authors = await SearchProductService.getAuthors();
-        SearchProductUI.renderAuthors(authors);
+        if(authors) SearchProductUI.renderAuthors(authors);
     },
 
     bindEvents() {
-        // Sự kiện Sort (Sắp xếp)
-        const sortSelect = document.getElementById('sort-select'); // Cần thêm ID này vào HTML select box
-        if (sortSelect) {
-            sortSelect.addEventListener('change', (e) => {
-                this.state.filters.sort = e.target.value;
-                this.state.page = 1; // Reset về trang 1
-                this.loadBooks();
-            });
-        }
+        // 1. NÚT ÁP DỤNG BỘ LỌC
+        document.getElementById('btn-apply-filter')?.addEventListener('click', () => {
+            // Lấy giá từ Radio Price
+            const priceRadio = document.querySelector('input[name="price_filter"]:checked');
+            if (priceRadio && priceRadio.value !== 'all') {
+                const [min, max] = priceRadio.value.split('-');
+                this.state.filters.price_min = min;
+                this.state.filters.price_max = max;
+            } else {
+                this.state.filters.price_min = '';
+                this.state.filters.price_max = '';
+            }
 
-        // Sự kiện Filter (Nút "Áp dụng" hoặc thay đổi input)
-        // Giả sử bạn có nút id="btn-apply-filter"
-        const btnFilter = document.getElementById('btn-apply-filter'); 
-        if (btnFilter) {
-            btnFilter.addEventListener('click', () => {
-                this.handleFilterChange();
-            });
-        }
-        
-        // Sự kiện click vào checkbox Category (vì render động nên dùng delegate hoặc gắn sau khi render)
-        // Cách đơn giản nhất: lắng nghe change trên container cha
-        document.getElementById('filter-category')?.addEventListener('change', (e) => {
-            if(e.target.name === 'category') {
-                this.state.filters.category_id = e.target.value;
-                this.state.page = 1;
+            // Lấy tác giả từ Radio Author
+            const authorRadio = document.querySelector('input[name="author_filter"]:checked');
+            if (authorRadio && authorRadio.value !== 'all') {
+                this.state.filters.author = authorRadio.value;
+            } else {
+                this.state.filters.author = '';
+            }
+
+            this.state.pagination.page = 1;
+            this.loadBooks();
+        });
+
+        // 2. Click Danh mục
+        document.getElementById('category-tree')?.addEventListener('click', (e) => {
+            if(e.target.classList.contains('cat-link')) {
+                document.querySelectorAll('.cat-link').forEach(el => el.classList.remove('active'));
+                e.target.classList.add('active');
+                this.state.filters.category_id = e.target.dataset.id;
+                this.state.pagination.page = 1;
                 this.loadBooks();
             }
+            if(e.target.classList.contains('toggle-icon')) {
+                const ul = e.target.parentElement.querySelector('.children-container');
+                if(ul) {
+                    ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+                    e.target.innerText = ul.style.display === 'block' ? '-' : '+';
+                }
+            }
         });
-    },
 
-    handleFilterChange() {
-        // Thu thập dữ liệu từ các input filter
-        // Ví dụ giá
-        const minPrice = document.getElementById('min-price')?.value;
-        const maxPrice = document.getElementById('max-price')?.value;
-        
-        this.state.filters.price_min = minPrice;
-        this.state.filters.price_max = maxPrice;
-        
-        // Keyword từ ô search nội bộ trang (nếu có)
-        const keywordInput = document.getElementById('filter-keyword');
-        if(keywordInput) {
-            this.state.filters.keyword = keywordInput.value;
-        }
+        // 3. Phân trang
+        document.getElementById('pagination-container')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(e.target.classList.contains('page-link')) {
+                const newPage = parseInt(e.target.dataset.page);
+                if (newPage && newPage !== this.state.pagination.page) {
+                    this.state.pagination.page = newPage;
+                    this.loadBooks();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        });
 
-        this.state.page = 1;
-        this.loadBooks();
+        // 4. Sort
+        document.getElementById('sort-select')?.addEventListener('change', (e) => {
+            this.state.filters.sort = e.target.value;
+            this.state.pagination.page = 1;
+            this.loadBooks();
+        });
     }
 };
 
-// Khởi chạy khi trang load
-document.addEventListener('DOMContentLoaded', () => {
-    // Chỉ chạy nếu đang ở trang search_product (kiểm tra element container)
-    if (document.getElementById('product-list-container')) {
-        SearchProductPage.init();
-    }
-});
-
-export default SearchProductPage;
+document.addEventListener('DOMContentLoaded', () => SearchProductPage.init());

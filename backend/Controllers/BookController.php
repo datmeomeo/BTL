@@ -95,22 +95,27 @@ class BookController extends BaseController
         ]);
     }
 
+// Trong hàm getListBooks()
     private function getListBooks()
     {
-        // Lấy toàn bộ tham số từ URL (page, limit, sort, filters...)
         $params = $_GET;
-        
-        // Gọi Query để lấy dữ liệu (trả về mảng các đối tượng DTO)
-        $dtos = $this->searchProductQuery->search($params);
+        $result = $this->searchProductQuery->search($params);
 
-        // Chuyển đổi mảng DTO thành mảng thường để trả về JSON
-        // Sử dụng hàm toArray() đã định nghĩa trong SearchProductPageDto
-        $data = array_map(fn($dto) => $dto->toArray(), $dtos);
+        // Map mảng DTO sang mảng thường
+        $booksArray = array_map(fn($dto) => $dto->toArray(), $result['books']);
 
         $this->jsonResponse([
             'status' => 'success',
-            'message' => 'Lấy danh sách sách thành công',
-            'data' => $data
+            'message' => 'Lấy danh sách thành công',
+            'data' => [
+                'books' => $booksArray,
+                'pagination' => [
+                    'total' => $result['total'],
+                    'page' => $result['page'],
+                    'limit' => $result['limit'],
+                    'total_pages' => ceil($result['total'] / $result['limit'])
+                ]
+            ]
         ]);
     }
 
