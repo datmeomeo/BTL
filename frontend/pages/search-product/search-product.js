@@ -1,134 +1,125 @@
-import SearchProductService from '../../services/book-list-service.js';
-import searchProductUI from './search-product.ui.js';
+// frontend/pages/search-product/search-product.js
 
+import SearchProductService from '../../services/searchProduct-service.js';
+import SearchProductUI from './search-product.ui.js';
 
-const state = {
-    currentPage: 1,
-    limit: 24,
-    sort: 'newest',
-    filters: {
-        categories: [],
-        publisher: [],
-        types: [],
-        priceRanges: []
+const SearchProductPage = {
+    state: {
+        filters: {
+            keyword: '',
+            category_id: '',
+            price_min: '',
+            price_max: '',
+            sort: 'newest'
+        },
+        page: 1,
+        limit: 12
+    },
+
+    async init() {
+        // 1. Lấy tham số từ URL (ví dụ: người dùng search từ header)
+        const urlParams = new URLSearchParams(window.location.search);
+        // Lưu ý: url của bạn có thể là index.php?page=search_product&keyword=abc
+        this.state.filters.keyword = urlParams.get('keyword') || '';
+        
+        // Cập nhật ô input search nếu có
+        const searchInput = document.querySelector('input[name="search_query"]'); // ID input trên header hoặc trong trang
+        if (searchInput && this.state.filters.keyword) {
+            searchInput.value = this.state.filters.keyword;
+        }
+
+        // 2. Load dữ liệu ban đầu
+        await Promise.all([
+            this.loadCategories(),
+            this.loadAuthors(),
+            this.loadBooks()
+        ]);
+
+        // 3. Gắn sự kiện (Event Listeners)
+        this.bindEvents();
+    },
+
+    async loadBooks() {
+        // Hiển thị loading (nếu có UI loading)
+        // document.getElementById('product-list-container').innerHTML = 'Loading...';
+
+        const books = await SearchProductService.getBooks({
+            page: this.state.page,
+            limit: this.state.limit,
+            sort: this.state.filters.sort,
+            filters: this.state.filters
+        });
+        
+        SearchProductUI.renderListBooks(books);
+    },
+
+    async loadCategories() {
+        const categories = await SearchProductService.getCategories();
+        SearchProductUI.renderCategories(categories);
+    },
+
+    async loadAuthors() {
+        const authors = await SearchProductService.getAuthors();
+        SearchProductUI.renderAuthors(authors);
+    },
+
+    bindEvents() {
+        // Sự kiện Sort (Sắp xếp)
+        const sortSelect = document.getElementById('sort-select'); // Cần thêm ID này vào HTML select box
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                this.state.filters.sort = e.target.value;
+                this.state.page = 1; // Reset về trang 1
+                this.loadBooks();
+            });
+        }
+
+        // Sự kiện Filter (Nút "Áp dụng" hoặc thay đổi input)
+        // Giả sử bạn có nút id="btn-apply-filter"
+        const btnFilter = document.getElementById('btn-apply-filter'); 
+        if (btnFilter) {
+            btnFilter.addEventListener('click', () => {
+                this.handleFilterChange();
+            });
+        }
+        
+        // Sự kiện click vào checkbox Category (vì render động nên dùng delegate hoặc gắn sau khi render)
+        // Cách đơn giản nhất: lắng nghe change trên container cha
+        document.getElementById('filter-category')?.addEventListener('change', (e) => {
+            if(e.target.name === 'category') {
+                this.state.filters.category_id = e.target.value;
+                this.state.page = 1;
+                this.loadBooks();
+            }
+        });
+    },
+
+    handleFilterChange() {
+        // Thu thập dữ liệu từ các input filter
+        // Ví dụ giá
+        const minPrice = document.getElementById('min-price')?.value;
+        const maxPrice = document.getElementById('max-price')?.value;
+        
+        this.state.filters.price_min = minPrice;
+        this.state.filters.price_max = maxPrice;
+        
+        // Keyword từ ô search nội bộ trang (nếu có)
+        const keywordInput = document.getElementById('filter-keyword');
+        if(keywordInput) {
+            this.state.filters.keyword = keywordInput.value;
+        }
+
+        this.state.page = 1;
+        this.loadBooks();
     }
 };
 
-// Initialize page
-document.addEventListener('DOMContentLoaded', async () => {
-    await initFilters();
-    await loadBooks();
-    setupEventListeners();
+// Khởi chạy khi trang load
+document.addEventListener('DOMContentLoaded', () => {
+    // Chỉ chạy nếu đang ở trang search_product (kiểm tra element container)
+    if (document.getElementById('product-list-container')) {
+        SearchProductPage.init();
+    }
 });
 
-// Load all filter options
-async function initFilters() {
-    try {
-        // Load categories
-        const categories = await BookListService.getCategories();
-        BookListUI.renderCategories(categories);
-
-        // Load publisher
-        const publisher = await BookListService.getPublisher();
-        BookListUI.renderPublisher(publisher);
-
-        // Load book types
-        const types = await BookListService.getBookTypes();
-        BookListUI.renderBookTypes(types);
-
-    } catch (error) {
-        console.error('Error loading filters:', error);
-    }
-}
-
-// Load books based on current state
-async function loadBooks() {
-    BookListUI.showLoading();
-    
-    try {
-        const params = {
-            page: state.currentPage,
-            limit: state.limit,
-            sort: state.sort,
-            filters: {
-                category: state.filters.categories.join(','),
-                author: state.filters.authors.join(','),
-                type: state.filters.types.join(','),
-                price: state.filters.priceRanges.join(',')
-            }
-        };
-
-        const data = await BookListService.getBooks(params);
-        
-        BookListUI.renderProducts(data.books);
-        BookListUI.renderPagination(data.currentPage, data.totalPages);
-        
-    } catch (error) {
-        console.error('Error loading books:', error);
-        BookListUI.showError('Không thể tải dữ liệu. Vui lòng thử lại sau.');
-    }
-}
-
-// Setup all event listeners
-function setupEventListeners() {
-    // Sort change
-    BookListUI.els.sortSelect.addEventListener('change', (e) => {
-        state.sort = e.target.value;
-        state.currentPage = 1;
-        loadBooks();
-    });
-
-    // Limit change
-    BookListUI.els.limitSelect.addEventListener('change', (e) => {
-        state.limit = parseInt(e.target.value);
-        state.currentPage = 1;
-        loadBooks();
-    });
-
-    // Category filter
-    document.addEventListener('change', (e) => {
-        if (e.target.name === 'category') {
-            updateFilter('categories', e.target.value, e.target.checked);
-        } else if (e.target.name === 'publisher') {
-            updateFilter('publisher', e.target.value, e.target.checked);
-        } else if (e.target.name === 'type') {
-            updateFilter('types', e.target.value, e.target.checked);
-        } else if (e.target.name === 'price') {
-            updateFilter('priceRanges', e.target.value, e.target.checked);
-        }
-    });
-
-    // Pagination
-    window.addEventListener('pageChange', (e) => {
-        state.currentPage = e.detail.page;
-        loadBooks();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// Update filter state
-function updateFilter(filterType, value, isChecked) {
-    if (value === 'all') {
-        // Uncheck all other options when "Tất cả" is selected
-        if (isChecked) {
-            state.filters[filterType] = [];
-            document.querySelectorAll(`input[name="${filterType === 'categories' ? 'category' : filterType}"]`).forEach(input => {
-                if (input.value !== 'all') input.checked = false;
-            });
-        }
-    } else {
-        // Uncheck "Tất cả" when any specific option is selected
-        document.querySelector(`input[name="${filterType === 'categories' ? 'category' : filterType}"][value="all"]`)?.checked = false;
-        
-        if (isChecked) {
-            if (!state.filters[filterType].includes(value)) {
-                state.filters[filterType].push(value);
-            }
-        } else {
-            state.filters[filterType] = state.filters[filterType].filter(v => v !== value);
-        }
-    }
-    
-    state.currentPage = 1;
-    loadBooks();
-}
+export default SearchProductPage;

@@ -1,219 +1,138 @@
-import { escapeHTML, formatCurrency } from '../../utils/utils.js';
+const SearchProductUI = {
+    // Hàm xử lý đường dẫn ảnh để tránh lỗi hiển thị
+    fixImagePath(path) {
+        if (!path) return './assets/img/default-book.jpg';
+        
+        // Nếu đường dẫn bắt đầu bằng ../ (thường do lưu từ trang admin)
+        // Chúng ta đổi thành ./assets/ để phù hợp với frontend
+        if (path.startsWith('../')) {
+            return path.replace('../', './assets/');
+        }
+        
+        // Nếu đường dẫn chưa có ./assets (ví dụ chỉ lưu tên file)
+        if (!path.startsWith('./') && !path.startsWith('http')) {
+            return `./assets/${path}`;
+        }
 
-const searchProductUI ={
-    els: {
-        categoryFilter: document.getElementById('category-filter'),//1
-        authorFilter: document.getElementById('publisher-filter'), //2
-        typeFilter: document.getElementById('type-filter'),
-        priceFilter: document.getElementById('price-filter'),
-        productGrid: document.getElementById('product-grid'),
-        pagination: document.getElementById('pagination'),
-        sortSelect: document.getElementById('sort-select'),
-        limitSelect: document.getElementById('limit-select')
+        return path;
     },
 
-    // Render Danh mục sản phẩm
-
-    renderCategories (category) {
-        if (!categories || categories.length === 0) {
-            this.els.categoryFilter.innerHTML = '<p style="color:#999">Không có danh mục</p>';
+    renderListBooks(books) {
+        console.log("UI received books:", books); // Debug: Kiểm tra xem dữ liệu vào UI chưa
+        
+        const container = document.getElementById('product-list-container');
+        if (!container) {
+            console.error("Lỗi: Không tìm thấy thẻ HTML có id='product-list-container'");
             return;
         }
 
-        let html = `
-            <div class="filter-item">
-                <label>
-                    <input type="checkbox" name="category" value="all" checked>
-                    Tất Cả Nhóm Sản Phẩm
-                </label>
-            </div>
-        `;
-
-        categories.forEach(cat => {
-            html += `
-                <div class="filter-item">
-                    <label>
-                        <input type="checkbox" name="category" value="${cat.id}">
-                        ${escapeHTML(cat.name)}
-                    </label>
-                </div>
-            `;
-
-            // Nếu có subcategories
-            if (cat.subcategories && cat.subcategories.length > 0) {
-                html += '<div class="subcategory">';
-                cat.subcategories.forEach(sub => {
-                    html += `
-                        <div class="filter-item">
-                            <label>
-                                <input type="checkbox" name="category" value="${sub.id}">
-                                ${escapeHTML(sub.name)}
-                            </label>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-            }
-        });
-
-        html += '<span class="view-more">Xem Thêm</span>';
-        this.els.categoryFilter.innerHTML = html;
-    },
-
-    // Render nhà xuất bản
-    renderAuthors(publisher) {
-        if (!publisher || publisher.length === 0) {
-            this.els.authorFilter.innerHTML = '<p style="color:#999">Không có nhà xuất bản</p>';
-            return;
-        }
-
-        let html = '';
-        const displayCount = 5;
-
-        authors.slice(0, displayCount).forEach(author => {
-            html += `
-                <div class="filter-item">
-                    <label>
-                        <input type="checkbox" name="author" value="${publisher.id}">
-                        ${escapeHTML(publisher.name)}
-                    </label>
-                </div>
-            `;
-        });
-
-        if (publisher.length > displayCount) {
-            html += '<span class="view-more">Xem Thêm</span>';
-        }
-
-        this.els.authorFilter.innerHTML = html;
-    },
-
-
-    // Render Loại sách
-        renderBookTypes(types) {
-        if (!types || types.length === 0) {
-            this.els.typeFilter.innerHTML = '<p style="color:#999">Không có loại sách</p>';
-            return;
-        }
-
-        let html = '';
-        types.forEach(type => {
-            html += `
-                <div class="filter-item">
-                    <label>
-                        <input type="checkbox" name="type" value="${type.id}">
-                        ${escapeHTML(type.name)}
-                    </label>
-                </div>
-            `;
-        });
-
-        this.els.typeFilter.innerHTML = html;
-    },
-
-    // Render giá sản phẩm
-    renderProducts(books) {
         if (!books || books.length === 0) {
-            this.els.productGrid.innerHTML = '<div class="loading">Không có sản phẩm nào</div>';
+            container.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-inbox fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">Không tìm thấy sản phẩm nào phù hợp.</p>
+                </div>`;
             return;
         }
 
-        this.els.productGrid.innerHTML = books.map(book => {
-            const hasDiscount = book.originalPrice > book.sellingPrice;
-            const discountHtml = hasDiscount ? 
-                `<span class="discount-badge">-${book.discountPercent}%</span>` : '';
-            const oldPriceHtml = hasDiscount ? 
-                `<div class="original-price">${formatCurrency(book.originalPrice)}</div>` : '';
+        const html = books.map(book => {
+            // Format giá tiền
+            const sellingPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book.sellingPrice);
+            const originalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book.originalPrice);
+            
+            // Xử lý ảnh (Quan trọng!)
+            const imgSrc = this.fixImagePath(book.mainImage);
+
+            // Tính toán hiển thị giảm giá
+            const discountBadge = book.discountPercent > 0 
+                ? `<span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 m-2 rounded small">-${book.discountPercent}%</span>` 
+                : '';
+            
+            const priceBlock = book.discountPercent > 0
+                ? `<div class="d-flex align-items-center gap-2">
+                     <span class="text-danger fw-bold">${sellingPrice}</span>
+                     <span class="text-muted text-decoration-line-through small">${originalPrice}</span>
+                   </div>`
+                : `<span class="text-danger fw-bold">${sellingPrice}</span>`;
 
             return `
-                <div class="product-card" onclick="BookListUI.selectProduct(this, ${book.id})">
-                    <span class="product-badge">HOT</span>
-                    <img src="${escapeHTML(book.mainImage || '../img/no-image.jpg')}" 
-                         alt="${escapeHTML(book.bookName)}" 
-                         class="product-image">
-                    <div class="product-name">${escapeHTML(book.bookName)}</div>
-                    <div class="product-price">
-                        <span class="current-price">${formatCurrency(book.sellingPrice)}</span>
-                        ${discountHtml}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <div class="position-relative overflow-hidden group-image">
+                            ${discountBadge}
+                            <a href="index.php?page=book&id=${book.bookId}">
+                                <img src="${imgSrc}" 
+                                     class="card-img-top object-fit-contain p-3 transition-transform" 
+                                     alt="${book.bookName}" 
+                                     style="height: 200px; width: 100%;"
+                                     onerror="this.src='./assets/img/default-book.jpg'"> 
+                            </a>
+                        </div>
+                        <div class="card-body d-flex flex-column p-3">
+                            <div class="mb-2">
+                                <span class="badge bg-light text-secondary fw-normal border">${book.categoryName}</span>
+                            </div>
+                            <a href="index.php?page=book&id=${book.bookId}" class="text-decoration-none text-dark mb-2">
+                                <h6 class="card-title text-truncate-2 lh-base" title="${book.bookName}" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 40px;">
+                                    ${book.bookName}
+                                </h6>
+                            </a>
+                            <div class="mt-auto">
+                                ${priceBlock}
+                                <div class="d-flex align-items-center mt-2 text-muted small">
+                                    <i class="bi bi-pen me-1"></i> ${book.authorName}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    ${oldPriceHtml}
-                    <div class="product-rating">★★★★★</div>
                 </div>
             `;
         }).join('');
+
+        container.innerHTML = html;
     },
 
+    // Render danh mục (Sidebar)
+    renderCategories(categories) {
+        const container = document.getElementById('filter-category');
+        if (!container) return;
 
-        // === RENDER PAGINATION ===
-    renderPagination(currentPage, totalPages) {
-        if (totalPages <= 1) {
-            this.els.pagination.innerHTML = '';
+        if(!categories || categories.length === 0) {
+            container.innerHTML = '<div class="small text-muted">Chưa có danh mục</div>';
             return;
         }
 
-        let html = '';
+        const html = categories.map(cat => `
+            <div class="form-check my-1">
+                <input class="form-check-input" type="radio" name="category_filter" value="${cat.ma_danh_muc}" id="cat-${cat.ma_danh_muc}">
+                <label class="form-check-label small" for="cat-${cat.ma_danh_muc}" role="button">
+                    ${cat.ten_danh_muc}
+                </label>
+            </div>
+        `).join('');
+        container.innerHTML = html;
+    },
 
-        // Previous button
-        html += `<button ${currentPage === 1 ? 'disabled' : ''} 
-                         onclick="BookListUI.goToPage(${currentPage - 1})">‹</button>`;
+    // Render tác giả (Sidebar)
+    renderAuthors(authors) {
+        const container = document.getElementById('filter-author');
+        if (!container) return;
 
-        // Page numbers
-        const range = 2; // Số trang hiển thị trước và sau trang hiện tại
-        
-        for (let i = 1; i <= totalPages; i++) {
-            if (i === 1 || i === totalPages || (i >= currentPage - range && i <= currentPage + range)) {
-                html += `<button class="${i === currentPage ? 'active' : ''}" 
-                                 onclick="BookListUI.goToPage(${i})">${i}</button>`;
-            } else if (i === currentPage - range - 1 || i === currentPage + range + 1) {
-                html += '<span>...</span>';
-            }
+        if(!authors || authors.length === 0) {
+            container.innerHTML = '<div class="small text-muted">Chưa có tác giả</div>';
+            return;
         }
 
-        // Next button
-        html += `<button ${currentPage === totalPages ? 'disabled' : ''} 
-                         onclick="BookListUI.goToPage(${currentPage + 1})">›</button>`;
-
-        this.els.pagination.innerHTML = html;
-    },
-
-    // === INTERACTIONS ===
-    selectProduct(element, bookId) {
-        // Remove selected class from all products
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.classList.remove('selected');
-        });
-        // Add selected class to clicked product
-        element.classList.add('selected');
-        
-        // Navigate to detail page
-        setTimeout(() => {
-            window.location.href = `book-detail.php?id=${bookId}`;
-        }, 200);
-    },
-
-    toggleFilter(element) {
-        element.classList.toggle('collapsed');
-        const content = element.nextElementSibling;
-        content.classList.toggle('hidden');
-    },
-
-    goToPage(page) {
-        // This will be handled by the main controller
-        window.dispatchEvent(new CustomEvent('pageChange', { detail: { page } }));
-    },
-
-    // === STATE MANAGEMENT ===
-    showLoading() {
-        this.els.productGrid.innerHTML = '<div class="loading">Đang tải...</div>';
-    },
-
-    hideLoading() {
-        // Loading is hidden when products are rendered
-    },
-
-    showError(msg) {
-        this.els.productGrid.innerHTML = `<div class="error">⚠️ ${escapeHTML(msg)}</div>`;
+        const html = authors.slice(0, 10).map(auth => `
+            <div class="form-check my-1">
+                <input class="form-check-input" type="checkbox" name="author_filter" value="${auth.ten_tac_gia}" id="auth-${auth.ma_tac_gia}">
+                <label class="form-check-label small" for="auth-${auth.ma_tac_gia}" role="button">
+                    ${auth.ten_tac_gia}
+                </label>
+            </div>
+        `).join('');
+        container.innerHTML = html;
     }
-
 };
-export default searchProductUI;
+
+export default SearchProductUI;
