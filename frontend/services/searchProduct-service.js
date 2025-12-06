@@ -1,5 +1,4 @@
 const API_CONFIG = {
-    // Đổi tên thư mục nếu cần thiết (ví dụ BTL-datt)
     BASE_URL: 'http://localhost/BTL/backend/api.php?route=book' 
 };
 

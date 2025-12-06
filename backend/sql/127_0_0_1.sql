@@ -65,7 +65,7 @@ CREATE TABLE `danh_muc` (
   `ten_danh_muc` varchar(100) NOT NULL,
   `slug` varchar(100) DEFAULT NULL,
   `mo_ta` text DEFAULT NULL,
-  `danh_muc_cha` int(11) DEFAULT NULL,
+  `danh_muc_cha` int(11) DEFAULT 0,
   `cap_do` int(11) DEFAULT 1,
   `thu_tu` int(11) DEFAULT 0,
   `hien_thi_menu` tinyint(1) DEFAULT 1,
@@ -223,6 +223,7 @@ CREATE TABLE `sach` (
   `ma_sach` int(11) NOT NULL,
   `ten_sach` varchar(255) NOT NULL,
   `ma_nxb` int(11) DEFAULT NULL,
+  `ma_tac_gia` int(11) DEFAULT NULL,
   `mo_ta` text DEFAULT NULL,
   `gia_ban` decimal(10,2) NOT NULL,
   `gia_goc` decimal(10,2) DEFAULT NULL,
@@ -259,7 +260,9 @@ INSERT INTO `sach` (`ma_sach`, `ten_sach`, `ma_nxb`, `mo_ta`, `gia_ban`, `gia_go
 
 CREATE TABLE `sach_danh_muc` (
   `ma_sach` int(11) NOT NULL,
-  `ma_danh_muc` int(11) NOT NULL
+  `ma_danh_cha` int(11) NOT NULL
+  `ma_danh_con` int(11) NOT NULL
+  `ma_danh_chau` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

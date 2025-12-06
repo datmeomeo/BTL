@@ -3,12 +3,12 @@
         <div class="col-lg-3 mb-4 filter-sidebar">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="fw-bold m-0"><i class="bi bi-funnel-fill text-primary"></i> Bộ lọc tìm kiếm</h5>
+                    <h5 class="fw-bold m-0"><i class="bi bi-funnel-fill text-primary"></i> Bộ lọc</h5>
                 </div>
                 <div class="card-body">
                     
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Danh mục sản phẩm</label>
+                        <label class="form-label fw-bold">Danh mục</label>
                         <div id="category-tree" class="category-tree filter-scroll-box">
                             <p class="text-muted small">Đang tải...</p>
                         </div>
@@ -20,7 +20,7 @@
                         <div class="price-list">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="price_filter" value="all" id="price-all" checked>
-                                <label class="form-check-label" for="price-all">Tất cả khoảng giá</label>
+                                <label class="form-check-label" for="price-all">Tất cả</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="price_filter" value="0-150000" id="p1">
@@ -53,10 +53,7 @@
                         </div>
                     </div>
 
-                    <button id="btn-apply-filter" class="btn btn-primary w-100 fw-bold shadow-sm">
-                        Áp dụng bộ lọc
-                    </button>
-                </div>
+                    </div>
             </div>
         </div>
 

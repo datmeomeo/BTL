@@ -16,7 +16,7 @@ class Book
     private ?string $id = null; 
     
     private string $name;
-    private int $publisherId; // ID của nhà xuất bản (khóa ngoại), phần này có thể mở rộng thành một Value Object.
+    private int $publisherId; 
     private int $numberOfPages;
     private string $coverType;
     private string $language;

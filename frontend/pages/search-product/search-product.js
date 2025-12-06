@@ -1,5 +1,4 @@
 // frontend/pages/search-product/search-product.js
-
 import SearchProductService from '../../services/searchProduct-service.js';
 import SearchProductUI from './search-product.ui.js';
 
@@ -10,7 +9,7 @@ const SearchProductPage = {
             category_id: '',
             price_min: '', 
             price_max: '',
-            author: '', // Thêm filter author
+            author: '',
             sort: 'newest'
         },
         pagination: { page: 1, limit: 20, total_pages: 1 }
@@ -43,7 +42,17 @@ const SearchProductPage = {
 
     async loadCategories() {
         const categories = await SearchProductService.getCategories();
-        if(categories) SearchProductUI.renderCategoryTree(categories);
+        if(categories) {
+            // 1. Vẽ cây danh mục
+            SearchProductUI.renderCategoryTree(categories);
+
+            // 2. LOGIC MỚI: Highlight danh mục đang chọn dựa trên URL
+            // (Lấy từ state.filters.category_id đã được init từ URL)
+            const activeId = this.state.filters.category_id;
+            if (activeId) {
+                SearchProductUI.highlightActiveCategory(activeId);
+            }
+        }
     },
     async loadAuthors() {
         const authors = await SearchProductService.getAuthors();
@@ -51,50 +60,57 @@ const SearchProductPage = {
     },
 
     bindEvents() {
-        // 1. NÚT ÁP DỤNG BỘ LỌC
-        document.getElementById('btn-apply-filter')?.addEventListener('click', () => {
-            // Lấy giá từ Radio Price
-            const priceRadio = document.querySelector('input[name="price_filter"]:checked');
-            if (priceRadio && priceRadio.value !== 'all') {
-                const [min, max] = priceRadio.value.split('-');
-                this.state.filters.price_min = min;
-                this.state.filters.price_max = max;
-            } else {
-                this.state.filters.price_min = '';
-                this.state.filters.price_max = '';
+        // 1. TỰ ĐỘNG LỌC KHI CHỌN GIÁ
+        // Lắng nghe sự kiện change trên container cha của radio giá
+        document.querySelector('.price-list')?.addEventListener('change', (e) => {
+            if(e.target.name === 'price_filter') {
+                if (e.target.value !== 'all') {
+                    const [min, max] = e.target.value.split('-');
+                    this.state.filters.price_min = min;
+                    this.state.filters.price_max = max;
+                } else {
+                    this.state.filters.price_min = '';
+                    this.state.filters.price_max = '';
+                }
+                this.state.pagination.page = 1;
+                this.loadBooks(); // Gọi ngay
             }
-
-            // Lấy tác giả từ Radio Author
-            const authorRadio = document.querySelector('input[name="author_filter"]:checked');
-            if (authorRadio && authorRadio.value !== 'all') {
-                this.state.filters.author = authorRadio.value;
-            } else {
-                this.state.filters.author = '';
-            }
-
-            this.state.pagination.page = 1;
-            this.loadBooks();
         });
 
-        // 2. Click Danh mục
+        // 2. TỰ ĐỘNG LỌC KHI CHỌN TÁC GIẢ
+        document.getElementById('filter-author')?.addEventListener('change', (e) => {
+            if(e.target.name === 'author_filter') {
+                this.state.filters.author = (e.target.value !== 'all') ? e.target.value : '';
+                this.state.pagination.page = 1;
+                this.loadBooks(); // Gọi ngay
+            }
+        });
+
+        // 3. TỰ ĐỘNG LỌC KHI BẤM DANH MỤC (Bỏ toggle icon)
         document.getElementById('category-tree')?.addEventListener('click', (e) => {
             if(e.target.classList.contains('cat-link')) {
+                // 1. Highlight & Lọc sách (Logic cũ)
                 document.querySelectorAll('.cat-link').forEach(el => el.classList.remove('active'));
                 e.target.classList.add('active');
+                
                 this.state.filters.category_id = e.target.dataset.id;
                 this.state.pagination.page = 1;
                 this.loadBooks();
-            }
-            if(e.target.classList.contains('toggle-icon')) {
-                const ul = e.target.parentElement.querySelector('.children-container');
-                if(ul) {
-                    ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
-                    e.target.innerText = ul.style.display === 'block' ? '-' : '+';
+
+                // 2. LOGIC MỚI: Tự động Bật/Tắt danh mục con
+                const childrenContainer = e.target.parentElement.querySelector('.children-container');
+                if(childrenContainer) {
+                    // Nếu đang ẩn thì hiện, đang hiện thì ẩn
+                    if (childrenContainer.style.display === 'none') {
+                        childrenContainer.style.display = 'block';
+                    } else {
+                        childrenContainer.style.display = 'none';
+                    }
                 }
             }
         });
 
-        // 3. Phân trang
+        // 4. Phân trang
         document.getElementById('pagination-container')?.addEventListener('click', (e) => {
             e.preventDefault();
             if(e.target.classList.contains('page-link')) {
@@ -107,7 +123,7 @@ const SearchProductPage = {
             }
         });
 
-        // 4. Sort
+        // 5. Sort
         document.getElementById('sort-select')?.addEventListener('change', (e) => {
             this.state.filters.sort = e.target.value;
             this.state.pagination.page = 1;
