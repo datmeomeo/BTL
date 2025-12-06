@@ -117,6 +117,39 @@ const SearchProductUI = {
     if (container)
       container.innerHTML = renderHTML(buildTree(categories, null));
   },
+  highlightActiveCategory(id) {
+        // 1. Tìm thẻ link có data-id tương ứng
+        const activeLink = document.querySelector(`.cat-link[data-id="${id}"]`);
+        
+        if (activeLink) {
+            // 2. Tô đậm chính nó
+            // Xóa active cũ trước (đề phòng)
+            document.querySelectorAll('.cat-link').forEach(el => el.classList.remove('active', 'fw-bold', 'text-primary'));
+            activeLink.classList.add('active', 'fw-bold', 'text-primary');
+
+            // 3. Mở bung tất cả các cấp Cha/Ông (Parents)
+            // Tìm ngược lên trên, cứ gặp .children-container nào đang ẩn thì hiện ra
+            let parentContainer = activeLink.closest('.children-container');
+            
+            while (parentContainer) {
+                parentContainer.style.display = 'block'; // Mở ra
+                
+                // Tiếp tục tìm cha của container này (để mở tiếp cấp ông nội)
+                // Cấu trúc: div.children-container -> li -> ul -> div.children-container (cấp trên)
+                const grandParentLi = parentContainer.closest('li').parentElement.closest('li');
+                if (grandParentLi) {
+                    parentContainer = grandParentLi.querySelector('.children-container');
+                } else {
+                    parentContainer = null; // Hết cha, dừng vòng lặp
+                }
+            }
+            
+            // 4. Cuộn màn hình tới vị trí đó cho dễ nhìn
+            setTimeout(() => {
+                activeLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+    },
 
   // Render Tác giả (không ẩn bớt nữa)
   renderAuthors(authors) {
@@ -134,38 +167,6 @@ const SearchProductUI = {
       )
       .join("");
     container.innerHTML = html;
-  },
-  highlightActiveCategory(id) {
-    // 1. Tìm thẻ link có data-id tương ứng
-    const activeLink = document.querySelector(`.cat-link[data-id="${id}"]`);
-
-    if (activeLink) {
-      // 2. Tô đậm chính nó
-      activeLink.classList.add("active", "fw-bold", "text-primary");
-
-      // 3. Mở bung tất cả các cấp Cha/Ông (Parents)
-      // Tìm ngược lên trên, cứ gặp .children-container nào đang ẩn thì hiện ra
-      let parentContainer = activeLink.closest(".children-container");
-
-      while (parentContainer) {
-        parentContainer.style.display = "block"; // Mở ra
-        // Tiếp tục tìm cha của container này (để mở tiếp cấp ông nội)
-        // Container -> li -> ul -> div.children-container (cấp trên)
-        const grandParentLi = parentContainer
-          .closest("li")
-          .parentElement.closest("li");
-        if (grandParentLi) {
-          parentContainer = grandParentLi.querySelector(".children-container");
-        } else {
-          parentContainer = null; // Hết cha
-        }
-      }
-
-      // 4. Cuộn màn hình tới vị trí đó cho dễ nhìn
-      setTimeout(() => {
-        activeLink.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
-    }
   },
 };
 export default SearchProductUI;

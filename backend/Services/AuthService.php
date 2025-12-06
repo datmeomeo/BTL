@@ -34,6 +34,7 @@ class AuthService
 
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
+        $_SESSION['user_name'] = $user->getFullName();
         
         return $user;
     }

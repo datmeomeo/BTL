@@ -1,3 +1,10 @@
+<?php
+// Kiểm tra trạng thái đăng nhập dựa trên key mà AuthService đã lưu
+// AuthService lưu: $_SESSION['user_id'], $_SESSION['user_name'], ...
+$isLoggedIn = isset($_SESSION['user_id']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : 'Tài khoản';
+?>
+
 <header class="header">
     <div class="container-fluid py-2 px-3">
         <div class="row align-items-center g-3">
@@ -6,24 +13,15 @@
                     <img src="./assets/img/fahasa-logo.jpg" alt="Fahasa-logo">
                 </a>
             </div>
-            
+
             <div class="col-auto mega-menu-wrapper">
                 <button class="menu-icon-btn" id="menuToggle">
                     <div class="grid-icon">
-                        <div class="grid-dot"></div>
-                        <div class="grid-dot"></div>
-                        <div class="grid-dot"></div>
-                        <div class="grid-dot"></div>
+                        <div class="grid-dot"></div><div class="grid-dot"></div>
+                        <div class="grid-dot"></div><div class="grid-dot"></div>
                     </div>
                 </button>
-                
-                <div class="mega-menu" id="megaMenu">
-                    <div class="d-flex w-100 justify-content-center align-items-center py-5">
-                        <div class="spinner-border text-danger" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="mega-menu" id="megaMenu"></div>
             </div>
 
             <div class="col search-wrapper">
@@ -44,23 +42,40 @@
                         </span>
                         <span class="icon-text">Thông Báo</span>
                     </a>
+                    
                     <a href="index.php?page=cart" class="header-icon">
                         <span class="icon-symbol">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
                         </span>
                         <span class="icon-text">Giỏ Hàng</span>
                     </a>
-                    <a href="<?php echo isset($_SESSION['user']) ? '#' : 'index.php?page=login'; ?>" class="header-icon">
-                        <span class="icon-symbol">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg>
-                        </span>
-                        <span class="icon-text"><?php echo isset($_SESSION['user']) ? $_SESSION['user']['ho_ten'] : 'Tài khoản'; ?></span>
-                    </a>
-                    <?php if (isset($_SESSION['user'])): ?>
-                        <a href="index.php?action=logout" class="header-icon text-danger">
-                            <span class="icon-text ms-0">Đăng xuất</span>
+
+                    <div class="header-icon-box" id="header-account" style="position: relative; cursor: pointer;">
+                        <a href="<?php echo $isLoggedIn ? 'javascript:void(0)' : 'index.php?page=login'; ?>" 
+                           class="header-icon"
+                           id="header-account-link"
+                           style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+                            <span class="icon-symbol">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg>
+                            </span>
+                            <span class="icon-text" id="header-username"><?php echo htmlspecialchars($userName); ?></span>
                         </a>
-                    <?php endif; ?>
+
+                        <div id="account-dropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-radius: 8px; min-width: 220px; padding: 15px; z-index: 1000; border: 1px solid #eee;">
+                            
+                            <div style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                                <div style="font-size: 13px; color: #777; margin-bottom: 4px;">Xin chào,</div>
+                                <div id="user-display-name" style="font-weight: bold; font-size: 16px; color: #333;">
+                                    <?php echo htmlspecialchars($userName); ?>
+                                </div>
+                            </div>
+
+                            <button id="btn-header-logout" style="width: 100%; background: #ffebee; color: #c62828; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                Đăng xuất
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

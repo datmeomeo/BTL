@@ -24,7 +24,40 @@ const SearchProductPage = {
         this.bindEvents();
     },
 
+        async loadCategories() {
+        const categories = await SearchProductService.getCategories();
+        if(categories) {
+            // 1. Vẽ cây danh mục
+            SearchProductUI.renderCategoryTree(categories);
+
+            // 2. LOGIC MỚI: Không cần setTimeout
+            const activeId = this.state.filters.category_id;
+            if (activeId) {
+                // DOM đã vẽ xong, gọi luôn
+                SearchProductUI.highlightActiveCategory(activeId);
+            }
+        }
+    },
+    
+    
+    // Thêm hàm này để cập nhật URL khi lọc
+    updateURL() {
+        const params = new URLSearchParams();
+        if(this.state.filters.keyword) params.set('keyword', this.state.filters.keyword);
+        if(this.state.filters.category_id) params.set('category_id', this.state.filters.category_id);
+        // ... thêm các param khác nếu muốn giữ lại khi F5
+        
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.pushState({path: newUrl}, '', newUrl);
+    },
+    async loadAuthors() {
+        const authors = await SearchProductService.getAuthors();
+        if(authors) SearchProductUI.renderAuthors(authors);
+    },
+
     async loadBooks() {
+
+        this.updateURL(); // Cập nhật URL mỗi khi load sách
         const data = await SearchProductService.getBooks({
             page: this.state.pagination.page,
             limit: this.state.pagination.limit,
@@ -38,25 +71,6 @@ const SearchProductPage = {
             SearchProductUI.renderBooks(data.books);
             SearchProductUI.renderPagination(this.state.pagination);
         }
-    },
-
-    async loadCategories() {
-        const categories = await SearchProductService.getCategories();
-        if(categories) {
-            // 1. Vẽ cây danh mục
-            SearchProductUI.renderCategoryTree(categories);
-
-            // 2. LOGIC MỚI: Highlight danh mục đang chọn dựa trên URL
-            // (Lấy từ state.filters.category_id đã được init từ URL)
-            const activeId = this.state.filters.category_id;
-            if (activeId) {
-                SearchProductUI.highlightActiveCategory(activeId);
-            }
-        }
-    },
-    async loadAuthors() {
-        const authors = await SearchProductService.getAuthors();
-        if(authors) SearchProductUI.renderAuthors(authors);
     },
 
     bindEvents() {

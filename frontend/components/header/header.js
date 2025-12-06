@@ -3,7 +3,105 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadMegaMenu();
     setupMenuToggle(); // Xử lý nút bật/tắt menu mobile (nếu có)
+    setupAccountDropdown();
 });
+function setupAccountDropdown() {
+    const accountWrapper = document.getElementById('header-account');
+    const accountLink = document.getElementById('header-account-link');
+    const dropdown = document.getElementById('account-dropdown');
+    const nameDisplay = document.getElementById('user-display-name');
+    const headerName = document.getElementById('header-username');
+    const logoutBtn = document.getElementById('btn-header-logout');
+
+    // 1. Kiểm tra trạng thái đăng nhập từ LocalStorage
+    const storedUser = localStorage.getItem('user_info');
+    let user = null;
+
+    if (storedUser) {
+        try {
+            user = JSON.parse(storedUser);
+        } catch (e) {
+            console.error("Lỗi parse user_info", e);
+            localStorage.removeItem('user_info');
+        }
+    }
+
+    // 2. Xử lý Logic Hiển thị
+    if (user) {
+        // --- TRẠNG THÁI: ĐÃ ĐĂNG NHẬP ---
+        
+        // Cập nhật tên hiển thị trên header (Frontend update ngay lập tức)
+        if (headerName) headerName.textContent = getShortName(user.name);
+        if (nameDisplay) nameDisplay.textContent = user.name;
+        
+        // Đảm bảo thẻ a không chuyển trang
+        if (accountLink) {
+            accountLink.href = "javascript:void(0)"; 
+            accountLink.style.cursor = "pointer";
+        }
+
+        // Sự kiện Click: Bật/Tắt Dropdown
+        if (accountWrapper) {
+            accountWrapper.addEventListener('click', (e) => {
+                // Ngăn chặn sự kiện nổi bọt (để không bị document click tắt ngay lập tức)
+                e.stopPropagation();
+                // Ngăn thẻ a chuyển hướng (để chắc chắn)
+                e.preventDefault();
+
+                // Toggle hiển thị
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = isVisible ? 'none' : 'block';
+            });
+        }
+
+        // Sự kiện Logout
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Ngăn sự kiện click lan ra wrapper
+                
+                if(confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                    try {
+                        await AuthService.logout(); // Gọi API PHP
+                    } catch (error) {
+                        console.log("Lỗi logout server:", error);
+                    }
+                    
+                    // Xóa bộ nhớ và reload
+                    localStorage.removeItem('user_info');
+                    window.location.href = 'index.php';
+                }
+            });
+        }
+
+    } else {
+        // --- TRẠNG THÁI: CHƯA ĐĂNG NHẬP ---
+        if (accountLink) {
+            accountLink.href = 'index.php?page=login';
+        }
+        // Ẩn dropdown nếu lỡ nó đang hiện
+        if (dropdown) dropdown.style.display = 'none';
+    }
+
+    // 3. Sự kiện bấm ra ngoài thì đóng dropdown
+    document.addEventListener('click', (e) => {
+        if (dropdown && dropdown.style.display === 'block') {
+            // Nếu click không nằm trong wrapper tài khoản
+            if (!accountWrapper.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Hàm phụ trợ: Cắt tên cho ngắn gọn nếu cần
+function getShortName(fullName) {
+    if (!fullName) return 'Tài khoản';
+    const parts = fullName.split(' ');
+    // Lấy 2 từ cuối cùng của tên (Ví dụ: Nguyễn Văn A -> Văn A)
+    return parts.slice(-2).join(' ');
+}
+
+
 
 async function loadMegaMenu() {
     const menuContainer = document.getElementById('megaMenu');
