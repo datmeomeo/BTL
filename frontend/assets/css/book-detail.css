@@ -77,7 +77,6 @@ body {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-
 /* Policy Card */
 .policy-card {
     background: white;
@@ -290,59 +289,28 @@ body {
     display: inline-block;
 }
 
-/* Shipping Section */
-.shipping-section {
-    border: none;
-    border-radius: 0;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
-
-.shipping-title {
-    font-weight: 500;
-    padding: 12px 16px;
-    font-size: 14px;
-    background: #fafafa;
-    border-bottom: 1px solid #ebebeb;
-}
-
-.shipping-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 16px;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.shipping-icon {
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-/* Fahasa Policy Section */
+/* === START: CẬP NHẬT CSS PHẦN CHÍNH SÁCH (POLICY) === 
+*/
 .fahasa-policy-section {
-    border: none;
-    border-radius: 0;
-    overflow: hidden;
-    margin: 0;
+    padding: 0;
 }
 
 .policy-title {
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
     padding: 12px 16px;
-    background: #fafafa;
-    font-size: 14px;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    text-transform: uppercase;
 }
 
 .policy-item {
     display: flex;
     align-items: center;
     padding: 12px 16px;
-    border-bottom: 1px solid #ebebeb;
-    transition: background 0.2s;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s ease;
     cursor: pointer;
 }
 
@@ -351,98 +319,126 @@ body {
 }
 
 .policy-item:hover {
-    background: #fafafa;
+    background-color: #f9f9f9;
 }
 
 .policy-icon {
-    font-size: 20px;
+    width: 24px;
+    height: 24px;
     margin-right: 12px;
-    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    flex-shrink: 0;
 }
 
+/* Tô màu đỏ cho icon */
 .policy-icon svg {
-    width: 20px;
-    height: 20px;
+    stroke: #C92127; 
+    width: 22px;
+    height: 22px;
 }
 
 .policy-text {
     flex: 1;
     font-size: 13px;
-    line-height: 1.5; 
+    line-height: 1.4;
+    color: #333;
 }
 
 .policy-text strong {
-    color: #333;
-    font-weight: 500;
+    font-weight: 600;
+    color: #000;
+    display: inline-block;
+    margin-right: 4px;
 }
 
 .policy-arrow {
-    color: #999;
-    font-size: 18px;
-    margin-left: 8px;
+    color: #ccc;
     display: flex;
     align-items: center;
+    margin-left: 10px;
+    flex-shrink: 0;
 }
+/* === END: POLICY CSS === */
 
-.policy-arrow svg {
-    width: 16px;
-    height: 16px;
-}
 
-/* Quantity */
+/* === START: CẬP NHẬT CSS PHẦN SỐ LƯỢNG (QUANTITY) === 
+*/
 .quantity-section {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .quantity-label {
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 600;
+    margin-right: 16px;
+    color: #333;
 }
 
-.quantity-control {
+.quantity-control-group {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
+    border: 1px solid #C1C1C1;
     border-radius: 4px;
+    background: #fff;
+    height: 32px;
     overflow: hidden;
 }
 
 .qty-btn {
     width: 32px;
-    height: 32px;
+    height: 100%;
+    background-color: #fff;
     border: none;
-    background: white;
     cursor: pointer;
-    font-size: 16px;
-    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #666;
+    transition: all 0.2s;
+    padding: 0;
 }
 
 .qty-btn:hover {
-    background: #f5f5f5;
+    background-color: #f0f0f0;
+    color: #C92127;
+}
+
+/* Kẻ vạch ngăn cách giữa nút và ô input */
+.qty-btn.btn-subtract-qty {
+    border-right: 1px solid #ddd;
+}
+
+.qty-btn.btn-add-qty {
+    border-left: 1px solid #ddd;
 }
 
 .qty-input {
     width: 50px;
-    height: 32px;
+    height: 100%;
     border: none;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
     text-align: center;
-    font-weight: 500;
     font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    background: transparent;
+    appearance: none;
+    -moz-appearance: textfield;
 }
 
 .qty-input:focus {
     outline: none;
 }
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* === END: QUANTITY CSS === */
 
 /* Buttons */
 .action-buttons {
@@ -468,24 +464,25 @@ body {
 }
 
 .btn-add-cart {
-    background-color: #f0f0f0;
-    color: #333;
-    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #C92127;
+    border: 2px solid #C92127;
 }
 
 .btn-add-cart:hover {
-    background-color: #e0e0e0;
+    background-color: #fff5f5;
 }
 
 .btn-buy-now {
-    background-color: #ff424e;
-    /* Màu đỏ Tiki/Shopee */
+    background-color: #C92127;
     color: white;
-    box-shadow: 0 4px 6px rgba(255, 66, 78, 0.2);
+    border: 2px solid #C92127;
+    box-shadow: 0 4px 6px rgba(201, 33, 39, 0.2);
 }
 
 .btn-buy-now:hover {
-    background-color: #e03844;
+    background-color: #b01b20;
+    border-color: #b01b20;
     transform: translateY(-1px);
 }
 
@@ -526,11 +523,8 @@ body {
 .product-bottom-section {
     width: 100%;
     margin-top: 10px;
-    /* padding-top: 20px;
-    border-top: 1px solid #eee; */
     display: grid;
     grid-template-columns: 2fr 1fr;
-    /* 2 phần mô tả, 1 phần review */
     gap: 30px;
 }
 

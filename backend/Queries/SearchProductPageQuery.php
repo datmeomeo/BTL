@@ -116,19 +116,34 @@ class SearchProductPageQuery
         $stmt->execute();
         
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        $imagePrefix = 'assets/img-book/';
         // Map sang DTO
         $dtos = [];
         foreach ($rows as $row) {
             $discount = ($row['gia_goc'] > 0 && $row['gia_goc'] > $row['gia_ban']) 
                 ? round((($row['gia_goc'] - $row['gia_ban']) / $row['gia_goc']) * 100) : 0;
             
+            // --- XỬ LÝ HÌNH ẢNH (Mới thêm) ---
+            $rawImage = $row['hinh_anh'];
+            // Ảnh mặc định nếu trong DB là null
+            $finalImage = './assets/img/fahasa-logo.jpg'; 
+
+            if ($rawImage) {
+                // Nếu link là http (ảnh mạng) thì giữ nguyên
+                if (strpos($rawImage, 'http') === 0) {
+                    $finalImage = $rawImage;
+                } else {
+                    // Nối prefix vào trước tên file lấy từ DB
+                    $finalImage = $imagePrefix . $rawImage;
+                }
+            }
+            
             $dtos[] = new SearchProductPageDto(
                 (int)$row['ma_sach'], $row['ten_sach'], $row['mo_ta'] ?? '', null,
                 (float)$row['gia_ban'], (float)$row['gia_goc'], (int)$discount,
                 $row['ten_danh_muc'], null,
                 $row['ten_tac_gia'] ?? '', $row['ten_nxb'] ?? '',
-                $row['hinh_anh'] ?? './assets/img/fahasa-logo.jpg'
+                $finalImage
             );
         }
 

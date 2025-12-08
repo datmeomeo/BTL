@@ -12,6 +12,7 @@ function setupAccountDropdown() {
     const nameDisplay = document.getElementById('user-display-name');
     const headerName = document.getElementById('header-username');
     const logoutBtn = document.getElementById('btn-header-logout');
+    const adminBtn = document.getElementById('btn-go-admin'); 
 
     // 1. Kiểm tra trạng thái đăng nhập từ LocalStorage
     const storedUser = localStorage.getItem('user_info');
@@ -33,13 +34,12 @@ function setupAccountDropdown() {
         // Cập nhật tên hiển thị trên header (Frontend update ngay lập tức)
         if (headerName) headerName.textContent = getShortName(user.name);
         if (nameDisplay) nameDisplay.textContent = user.name;
-        
+    
         // Đảm bảo thẻ a không chuyển trang
         if (accountLink) {
             accountLink.href = "javascript:void(0)"; 
             accountLink.style.cursor = "pointer";
         }
-
         // Sự kiện Click: Bật/Tắt Dropdown
         if (accountWrapper) {
             accountWrapper.addEventListener('click', (e) => {
@@ -51,9 +51,21 @@ function setupAccountDropdown() {
                 // Toggle hiển thị
                 const isVisible = dropdown.style.display === 'block';
                 dropdown.style.display = isVisible ? 'none' : 'block';
+            }); 
+        }
+        const isAdmin = (user.role == 1 || user.role === 'admin' || user.role_id == 1);
+        
+        if (adminBtn && isAdmin) {
+            adminBtn.style.display = 'flex'; // Hiện nút lên nếu là admin
+        }
+        // === SỰ KIỆN NÚT VỀ ADMIN ===
+        if (adminBtn) {
+            adminBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Ngăn đóng dropdown
+                // Chuyển về trang Admin (Đường dẫn chuẩn bạn đã cung cấp)
+                window.location.href = './pages/Admin/GiaoDien/index.php';
             });
         }
-
         // Sự kiện Logout
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async (e) => {
