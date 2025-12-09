@@ -39,7 +39,7 @@ if ($selected_id) {
 
     <?php if ($selected_id): ?>
         <!-- Upload ảnh -->
-        <form action="../book/book_images_handle.php" method="post" enctype="multipart/form-data" class="mb-4">
+        <form action="../book_images/book_images_handle.php" method="post" enctype="multipart/form-data" class="mb-4">
             <input type="hidden" name="ma_sach" value="<?= $selected_id ?>">
             <input type="file" name="images[]" multiple required>
             <button type="submit" name="action" value="upload" class="btn btn-success">Upload ảnh</button>
@@ -74,12 +74,12 @@ function deleteImage(id) {
         cancelButtonText: 'Hủy'
     }).then((result) => {
         if(result.isConfirmed){
-            window.location.href = `../book/book_images_handle.php?action=delete&id=${id}&ma_sach=<?= $selected_id ?>`;
+            window.location.href = `../book_images/book_images_handle.php?action=delete&id=${id}&ma_sach=<?= $selected_id ?>`;
         }
     });
 }
 
 function setCover(id) {
-    window.location.href = `../book/book_images_handle.php?action=set_cover&id=${id}&ma_sach=<?= $selected_id ?>`;
+    window.location.href = `../book_images/book_images_handle.php?action=set_cover&id=${id}&ma_sach=<?= $selected_id ?>`;
 }
 </script>

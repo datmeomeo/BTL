@@ -7,10 +7,10 @@ try {
     if ($action === 'upload') {
         $ma_sach = $_POST['ma_sach'];
         foreach ($_FILES['images']['tmp_name'] as $index => $tmp_name) {
-            $name = time() . '_' . basename($_FILES['images']['name'][$index]);
-            $path = "../uploads/$name";
+            $name = basename($_FILES['images']['name'][$index]);
+            $path = "../../../assets/img-book/$name";
             if (move_uploaded_file($tmp_name, $path)) {
-                $conn->prepare("INSERT INTO hinh_anh_sach(ma_sach, file_name) VALUES(?,?)")
+                $conn->prepare("INSERT INTO hinh_anh_sach(ma_sach, duong_dan_anh) VALUES(?,?)")
                      ->execute([$ma_sach, $name]);
             }
         }
