@@ -21,6 +21,8 @@ use Services\BookService;
 use Queries\BookDetailPageQuery;
 use Queries\SuggestBookQuery;
 
+use Queries\SearchProductPageQuery;
+
 
 function BookAPI(string $action, PDO $db)
 {
@@ -28,7 +30,8 @@ function BookAPI(string $action, PDO $db)
     $bookService = new BookService($bookRepository);
     $suggestBookQuery = new SuggestBookQuery($db);
     $bookDetailPageQuery = new BookDetailPageQuery($db);
-    $controller = new BookController($bookService, $bookDetailPageQuery, $suggestBookQuery);
+    $searchProductQuery = new SearchProductPageQuery($db);
+    $controller = new BookController($bookService, $bookDetailPageQuery, $suggestBookQuery,  $searchProductQuery);
     $controller->handleRequest($action);
 }
 

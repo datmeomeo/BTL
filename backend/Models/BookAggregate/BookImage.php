@@ -3,7 +3,7 @@ namespace Models\BookAggregate;
 
 use InvalidArgumentException;
 use Core\ValueObject;
-// Đây là Value Object đại diện cho hình ảnh sách
+// Đây là Value Object đại diện cho hình ảnh sách ko viết ko ngoại
 class BookImage extends ValueObject {
     private string $url;
     private bool $isMainImage;

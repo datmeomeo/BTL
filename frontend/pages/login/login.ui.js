@@ -11,6 +11,7 @@ const LoginUI = {
         passwordConfirmInput: document.getElementById('confirm-password')
     },
 
+
     /**
      * Chuyển đổi trạng thái hiển thị mật khẩu.
      * @param {HTMLInputElement} inputElement Phần tử input mật khẩu.
@@ -25,7 +26,50 @@ const LoginUI = {
             if (btn) btn.textContent = "Hiện";
         }
     },
+/**
+     * Hiển thị Modal thông báo đăng nhập thành công (Dùng chung cho Admin và Khách)
+     * @param {string} title Tiêu đề modal (Ví dụ: Xin chào Admin)
+     * @param {string} message Nội dung thông báo
+     * @param {string} buttonText Chữ hiển thị trên nút (Ví dụ: Về trang chủ)
+     * @param {Function} callback Hàm sẽ chạy khi người dùng bấm nút
+     */
+    showSuccessModal: (title, message, buttonText, callback) => {
+        // Xóa modal cũ nếu có để tránh trùng lặp
+        const existingModal = document.getElementById('loginSuccessModal');
+        if (existingModal) existingModal.remove();
 
+        // Tạo HTML cho modal
+        const modalHtml = `
+            <div id="loginSuccessModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+                <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; width: 350px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: fadeIn 0.3s;">
+                    <h3 style="margin-top: 0; color: #333; font-size: 20px;">${title}</h3>
+                    
+                    <div style="margin: 20px auto; width: 60px; height: 60px; background: #4CAF50; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    
+                    <p style="font-size: 16px; color: #555; margin-bottom: 25px;">${message}</p>
+                    
+                    <button id="btnBackHome" style="background: #C92127; color: white; border: none; padding: 10px 0; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">
+                        ${buttonText}
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Chèn vào body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        // Xử lý sự kiện click nút
+        document.getElementById('btnBackHome').addEventListener('click', () => {
+            document.getElementById('loginSuccessModal').remove(); // Xóa modal
+            if (callback && typeof callback === 'function') {
+                callback(); // Chuyển trang
+            }
+        });
+    },
     /**
      * Cập nhật trạng thái nút submit (đang xử lý/ban đầu).
      * @param {HTMLButtonElement} button Nút submit.
@@ -112,6 +156,9 @@ const LoginUI = {
     switchToLoginTab: () => {
         document.querySelector('.auth-tab[data-tab="login"]')?.click();
     }
+
+
+    
 };
 
 export default LoginUI;

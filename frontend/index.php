@@ -23,7 +23,15 @@
             'js' => [
                 './pages/cart/cart.js'
             ],
+        ],
+        'search_product'=> [
+            'css' => ['./assets/css/search-product.css'],
+            'js'=> [
+                './pages/search-product/search-product.js',
+                './components/suggest-book/suggest-book.js', 
+            ],
         ]
+        
     ];
     $currentPage = ($page === '') ? 'home' : $page;
     $currentAssets = $assets[$currentPage] ?? [];
@@ -37,7 +45,6 @@
     <title>FAHASA</title>
     <link rel="stylesheet" href="./assets/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/main.css">
-    
     <?php 
         if (isset($currentAssets['css'])): 
             $cssFiles = is_array($currentAssets['css']) ? $currentAssets['css'] : [$currentAssets['css']];
@@ -62,7 +69,10 @@
             include './pages/login/login.php'; 
         } elseif ($page === 'cart') {
             include './pages/cart/cart.php';
-        } else {
+        } elseif ($page == 'search_product'){
+            include './pages/search-product/search-product.php';
+        } 
+        else {
             echo "<h1>Trang không tìm thấy</h1>";
         }
     ?>
