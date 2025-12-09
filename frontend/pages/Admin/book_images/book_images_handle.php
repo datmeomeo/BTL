@@ -10,7 +10,7 @@ try {
             $name = basename($_FILES['images']['name'][$index]);
             $path = "../../../assets/img-book/$name";
             if (move_uploaded_file($tmp_name, $path)) {
-                $conn->prepare("INSERT INTO hinh_anh_sach(ma_sach, duong_dan_anh) VALUES(?,?)")
+                $conn->prepare("INSERT INTO hinh_anh_sach(ma_sach, duong_dan_hinh) VALUES(?,?)")
                      ->execute([$ma_sach, $name]);
             }
         }

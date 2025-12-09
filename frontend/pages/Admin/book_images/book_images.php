@@ -49,14 +49,10 @@ if ($selected_id) {
         <div class="row">
             <?php foreach ($images as $img): ?>
                 <div class="col-md-3 mb-3 text-center">
-                    <img src="../uploads/<?= htmlspecialchars($img['file_name']) ?>" class="img-fluid rounded border mb-1">
-                    <?php if ($img['is_cover']): ?>
-                        <div class="badge bg-success">Bìa chính</div>
-                    <?php else: ?>
-                        <button type="button" class="btn btn-sm btn-outline-primary w-100 mb-1" 
-                            onclick="setCover(<?= $img['id'] ?>)">Đặt bìa chính</button>
-                    <?php endif; ?>
-                    <button type="button" class="btn btn-sm btn-danger w-100" onclick="deleteImage(<?= $img['id'] ?>)">Xóa</button>
+                    <img src="../../../assets/img-book/<?php echo $img['duong_dan_hinh'];?>" class="img-fluid rounded border mb-1">
+                    <div class="badge bg-success" style="margin-bottom: 10px">Bìa chính</div>
+                    <button type="button" style="margin-bottom: 10px" class="btn btn-sm btn-outline-primary w-100 mb-1">Đặt bìa chính</button>
+                    <button type="button" style="margin-bottom: 10px" class="btn btn-sm btn-danger w-100" >Xóa</button>
                 </div>
             <?php endforeach; ?>
         </div>
