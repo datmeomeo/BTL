@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2025 at 07:31 AM
+-- Generation Time: Dec 09, 2025 at 07:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `csdl_bansach`
 --
-CREATE DATABASE IF NOT EXISTS `csdl_bansach` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `csdl_bansach`;
 
 -- --------------------------------------------------------
 
@@ -37,6 +35,14 @@ CREATE TABLE `chi_tiet_gio_hang` (
   `gia_tai_thoi_diem` decimal(10,2) NOT NULL,
   `ngay_them` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chi_tiet_gio_hang`
+--
+
+INSERT INTO `chi_tiet_gio_hang` (`ma_chi_tiet`, `ma_gio_hang`, `ma_sach`, `so_luong`, `gia_tai_thoi_diem`, `ngay_them`) VALUES
+(1, 1, 1, 1, 33000.00, '2025-12-06 10:12:29'),
+(4, 2, 5, 3, 25000.00, '2025-12-06 15:10:49');
 
 -- --------------------------------------------------------
 
@@ -65,7 +71,7 @@ CREATE TABLE `danh_muc` (
   `ten_danh_muc` varchar(100) NOT NULL,
   `slug` varchar(100) DEFAULT NULL,
   `mo_ta` text DEFAULT NULL,
-  `danh_muc_cha` int(11) DEFAULT 0,
+  `danh_muc_cha` int(11) DEFAULT NULL,
   `cap_do` int(11) DEFAULT 1,
   `thu_tu` int(11) DEFAULT 0,
   `hien_thi_menu` tinyint(1) DEFAULT 1,
@@ -80,8 +86,6 @@ CREATE TABLE `danh_muc` (
 
 INSERT INTO `danh_muc` (`ma_danh_muc`, `ten_danh_muc`, `slug`, `mo_ta`, `danh_muc_cha`, `cap_do`, `thu_tu`, `hien_thi_menu`, `icon`, `mau_sac`, `la_danh_muc_noi_bat`) VALUES
 (1, 'Sách Trong Nước', 'sach-trong-nuoc', NULL, NULL, 1, 1, 1, NULL, NULL, 0),
-(2, 'Foreign Books', 'foreign-books', NULL, NULL, 1, 2, 1, NULL, NULL, 0),
-(3, 'SGK 2025', 'sgk-2025', NULL, NULL, 1, 3, 1, NULL, NULL, 0),
 (4, 'VĂN HỌC', 'van-hoc', NULL, 1, 2, 1, 1, NULL, NULL, 0),
 (5, 'KINH TẾ', 'kinh-te', NULL, 1, 2, 2, 1, NULL, NULL, 0),
 (6, 'TÂM LÝ - KỸ NĂNG', 'tam-ly-ky-nang', NULL, 1, 2, 3, 1, NULL, NULL, 0),
@@ -112,7 +116,6 @@ INSERT INTO `danh_muc` (`ma_danh_muc`, `ten_danh_muc`, `slug`, `mo_ta`, `danh_mu
 (31, 'Vừa học vừa chơi', 'vua-hoc-vua-choi', NULL, 8, 3, 4, 1, NULL, NULL, 0),
 (32, 'Câu chuyện cuộc đời', 'cau-chuyen-cuoc-doi', NULL, 9, 3, 1, 1, NULL, NULL, 0),
 (33, 'Chính trị', 'chinh-tri', NULL, 9, 3, 2, 1, NULL, NULL, 0),
-(34, 'Kinh tế', 'kinh-te-con', NULL, 3, 3, 3, 1, NULL, NULL, 0),
 (35, 'Nghệ thuật - Giaỉ trí', 'nghe-thuat-giai-tri', NULL, 9, 3, 4, 1, NULL, NULL, 0),
 (36, 'Sách giáo khoa', 'sach-giao-khoa', NULL, 10, 3, 1, 1, NULL, NULL, 0),
 (37, 'Sách tham khảo', 'sach-tham-khao', NULL, 10, 3, 2, 1, NULL, NULL, 0),
@@ -140,6 +143,14 @@ CREATE TABLE `gio_hang` (
   `ngay_cap_nhat` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `gio_hang`
+--
+
+INSERT INTO `gio_hang` (`ma_gio_hang`, `ma_nguoi_dung`, `ngay_tao`, `ngay_cap_nhat`) VALUES
+(1, 1, '2025-12-06 10:12:29', '2025-12-06 10:12:29'),
+(2, 3, '2025-12-06 15:10:48', '2025-12-06 15:10:49');
+
 -- --------------------------------------------------------
 
 --
@@ -159,8 +170,8 @@ CREATE TABLE `hinh_anh_sach` (
 --
 
 INSERT INTO `hinh_anh_sach` (`ma_hinh_anh`, `ma_sach`, `duong_dan_hinh`, `la_anh_chinh`, `thu_tu`) VALUES
-(1, 1, './assets/img-book/book-doraemon/dora-hiepsikhonggian-2.jpg', 1, 0),
-(2, 1, './assets/img-book/book-doraemon/dora-hiepsikhonggian.jpg', 0, 1);
+(113, 1, '/book-doraemon/dora-hiepsikhonggian-2.jpg', 1, 0),
+(114, 1, '/book-doraemon/dora-hiepsikhonggian.jpg', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -186,7 +197,9 @@ CREATE TABLE `nguoi_dung` (
 --
 
 INSERT INTO `nguoi_dung` (`ma_nguoi_dung`, `ten_dang_nhap`, `mat_khau`, `email`, `ho_ten`, `so_dien_thoai`, `dia_chi`, `ngay_dang_ky`, `trang_thai`, `vai_tro`) VALUES
-(1, 'admin', '123456', 'admin@fahasa.com', 'Quản Trị Viên', '0901234567', 'TP.HCM', '2025-11-23 15:58:48', 'active', 'admin');
+(1, 'admin', '$2y$10$mKdTRsWHIOC01omzng9pAeGh6DGGQWFxOCI1uOYvj.6Dt3i/MJY82', 'admin@fahasa.com', 'Quản Trị Viên', '0901234567', 'TP.HCM', '2025-11-23 15:58:48', 'active', 'admin'),
+(2, 'dathz1456', '$2y$10$qLIbjanyM3H6OCB/lqejvOh62LhMr8EgahlczUFDIvAiPtxLKgT0a', 'dathz1456@gmail.com', 'dat12345', NULL, NULL, '2025-11-30 16:09:01', 'active', 'customer'),
+(3, 'datnt40023201', '$2y$10$KSXs7wiiVAJe75sGz2CGNeJWhAl5hGqbOv6ZVuU79QjCa1nvjae92', 'datnt40023201@gmail.com', 'dat1234567', NULL, NULL, '2025-12-06 11:26:52', 'active', 'customer');
 
 -- --------------------------------------------------------
 
@@ -223,7 +236,6 @@ CREATE TABLE `sach` (
   `ma_sach` int(11) NOT NULL,
   `ten_sach` varchar(255) NOT NULL,
   `ma_nxb` int(11) DEFAULT NULL,
-  `ma_tac_gia` int(11) DEFAULT NULL,
   `mo_ta` text DEFAULT NULL,
   `gia_ban` decimal(10,2) NOT NULL,
   `gia_goc` decimal(10,2) DEFAULT NULL,
@@ -243,14 +255,15 @@ CREATE TABLE `sach` (
 --
 
 INSERT INTO `sach` (`ma_sach`, `ten_sach`, `ma_nxb`, `mo_ta`, `gia_ban`, `gia_goc`, `so_luong_ton`, `so_trang`, `hinh_thuc_bia`, `ngon_ngu`, `nam_xuat_ban`, `ma_isbn`, `ngay_them`, `luot_xem`, `trang_thai`) VALUES
-(1, 'Doraemon - Movie Story: Nobita Và Những Hiệp Sĩ Không Gian', 1, 'Câu chuyện phiêu lưu của Nobita và những người bạn trong không gian', 33000.00, 35000.00, 120, 139, 'Bìa Mềm', 'Tiếng Việt', 2025, '9786042393324', '2025-11-23 15:31:27', 1296, 'available'),
-(2, 'Mắt Biếc', 2, 'Tác phẩm văn học nổi tiếng của nhà văn Nguyễn Nhật Ánh', 108000.00, 120000.00, 85, 368, 'Bìa Mềm', 'Tiếng Việt', 2023, '9786041169647', '2025-11-23 15:31:27', 3420, 'available'),
-(3, 'Nhà Giả Kim', 3, 'Cuốn sách nổi tiếng của Paulo Coelho về hành trình tìm kiếm ước mơ', 79000.00, 95000.00, 150, 227, 'Bìa Mềm', 'Tiếng Việt', 2024, '9786042105323', '2025-11-23 15:31:27', 5680, 'available'),
-(4, 'Đắc Nhân Tâm', 2, 'Cuốn sách kinh điển về nghệ thuật giao tiếp và ứng xử', 86000.00, 108000.00, 200, 320, 'Bìa Cứng', 'Tiếng Việt', 2023, '9786041132937', '2025-11-23 15:31:27', 8920, 'available'),
-(5, 'Detective Conan - Tập 100', 1, 'Thám tử lừng danh Conan và những vụ án bí ẩn', 25000.00, 30000.00, 300, 186, 'Bìa Mềm', 'Tiếng Việt', 2024, '9786042155678', '2025-11-23 15:31:27', 2150, 'available'),
-(6, 'One Piece - Tập 105', 1, 'Cuộc phiêu lưu của Luffy và băng Mũ Rơm', 28000.00, 32000.00, 250, 192, 'Bìa Mềm', 'Tiếng Việt', 2024, '9786042167890', '2025-11-23 15:31:27', 3890, 'available'),
-(7, 'Kafka Bên Bờ Biển', 3, 'Tác phẩm nổi tiếng của Haruki Murakami', 165000.00, 195000.00, 60, 568, 'Bìa Mềm', 'Tiếng Việt', 2023, '9786041198765', '2025-11-23 15:31:27', 980, 'available'),
-(8, 'Tôi Thấy Hoa Vàng Trên Cỏ Xanh', 2, 'Tuổi thơ dữ dội và nhân ái của Nguyễn Nhật Ánh', 95000.00, 115000.00, 110, 432, 'Bìa Mềm', 'Tiếng Việt', 2023, '9786041154321', '2025-11-23 15:31:27', 2671, 'available');
+(1, 'Doraemon - Movie Story: Nobita Và Những Hiệp Sĩ Không Gian', 1, 'Câu chuyện phiêu lưu của Nobita và những người bạn trong không gian', 33000.00, 35000.00, 120, 139, 'Bìa Mềm', 'Tiếng Việt', 2025, '9786042393324', '2025-11-23 15:31:27', 1592, 'available'),
+(2, 'Mắt Biếc', 2, 'Tác phẩm văn học nổi tiếng của nhà văn Nguyễn Nhật Ánh', 108000.00, 120000.00, 85, 368, 'Bìa Mềm', 'Tiếng Việt', 2023, '9786041169647', '2025-11-23 15:31:27', 3425, 'available'),
+(3, 'Nhà Giả Kim', 3, 'Cuốn sách nổi tiếng của Paulo Coelho về hành trình tìm kiếm ước mơ', 79000.00, 95000.00, 150, 227, 'Bìa Mềm', 'Tiếng Việt', 2024, '9786042105323', '2025-11-23 15:31:27', 5685, 'available'),
+(4, 'Đắc Nhân Tâm', 2, 'Cuốn sách kinh điển về nghệ thuật giao tiếp và ứng xử', 86000.00, 108000.00, 200, 320, 'Bìa Cứng', 'Tiếng Việt', 2023, '9786041132937', '2025-11-23 15:31:27', 8927, 'available'),
+(5, 'Detective Conan - Tập 100', 1, 'Thám tử lừng danh Conan và những vụ án bí ẩn', 25000.00, 30000.00, 300, 186, 'Bìa Mềm', 'Tiếng Việt', 2024, '9786042155678', '2025-11-23 15:31:27', 2165, 'available'),
+(6, 'One Piece - Tập 105', 1, 'Cuộc phiêu lưu của Luffy và băng Mũ Rơm', 28000.00, 32000.00, 250, 192, 'Bìa Mềm', 'Tiếng Việt', 2024, '9786042167890', '2025-11-23 15:31:27', 3892, 'available'),
+(7, 'Kafka Bên Bờ Biển', 3, 'Tác phẩm nổi tiếng của Haruki Murakami', 165000.00, 195000.00, 60, 568, 'Bìa Mềm', 'Tiếng Việt', 2023, '9786041198765', '2025-11-23 15:31:27', 982, 'available'),
+(8, 'Tôi Thấy Hoa Vàng Trên Cỏ Xanh', 2, 'Tuổi thơ dữ dội và nhân ái của Nguyễn Nhật Ánh', 95000.00, 115000.00, 110, 432, 'Bìa Mềm', 'Tiếng Việt', 2023, '9786041154321', '2025-11-23 15:31:27', 2674, 'available'),
+(9, 'Connan', 1, 'Hello 123456', 100000.00, 100000.00, 10, 1000, 'Mềm', 'Tiếng Việt', 2015, '123456', '2025-12-08 19:43:51', 8, 'available');
 
 -- --------------------------------------------------------
 
@@ -260,9 +273,7 @@ INSERT INTO `sach` (`ma_sach`, `ten_sach`, `ma_nxb`, `mo_ta`, `gia_ban`, `gia_go
 
 CREATE TABLE `sach_danh_muc` (
   `ma_sach` int(11) NOT NULL,
-  `ma_danh_cha` int(11) NOT NULL
-  `ma_danh_con` int(11) NOT NULL
-  `ma_danh_chau` int(11) NOT NULL
+  `ma_danh_muc` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -309,7 +320,8 @@ INSERT INTO `sach_tac_gia` (`ma_sach`, `ma_tac_gia`) VALUES
 (5, 6),
 (6, 7),
 (7, 4),
-(8, 2);
+(8, 2),
+(9, 5);
 
 -- --------------------------------------------------------
 
@@ -429,7 +441,7 @@ ALTER TABLE `tac_gia`
 -- AUTO_INCREMENT for table `chi_tiet_gio_hang`
 --
 ALTER TABLE `chi_tiet_gio_hang`
-  MODIFY `ma_chi_tiet` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ma_chi_tiet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `danh_gia`
@@ -441,19 +453,19 @@ ALTER TABLE `danh_gia`
 -- AUTO_INCREMENT for table `gio_hang`
 --
 ALTER TABLE `gio_hang`
-  MODIFY `ma_gio_hang` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ma_gio_hang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `hinh_anh_sach`
 --
 ALTER TABLE `hinh_anh_sach`
-  MODIFY `ma_hinh_anh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ma_hinh_anh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `nguoi_dung`
 --
 ALTER TABLE `nguoi_dung`
-  MODIFY `ma_nguoi_dung` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ma_nguoi_dung` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `nha_xuat_ban`
@@ -465,7 +477,7 @@ ALTER TABLE `nha_xuat_ban`
 -- AUTO_INCREMENT for table `sach`
 --
 ALTER TABLE `sach`
-  MODIFY `ma_sach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ma_sach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tac_gia`
