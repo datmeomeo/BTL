@@ -4,7 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
     loadMegaMenu();
     setupMenuToggle(); // Xử lý nút bật/tắt menu mobile (nếu có)
     setupAccountDropdown();
+    notification(); //Xử lý ẩn hiện thông báo
 });
+
+function notification(){
+    const link = document.getElementById("linkNotify");
+    const box = document.getElementById("header-icon-nofity");
+
+    link.addEventListener("click", (e) => {
+        e.preventDefault();          // chặn <a> nhảy trang
+        box.classList.toggle("hidden-box");  // hiện/ẩn hộp
+    });
+}
+
 function setupAccountDropdown() {
     const accountWrapper = document.getElementById('header-account');
     const accountLink = document.getElementById('header-account-link');
@@ -63,7 +75,7 @@ function setupAccountDropdown() {
             adminBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Ngăn đóng dropdown
                 // Chuyển về trang Admin (Đường dẫn chuẩn bạn đã cung cấp)
-                window.location.href = './pages/Admin/GiaoDien/index.php';
+                window.location.href = './pages/Admin_MVC/index.php';
             });
         }
         // Sự kiện Logout
@@ -125,7 +137,7 @@ async function loadMegaMenu() {
     try {
         const response = await fetch(API_URL);
         const result = await response.json();
-
+        console.log("Dữ liệu API danh mục:", result.data);
         if (result.status === 'success' && result.data.length > 0) {
             renderMegaMenuHTML(result.data, menuContainer);
         } else {
@@ -137,83 +149,66 @@ async function loadMegaMenu() {
     }
 }
 
-function renderMegaMenuHTML(categories, container) {
-    // 1. Phân loại danh mục (Cha - Con - Cháu)
-    // Giả sử API trả về mảng phẳng, ta cần xây dựng cây
-    // Level 1: Sidebar (Sách Trong Nước, Foreign Books...)
-    const roots = categories.filter(c => !c.danh_muc_cha || c.danh_muc_cha == 0);
-    
-    // Hàm lấy con của một danh mục
-    const getChildren = (parentId) => categories.filter(c => c.danh_muc_cha == parentId);
+// frontend/components/header/header.js
 
-    // 2. Xây dựng HTML Sidebar
+function renderMegaMenuHTML(categories, container) {
+    // Helper: Lấy ID an toàn (ưu tiên ma_danh_muc, sau đó id)
+    const getId = (item) => item.ma_danh_muc || item.id || item.category_id;
+    const getName = (item) => item.ten_danh_muc || item.name;
+    const getParent = (item) => item.danh_muc_cha || item.parent_id || 0;
+
+    const roots = categories.filter(c => getParent(c) == 0);
+    const getChildren = (parentId) => categories.filter(c => getParent(c) == parentId);
+
     let sidebarHTML = `<div class="mega-sidebar"><div class="mega-sidebar-title">Danh mục sản phẩm</div>`;
-    
-    // 3. Xây dựng HTML Content
     let contentHTML = ``;
 
     roots.forEach((root, index) => {
-        const isActive = index === 0 ? 'active' : ''; // Mục đầu tiên active
-        const menuId = `menu-${root.ma_danh_muc}`;   // Tạo ID duy nhất
+        const rootId = getId(root);
+        const isActive = index === 0 ? 'active' : '';
+        const menuId = `menu-${rootId}`;
 
-        // --- Sidebar Item ---
         sidebarHTML += `
             <div class="mega-menu-item ${isActive}" data-menu="${menuId}">
-                ${root.ten_danh_muc}
+                ${getName(root)}
             </div>
         `;
 
-        // --- Content Block ---
         contentHTML += `
             <div class="mega-content ${isActive}" id="${menuId}">
-                <div class="mega-header">
-                    <div class="mega-icon"></div>
-                    <h2 class="mega-title">${root.ten_danh_muc}</h2>
-                </div>
+                <div class="mega-header"><h2 class="mega-title">${getName(root)}</h2></div>
                 <div class="categories-grid">
         `;
 
-        // Lấy danh mục con (Level 2 - Ví dụ: Văn Học, Kinh Tế)
-        const level2 = getChildren(root.ma_danh_muc);
-        
+        const level2 = getChildren(rootId);
         level2.forEach(l2 => {
+            const l2Id = getId(l2);
+            // Link chuẩn, chứa đầy đủ tham số page
+            const linkUrl = `index.php?page=search_product&category_id=${l2Id}`;
+
             contentHTML += `
                 <div class="category-section">
-                    <a href="index.php?page=search_product&category_id=${l2.ma_danh_muc}" class="text-decoration-none">
-                        <h3 class="category-title">${l2.ten_danh_muc}</h3>
+                    <a href="${linkUrl}" class="text-decoration-none category-title-link">
+                        <h3 class="category-title">${getName(l2)}</h3>
                     </a>
                     <ul class="category-list">
             `;
 
-            // Lấy danh mục cháu (Level 3 - Ví dụ: Tiểu thuyết, Ngôn tình)
-            const level3 = getChildren(l2.ma_danh_muc);
+            const level3 = getChildren(l2Id);
             level3.forEach(l3 => {
-                contentHTML += `
-                    <li>
-                        <a href="index.php?page=search_product&category_id=${l3.ma_danh_muc}">
-                            ${l3.ten_danh_muc}
-                        </a>
-                    </li>
-                `;
+                const l3Id = getId(l3);
+                const subLinkUrl = `index.php?page=search_product&category_id=${l3Id}`;
+                contentHTML += `<li><a href="${subLinkUrl}">${getName(l3)}</a></li>`;
             });
 
-            contentHTML += `
-                    </ul>
-                    <a href="index.php?page=search_product&category_id=${l2.ma_danh_muc}" class="view-all">Xem tất cả</a>
-                </div>
-            `;
+            contentHTML += `</ul><a href="${linkUrl}" class="view-all">Xem tất cả</a></div>`;
         });
-
-        contentHTML += `
-                </div> </div> `;
+        contentHTML += `</div></div>`;
     });
 
-    sidebarHTML += `</div>`; // Đóng mega-sidebar
-
-    // 4. Gộp lại và Inject vào Container
+    sidebarHTML += `</div>`;
     container.innerHTML = `<div class="d-flex w-100">${sidebarHTML}${contentHTML}</div>`;
-
-    // 5. Kích hoạt sự kiện chuyển tab (Hover/Click sidebar)
+    
     setupMegaMenuInteractions();
 }
 

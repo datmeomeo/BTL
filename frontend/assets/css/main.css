@@ -373,12 +373,24 @@ body{
     min-width: 100%;
     height: 100%;
     transition: opacity 0.8s ease, transform 0.8s ease;
+    display: none;
 }
 .carousel-slide img{
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
+}
+/* Chỉ hiện ảnh nào có class "active" */
+.carousel-slide.active {
+    display: block;
+    /* Thêm hiệu ứng hiện dần cho mượt mắt (nếu muốn) */
+    animation: hienDan 0.2s;
+}
+
+@keyframes hienDan {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
 }
 
 /* CAROUSEL BUTTONS */
