@@ -116,6 +116,28 @@
             </form>
         </div>
 
+        <!-- PHÂN TRANG -->
+        <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
+            <div class="text-muted">
+                Tổng: <strong><?= $total ?></strong> | Trang <?= $page_current ?> / <?= $total_pages_view ?>
+            </div>
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item <?= $page_current <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=category&p=<?= $page_current - 1 ?>">Trước</a>
+                    </li>
+                    <?php for ($i = 1; $i <= $total_pages_view; $i++): ?>
+                        <li class="page-item <?= $i == $page_current ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=category&p=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?= $page_current >= $total_pages_view ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=category&p=<?= $page_current + 1 ?>">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
         <!-- BẢNG DANH SÁCH -->
         <div class="table-responsive">
             <table class="table table-hover align-middle text-center">
@@ -160,28 +182,6 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        </div>
-
-        <!-- PHÂN TRANG -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Tổng: <strong><?= $total ?></strong> | Trang <?= $page_current ?> / <?= $total_pages_view ?>
-            </div>
-            <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item <?= $page_current <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $page_current - 1 ?>">Trước</a>
-                    </li>
-                    <?php for ($i = 1; $i <= $total_pages_view; $i++): ?>
-                        <li class="page-item <?= $i == $page_current ? 'active' : '' ?>">
-                            <a class="page-link" href="?page=category&p=<?= $i ?>"><?= $i ?></a>
-                        </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?= $page_current >= $total_pages_view ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $page_current + 1 ?>">Sau</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
 
     </div>

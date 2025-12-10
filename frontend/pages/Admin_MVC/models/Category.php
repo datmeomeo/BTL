@@ -19,7 +19,7 @@ class Category
             $params[':ten'] = "%$ten%";
         }
 
-        $sql .= " ORDER BY ma_danh_muc DESC LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY ma_danh_muc LIMIT :limit OFFSET :offset";
         $stmt = $this->conn->prepare($sql);
 
         foreach ($params as $k => $v) {
