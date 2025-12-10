@@ -6,6 +6,43 @@ $userName = $isLoggedIn ? $_SESSION['user_name'] : 'Tài khoản';
 $userRole = $isLoggedIn && isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
 ?>
 
+<style>
+    .hidden-box{
+        position: absolute;
+        top: 65px;    /* nằm dưới icon */
+        left: 70%;
+        width: 400px;
+        height: 600px;
+        padding: 10px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        display: none; /* Ẩn mặc định */
+        z-index: 999;
+        text-align: center;
+    }
+    .link-notify{
+        text-decoration: none;
+        padding-left: 10px;
+        text-align: center;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #333;
+        position: relative;
+        font-size: 24px;
+        cursor: pointer;    
+    }
+    .link-notify:hover{
+        color: var(--primary-red);
+    }
+    .link-notify:hover svg{
+        stroke: var(--primary-red);
+    }
+</style>
+
 <header class="header">
     <div class="container-fluid py-2 px-3">
         <div class="row align-items-center g-3">
@@ -43,7 +80,7 @@ $userRole = $isLoggedIn && isset($_SESSION['user_role']) ? $_SESSION['user_role'
 
             <div class="col-auto">
                 <div class="d-flex gap-3">
-                    <a href="#" class="header-icon">
+                    <a href="#" class="link-notify" id="notifyIcon">
                         <span class="icon-symbol">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -54,6 +91,10 @@ $userRole = $isLoggedIn && isset($_SESSION['user_role']) ? $_SESSION['user_role'
                         </span>
                         <span class="icon-text">Thông Báo</span>
                     </a>
+
+                    <div id="notifyBox" class="hidden-box">
+                        Không có thông báo nào
+                    </div>
 
                     <a href="index.php?page=cart" class="header-icon">
                         <span class="icon-symbol">
@@ -126,3 +167,20 @@ $userRole = $isLoggedIn && isset($_SESSION['user_role']) ? $_SESSION['user_role'
         </div>
     </div>
 </header>
+
+<script>
+    const icon = document.getElementById("notifyIcon");
+    const box = document.getElementById("notifyBox");
+
+    icon.addEventListener("click", function (e) {
+        e.preventDefault();   // để thẻ <a> không nhảy trang
+        box.style.display = box.style.display === "block" ? "none" : "block";
+    });
+
+    // Click ra ngoài để tắt hộp
+    document.addEventListener("click", function (e) {
+        if (!icon.contains(e.target) && !box.contains(e.target)) {
+            box.style.display = "none";
+        }
+    });
+</script>

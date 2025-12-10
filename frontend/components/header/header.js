@@ -4,7 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
     loadMegaMenu();
     setupMenuToggle(); // Xử lý nút bật/tắt menu mobile (nếu có)
     setupAccountDropdown();
+    notification(); //Xử lý ẩn hiện thông báo
 });
+
+function notification(){
+    const link = document.getElementById("linkNotify");
+    const box = document.getElementById("header-icon-nofity");
+
+    link.addEventListener("click", (e) => {
+        e.preventDefault();          // chặn <a> nhảy trang
+        box.classList.toggle("hidden-box");  // hiện/ẩn hộp
+    });
+}
+
 function setupAccountDropdown() {
     const accountWrapper = document.getElementById('header-account');
     const accountLink = document.getElementById('header-account-link');
