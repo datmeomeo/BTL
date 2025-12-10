@@ -1,7 +1,7 @@
 <?php
-require_once "models/BookImages.php";
+require_once __DIR__ . "/../models/BookImages.php";
 
-class BookImagesController{
+class Book_imagesController{
     private $model;
 
     public function __construct($db){
