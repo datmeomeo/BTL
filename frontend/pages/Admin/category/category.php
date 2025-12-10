@@ -11,7 +11,7 @@ $total_page = ceil($total / $per_page);
 
 $stmt = $conn->prepare("
     SELECT * FROM danh_muc 
-    ORDER BY ma_danh_muc DESC
+    ORDER BY ma_danh_muc
     LIMIT :limit OFFSET :offset
 ");
 $stmt->bindValue(':limit', $per_page, PDO::PARAM_INT);
@@ -133,6 +133,33 @@ $error = $_GET['error'] ?? '';
             </form>
         </div>
 
+        <!-- PHÂN TRANG GIỮ NGUYÊN -->
+        <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
+            <div class="text-muted">
+                Tổng: <b><?= $total ?></b> | Trang <?= $page ?>/<?= $total_page ?>
+            </div>
+
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=category&p=<?= $page - 1 ?>">Trước</a>
+                    </li>
+
+                    <?php
+                    for ($i = max(1, $page - 2); $i <= min($total_page, $page + 2); $i++):
+                    ?>
+                    <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                        <a class="page-link" href="?page=category&p=<?= $i ?>"><?= $i ?></a>
+                    </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= $page >= $total_page ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=category&p=<?= $page + 1 ?>">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
         <!-- BẢNG DANH MỤC -->
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -181,34 +208,6 @@ $error = $_GET['error'] ?? '';
                 </tbody>
             </table>
         </div>
-
-        <!-- PHÂN TRANG GIỮ NGUYÊN -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Tổng: <b><?= $total ?></b> | Trang <?= $page ?>/<?= $total_page ?>
-            </div>
-
-            <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $page - 1 ?>">Trước</a>
-                    </li>
-
-                    <?php
-                    for ($i = max(1, $page - 2); $i <= min($total_page, $page + 2); $i++):
-                    ?>
-                    <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $i ?>"><?= $i ?></a>
-                    </li>
-                    <?php endfor; ?>
-
-                    <li class="page-item <?= $page >= $total_page ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $page + 1 ?>">Sau</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
     </div>
 </div>
 

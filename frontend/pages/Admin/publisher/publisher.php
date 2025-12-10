@@ -11,7 +11,7 @@ $total = $conn->query("SELECT COUNT(*) FROM nha_xuat_ban")->fetchColumn();
 $total_page = ceil($total / $per_page);
 
 // Lấy danh sách
-$stmt = $conn->prepare("SELECT * FROM nha_xuat_ban ORDER BY ma_nxb DESC LIMIT ? OFFSET ?");
+$stmt = $conn->prepare("SELECT * FROM nha_xuat_ban ORDER BY ma_nxb LIMIT ? OFFSET ?");
 $stmt->bindValue(1, $per_page, PDO::PARAM_INT);
 $stmt->bindValue(2, $offset, PDO::PARAM_INT);
 $stmt->execute();

@@ -11,7 +11,7 @@ $total = $conn->query("SELECT COUNT(*) FROM tac_gia")->fetchColumn();
 $total_page = ceil($total / $per_page);
 
 // Lấy danh sách tác giả
-$stmt = $conn->prepare("SELECT * FROM tac_gia ORDER BY ma_tac_gia DESC LIMIT ? OFFSET ?");
+$stmt = $conn->prepare("SELECT * FROM tac_gia ORDER BY ma_tac_gia LIMIT ? OFFSET ?");
 $stmt->bindValue(1, $per_page, PDO::PARAM_INT);
 $stmt->bindValue(2, $offset, PDO::PARAM_INT);
 $stmt->execute();

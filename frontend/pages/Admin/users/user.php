@@ -11,7 +11,7 @@ $total       = $conn->query("SELECT COUNT(*) FROM nguoi_dung")->fetchColumn();
 $total_pages = ceil($total / $per_page);
 
 // Lấy danh sách người dùng
-$stmt = $conn->prepare("SELECT * FROM nguoi_dung ORDER BY ma_nguoi_dung DESC LIMIT ? OFFSET ?");
+$stmt = $conn->prepare("SELECT * FROM nguoi_dung ORDER BY ma_nguoi_dung LIMIT ? OFFSET ?");
 $stmt->bindValue(1, $per_page, PDO::PARAM_INT);
 $stmt->bindValue(2, $offset, PDO::PARAM_INT);
 $stmt->execute();

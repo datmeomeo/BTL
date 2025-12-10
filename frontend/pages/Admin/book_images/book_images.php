@@ -2,7 +2,7 @@
 require_once '../them/connect.php';
 
 // Lấy danh sách sách
-$books = $conn->query("SELECT ma_sach, ten_sach FROM sach ORDER BY ten_sach")->fetchAll(PDO::FETCH_ASSOC);
+$books = $conn->query("SELECT ma_sach, ten_sach FROM sach ORDER BY ma_sach")->fetchAll(PDO::FETCH_ASSOC);
 
 // Lấy sách đang chọn
 $selected_id = $_GET['id'] ?? '';

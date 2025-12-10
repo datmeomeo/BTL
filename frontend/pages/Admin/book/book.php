@@ -17,7 +17,7 @@ $stmt = $conn->prepare("
     LEFT JOIN nha_xuat_ban n ON s.ma_nxb = n.ma_nxb
     LEFT JOIN sach_tac_gia stg ON s.ma_sach = stg.ma_sach
     LEFT JOIN tac_gia tg ON tg.ma_tac_gia = stg.ma_tac_gia
-    ORDER BY s.ma_sach DESC 
+    ORDER BY s.ma_sach 
     LIMIT ? OFFSET ?
 ");
 $stmt->bindValue(1, $per_page, PDO::PARAM_INT);
@@ -169,6 +169,28 @@ $error   = $_GET['error'] ?? '';
                 </div>
             </form>
         </div>
+        
+        <!-- PHÂN TRANG -->
+        <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
+            <div class="text-muted">
+                Tổng: <strong><?= $total ?></strong> sách | Trang <?= $page ?>/<?= $total_page ?>
+            </div>
+            <?php if ($total_page > 1): ?>
+                <ul class="pagination mb-0">
+                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="../GiaoDien/index.php?page=book&p=<?= $page - 1 ?>">Trước</a>
+                    </li>
+                    <?php for ($i = max(1, $page - 2); $i <= min($total_page, $page + 2); $i++): ?>
+                        <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                            <a class="page-link" href="../GiaoDien/index.php?page=book&p=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?= $page >= $total_page ? 'disabled' : '' ?>">
+                        <a class="page-link" href="../GiaoDien/index.php?page=book&p=<?= $page + 1 ?>">Sau</a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+        </div>
 
         <!-- DANH SÁCH SÁCH -->
         <div class="table-responsive">
@@ -220,27 +242,6 @@ $error   = $_GET['error'] ?? '';
             </table>
         </div>
 
-        <!-- PHÂN TRANG -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Tổng: <strong><?= $total ?></strong> sách | Trang <?= $page ?>/<?= $total_page ?>
-            </div>
-            <?php if ($total_page > 1): ?>
-                <ul class="pagination mb-0">
-                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="../GiaoDien/index.php?page=book&p=<?= $page - 1 ?>">Trước</a>
-                    </li>
-                    <?php for ($i = max(1, $page - 2); $i <= min($total_page, $page + 2); $i++): ?>
-                        <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-                            <a class="page-link" href="../GiaoDien/index.php?page=book&p=<?= $i ?>"><?= $i ?></a>
-                        </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?= $page >= $total_page ? 'disabled' : '' ?>">
-                        <a class="page-link" href="../GiaoDien/index.php?page=book&p=<?= $page + 1 ?>">Sau</a>
-                    </li>
-                </ul>
-            <?php endif; ?>
-        </div>
     </div>
 </div>
 
