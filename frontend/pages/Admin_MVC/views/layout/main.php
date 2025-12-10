@@ -1,9 +1,7 @@
 <?php
-session_start();
-
-
-
-$page = $_GET['page'] ?? 'dashboard';
+// đảm bảo biến $page và $content tồn tại
+$page = $page ?? ($_GET['page'] ?? 'dashboard');
+$content = $content ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -14,9 +12,9 @@ $page = $_GET['page'] ?? 'dashboard';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Nhà sách Online</title>
 
-    <!-- Bootstrap 5.0.2 - đúng đường dẫn từ thư mục ADMIN -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="bootstrap-5.0.2-dist/css/bootstrap.min.css">
-    <!-- Bootstrap Icons - sửa đường dẫn đúng (thêm vào nếu chưa có thư mục) -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
@@ -71,7 +69,7 @@ $page = $_GET['page'] ?? 'dashboard';
             transform: translateX(-5px);
         }
 
-        /* Xóa dấu chấm tròn của Bootstrap */
+        /* Xoá dấu chấm menu bootstrap */
         .sidebar .nav,
         .sidebar .nav-item {
             list-style: none !important;
@@ -149,102 +147,26 @@ $page = $_GET['page'] ?? 'dashboard';
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-
-        <!-- CHỈ HIỆN THANH CHÀO + ĐĂNG XUẤT KHI Ở DASHBOARD -->
+        
+        <!-- Nếu đang ở dashboard thì hiển thị phần chào -->
         <?php if ($page === 'dashboard'): ?>
             <div class="header-info">
                 <div>
                     <h4>Xin chào, <strong><?= htmlspecialchars($_SESSION['ten_dang_nhap'] ?? 'Admin') ?></strong>!</h4>
                     <small>Chào mừng quay lại khu vực quản trị</small>
                 </div>
-                <a href="../GiaoDien/logout.php" class="logout-btn">Đăng xuất</a>
+                <a href="../../index.php" class="logout-btn">Đăng xuất</a>
             </div>
         <?php endif; ?>
 
-        <?php
-        require_once '../them/connect.php';
+        <!-- HIỂN THỊ VIEW TỪ CONTROLLER -->
+        <?= $content ?>
 
-        $totalBooks = $conn->query("SELECT COUNT(*) FROM sach")->fetchColumn();
-        $totalUsers = $conn->query("SELECT COUNT(*) FROM nguoi_dung")->fetchColumn();
-        $totalCategories = $conn->query("SELECT COUNT(*) FROM danh_muc")->fetchColumn();
-        $totalPublishers = $conn->query("SELECT COUNT(*) FROM nha_xuat_ban")->fetchColumn();
-        $totalAuthors = $conn->query("SELECT COUNT(*) FROM tac_gia")->fetchColumn();
-        ?>
-
-        <!-- NỘI DUNG CÁC TRANG -->
-        <?php
-        switch ($page) {
-            case 'user':
-                include '../users/user.php';
-                break;
-            case 'book':
-                include '../book/book.php';
-                break;
-            case 'category':
-                include '../category/category.php';
-                break;
-            case 'author':
-                include '../author/author.php';
-                break;
-            case 'publisher':
-                include '../publisher/publisher.php';
-                break;
-            case 'book_images':
-                include '../book_images/book_images.php';
-                break;
-            case 'dashboard':
-            default:
-                echo '<div class="bg-white p-5 rounded shadow">';
-                echo '<h2>Dashboard - Trang quản trị</h2>';
-                echo '<p>Chào mừng bạn đến với khu vực quản trị website bán sách.</p>';
-
-                echo '<div class="row mt-4 text-center">';
-
-        // Tổng sách
-                echo '<div class="col-md-3 mb-3">
-                        <div class="card p-4 shadow-sm">
-                            <h5>Tổng sách</h5>
-                            <h3 class="text-primary">'.$totalBooks.'</h3>
-                        </div>
-                    </div>';
-
-        // Người dùng
-                echo '<div class="col-md-3 mb-3">
-                        <div class="card p-4 shadow-sm">
-                            <h5>Người dùng</h5>
-                            <h3 class="text-success">'.$totalUsers.'</h3>
-                        </div>
-                    </div>';
-
-        // Danh mục
-                echo '<div class="col-md-3 mb-3">
-                        <div class="card p-4 shadow-sm">
-                            <h5>Danh mục</h5>
-                            <h3 class="text-warning">'.$totalCategories.'</h3>
-                        </div>
-                    </div>';
-
-        // Nhà xuất bản
-                echo '<div class="col-md-3 mb-3">
-                        <div class="card p-4 shadow-sm">
-                            <h5>Nhà xuất bản</h5>
-                            <h3 class="text-danger">'.$totalPublishers.'</h3>
-                        </div>
-                    </div>';
-
-                echo '<div class="col-md-3 mb-3">
-                        <div class="card p-4 shadow-sm">
-                            <h5>Tác giả</h5>
-                            <h3 class="text-danger">'.$totalAuthors.'</h3>
-                        </div>
-                    </div>';
-                break;
-                }
-        ?>
     </div>
 
-    <!-- Bootstrap JS - đúng đường dẫn -->
+    <!-- Bootstrap JS -->
     <script src="bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

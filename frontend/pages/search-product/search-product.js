@@ -16,48 +16,68 @@ const SearchProductPage = {
     },
 
     init() {
+        // 1. LẤY THAM SỐ TỪ URL
         const urlParams = new URLSearchParams(window.location.search);
         this.state.filters.keyword = urlParams.get('keyword') || '';
+        this.state.filters.category_id = urlParams.get('category_id') || ''; 
+
+        // 2. Tải dữ liệu
         this.loadCategories();
         this.loadAuthors();
-        this.loadBooks();
+        this.loadBooks(); 
         this.bindEvents();
     },
 
-        async loadCategories() {
+    async loadCategories() {
         const categories = await SearchProductService.getCategories();
         if(categories) {
-            // 1. Vẽ cây danh mục
             SearchProductUI.renderCategoryTree(categories);
 
-            // 2. LOGIC MỚI: Không cần setTimeout
+            // Highlight danh mục đang chọn nếu có
             const activeId = this.state.filters.category_id;
             if (activeId) {
-                // DOM đã vẽ xong, gọi luôn
                 SearchProductUI.highlightActiveCategory(activeId);
             }
         }
     },
     
-    
-    // Thêm hàm này để cập nhật URL khi lọc
+    // --- [QUAN TRỌNG] HÀM NÀY ĐÃ ĐƯỢC SỬA ---
     updateURL() {
-        const params = new URLSearchParams();
-        if(this.state.filters.keyword) params.set('keyword', this.state.filters.keyword);
-        if(this.state.filters.category_id) params.set('category_id', this.state.filters.category_id);
-        // ... thêm các param khác nếu muốn giữ lại khi F5
+        // Lấy tất cả tham số hiện tại (bao gồm ?page=search_product)
+        const params = new URLSearchParams(window.location.search);
+        
+        // Cập nhật Keyword
+        if(this.state.filters.keyword) {
+            params.set('keyword', this.state.filters.keyword);
+        } else {
+            params.delete('keyword');
+        }
+
+        // Cập nhật Category ID
+        if(this.state.filters.category_id) {
+            params.set('category_id', this.state.filters.category_id);
+        } else {
+            params.delete('category_id');
+        }
+
+        // [QUAN TRỌNG] Đảm bảo tham số page luôn tồn tại để PHP Router hiểu
+        if(!params.has('page')) {
+            params.set('page', 'search_product');
+        }
         
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.pushState({path: newUrl}, '', newUrl);
     },
+    // ----------------------------------------
+
     async loadAuthors() {
         const authors = await SearchProductService.getAuthors();
         if(authors) SearchProductUI.renderAuthors(authors);
     },
 
     async loadBooks() {
-
-        this.updateURL(); // Cập nhật URL mỗi khi load sách
+        this.updateURL(); // Cập nhật URL chuẩn trước khi tải
+        
         const data = await SearchProductService.getBooks({
             page: this.state.pagination.page,
             limit: this.state.pagination.limit,
@@ -74,8 +94,7 @@ const SearchProductPage = {
     },
 
     bindEvents() {
-        // 1. TỰ ĐỘNG LỌC KHI CHỌN GIÁ
-        // Lắng nghe sự kiện change trên container cha của radio giá
+        // Các sự kiện giữ nguyên như cũ
         document.querySelector('.price-list')?.addEventListener('change', (e) => {
             if(e.target.name === 'price_filter') {
                 if (e.target.value !== 'all') {
@@ -87,44 +106,39 @@ const SearchProductPage = {
                     this.state.filters.price_max = '';
                 }
                 this.state.pagination.page = 1;
-                this.loadBooks(); // Gọi ngay
+                this.loadBooks();
             }
         });
 
-        // 2. TỰ ĐỘNG LỌC KHI CHỌN TÁC GIẢ
         document.getElementById('filter-author')?.addEventListener('change', (e) => {
             if(e.target.name === 'author_filter') {
                 this.state.filters.author = (e.target.value !== 'all') ? e.target.value : '';
                 this.state.pagination.page = 1;
-                this.loadBooks(); // Gọi ngay
+                this.loadBooks();
             }
         });
 
-        // 3. TỰ ĐỘNG LỌC KHI BẤM DANH MỤC (Bỏ toggle icon)
         document.getElementById('category-tree')?.addEventListener('click', (e) => {
-            if(e.target.classList.contains('cat-link')) {
-                // 1. Highlight & Lọc sách (Logic cũ)
+            const link = e.target.closest('.cat-link'); 
+            if(link) {
+                e.preventDefault(); 
                 document.querySelectorAll('.cat-link').forEach(el => el.classList.remove('active'));
-                e.target.classList.add('active');
+                link.classList.add('active');
                 
-                this.state.filters.category_id = e.target.dataset.id;
+                this.state.filters.category_id = link.dataset.id;
                 this.state.pagination.page = 1;
                 this.loadBooks();
 
-                // 2. LOGIC MỚI: Tự động Bật/Tắt danh mục con
-                const childrenContainer = e.target.parentElement.querySelector('.children-container');
+                // Toggle menu con
+                const parentItem = link.parentElement;
+                const childrenContainer = parentItem.querySelector('.children-container');
                 if(childrenContainer) {
-                    // Nếu đang ẩn thì hiện, đang hiện thì ẩn
-                    if (childrenContainer.style.display === 'none') {
-                        childrenContainer.style.display = 'block';
-                    } else {
-                        childrenContainer.style.display = 'none';
-                    }
+                    const isHidden = childrenContainer.style.display === 'none' || !childrenContainer.style.display;
+                    childrenContainer.style.display = isHidden ? 'block' : 'none';
                 }
             }
         });
 
-        // 4. Phân trang
         document.getElementById('pagination-container')?.addEventListener('click', (e) => {
             e.preventDefault();
             if(e.target.classList.contains('page-link')) {
@@ -137,7 +151,6 @@ const SearchProductPage = {
             }
         });
 
-        // 5. Sort
         document.getElementById('sort-select')?.addEventListener('change', (e) => {
             this.state.filters.sort = e.target.value;
             this.state.pagination.page = 1;
