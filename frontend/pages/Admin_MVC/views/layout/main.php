@@ -140,7 +140,7 @@ $content = $content ?? '';
                 <a class="nav-link <?= $page == 'publisher' ? 'active' : '' ?>" href="?page=publisher">Nhà xuất bản</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= $page == 'book_images' ? 'active' : '' ?>" href="?page=book_images">Hình ảnh sách</a>
+                <a class="nav-link <?= $page == 'bookImage' ? 'active' : '' ?>" href="?page=bookImage">Hình ảnh sách</a>
             </li>
         </ul>
     </div>
