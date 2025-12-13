@@ -90,23 +90,23 @@
                     <div class="category-slider">
                         <div class="category-track" id="categoryTrack">
                             <!-- Category Item 2 -->
-                            <div class="category-item">
+                            <div class="category-item" onclick="window.location.href='index.php?page=search_product'">
                                 <div class="category-image">
                                     <img src="./assets/img/anhdm2.jpg" alt="Giấy Photo">
                                 </div>
                                 <p class="category-name">Giấy Photo</p>
                             </div>
-    
+
                             <!-- Category Item 4 -->
                             <div class="category-item">
-                                <div class="category-image">
+                                <div class="category-image" onclick="window.location.href='index.php?page=search_product'">
                                     <img src="./assets/img/anhdm4.jpg" alt="SGK 2025">
                                 </div>
                                 <p class="category-name">SGK 2025</p>
                             </div>
                             
                             <!-- Category Item 5 -->
-                            <div class="category-item">
+                            <div class="category-item" onclick="window.location.href='index.php?page=search_product'">
                                 <div class="category-image">
                                     <img src="./assets/img/anhdm5.jpg" alt="Lịch Sử Việt Nam">
                                 </div>
@@ -115,7 +115,7 @@
                             
                             <!-- Category Item 6 -->
                             <div class="category-item">
-                                <div class="category-image">
+                                <div class="category-image" onclick="window.location.href='index.php?page=search_product'">
                                     <img src="./assets/img/anhdm6.jpg" alt="Văn Học">
                                 </div>
                                 <p class="category-name">Văn Học</p>
@@ -123,7 +123,7 @@
                             
                             <!-- Category Item 7 -->
                             <div class="category-item">
-                                <div class="category-image">
+                                <div class="category-image" onclick="window.location.href='index.php?page=search_product'">
                                     <img src="./assets/img/anhdm7.jpg" alt="Tâm Lý Kỹ Năng">
                                 </div>
                                 <p class="category-name">Tâm Lý Kỹ Năng</p>
@@ -131,7 +131,7 @@
                             
                             <!-- Category Item 8 -->
                             <div class="category-item">
-                                <div class="category-image">
+                                <div class="category-image" onclick="window.location.href='index.php?page=search_product'">
                                     <img src="./assets/img/anhdm8.jpg" alt="Thiếu Nhi">
                                 </div>
                                 <p class="category-name">Thiếu Nhi</p>
@@ -139,7 +139,7 @@
                             
                             <!-- Category Item 9 -->
                             <div class="category-item">
-                                <div class="category-image">
+                                <div class="category-image" onclick="window.location.href='index.php?page=search_product'">
                                     <img src="./assets/img/anhdm9.jpg" alt="Sách Học Ngoại Ngữ">
                                 </div>
                                 <p class="category-name">Sách Học Ngoại Ngữ</p>
@@ -147,7 +147,7 @@
                             
                             <!-- Category Item 10 -->
                             <div class="category-item">
-                                <div class="category-image">
+                                <div class="category-image" onclick="window.location.href='index.php?page=search_product'">
                                     <img src="./assets/img/anhdm10.jpg" alt="Ngoại Văn">
                                 </div>
                                 <p class="category-name">Ngoại Văn</p>
@@ -159,3 +159,49 @@
         </div>
     </div>        
 </main>
+
+
+
+<!-- Xử lý chuyển cảnh cho banner chính -->
+<script>
+// Lấy danh sách các ảnh và các chấm
+const slides = document.querySelectorAll('.carousel-slide');
+const dots = document.querySelectorAll('.dot'); // <-- MỚI: Lấy tất cả các chấm
+
+let slideIndex = 0;
+
+// Hàm chạy khi bấm nút Mũi tên (Next/Prev)
+function moveSlide(n) {
+    // 1. Tắt active của Ảnh và Chấm hiện tại đi
+    slides[slideIndex].classList.remove('active');
+    dots[slideIndex].classList.remove('active'); // <-- MỚI: Tắt đèn chấm cũ
+
+    // 2. Tính toán vị trí mới
+    slideIndex += n;
+
+    // Xử lý vòng lặp (nếu đi quá số lượng)
+    if (slideIndex >= slides.length) {
+        slideIndex = 0; // Về đầu
+    } else if (slideIndex < 0) {
+        slideIndex = slides.length - 1; // Về cuối
+    }
+
+    // 3. Bật active cho Ảnh và Chấm mới
+    slides[slideIndex].classList.add('active');
+    dots[slideIndex].classList.add('active'); // <-- MỚI: Bật đèn chấm mới
+}
+
+// Hàm chạy khi bấm trực tiếp vào Chấm (nếu bạn muốn bấm chấm cũng ăn)
+function currentSlide(n) {
+    // Tắt cái cũ
+    slides[slideIndex].classList.remove('active');
+    dots[slideIndex].classList.remove('active');
+
+    // Gán vị trí mới bằng đúng cái chấm vừa bấm
+    slideIndex = n;
+
+    // Bật cái mới
+    slides[slideIndex].classList.add('active');
+    dots[slideIndex].classList.add('active');
+}
+</script>

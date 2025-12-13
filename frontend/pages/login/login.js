@@ -59,7 +59,7 @@ async function handleLogin(e) {
                 'Đăng nhập quyền quản trị thành công.', // Nội dung
                 'Vào trang quản trị',           // Nút bấm
                 () => {                         // Callback chuyển trang
-                    window.location.href = '/BTL/frontend/pages/Admin/GiaoDien/index.php'; // Đường dẫn admin của bạn
+                    window.location.href = '/BTL/frontend/pages/Admin_MVC/index.php'; // Đường dẫn admin của bạn
                 }
             );
         } else {

@@ -1,5 +1,6 @@
 // frontend/components/suggest-book/suggest-book.ui.js
 import { escapeHTML, formatCurrency, createStarIconHTML } from '../../utils/utils.js';
+
 const SuggestBookUI = {
     els: {
         gridContainer: document.getElementById('goi-y-content'),
@@ -7,17 +8,45 @@ const SuggestBookUI = {
     },
 
     /**
+     * CẤU HÌNH ĐƯỜNG DẪN ẢNH
+     * Bạn cần sửa 'assets/uploads/' thành đường dẫn thực tế chứa ảnh của bạn.
+     * Ví dụ: 'public/images/', '/uploads/', v.v...
+     */
+    config: {
+        imageBasePath: 'assets/img-book', // <-- SỬA ĐƯỜNG DẪN NÀY
+        defaultImage: 'assets/images/no-image.png' // Ảnh hiển thị khi bị lỗi
+    },
+
+    /**
+     * Xử lý logic đường dẫn ảnh
+     */
+    getImageUrl: function(imagePath) {
+        if (!imagePath) return this.config.defaultImage;
+        
+        // Nếu trong DB đã lưu full link (http...) thì dùng luôn
+        if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+            return imagePath;
+        }
+        
+        // Nếu chưa có dấu / ở đầu thì nối với base path
+        return this.config.imageBasePath + imagePath;
+    },
+
+    /**
      * Render một thẻ sách (book card) HTML.
      * @param {object} book Dữ liệu sách.
      * @returns {string} Chuỗi HTML của thẻ sách.
      */
-    renderBookCardHTML: (book) => { // This can remain an arrow function as it doesn't use 'this.els'
+    renderBookCardHTML: function(book) { // Đổi thành function thường để dùng 'this' nếu cần
         const addedDate = new Date(book.addedDate);
         const diffTime = Math.abs(new Date() - addedDate);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         const isNew = diffDays <= 7;
-        const publisherName = book.publisherName ?? 'NXB';
-        const imagePath = book.imagePath ?? '';
+        const publisherName = book.publisherName ?? 'NXB Khác';
+        
+        // --- SỬA LỖI ẢNH TẠI ĐÂY ---
+        // Lấy đường dẫn ảnh đã xử lý
+        const finalImagePath = this.getImageUrl(book.imagePath);
 
         const discountBadgeHTML = book.discountPercent > 0 ?
             `<div class="discount-badge">-${book.discountPercent}%</div>` : '';
@@ -27,16 +56,24 @@ const SuggestBookUI = {
         const oldPriceHTML = book.originalPrice > book.sellingPrice ?
             `<span class="old-price">${formatCurrency(book.originalPrice)}</span>` : '';
 
+        // Thêm sự kiện onerror để nếu ảnh lỗi thì hiện ảnh mặc định
+        // Lưu ý: book.bookId cần tồn tại, nếu không link sẽ bị lỗi
+        const bookId = book.bookId || book.id; 
+
         return `
-            <a href="index.php?page=book&id=${book.bookId}" class="sach-card">
+            <a href="index.php?page=book&id=${bookId}" class="sach-card">
 
                 ${discountBadgeHTML}
                 ${newBadgeHTML}
 
-                <img class="sach-image"
-                    src="${escapeHTML(imagePath)}"
-                    alt="${escapeHTML(book.bookName)}"
-                    loading="lazy">
+                <div class="img-wrapper">
+                    <img class="sach-image"
+                        src="${escapeHTML(finalImagePath)}"
+                        alt="${escapeHTML(book.bookName)}"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='${this.config.defaultImage}';"
+                    >
+                </div>
 
                 <div class="sach-info">
                     <div class="sach-title" title="${escapeHTML(book.bookName)}">
@@ -73,14 +110,15 @@ const SuggestBookUI = {
      * Render danh sách sách gợi ý vào container.
      * @param {Array<object>} books Mảng các đối tượng sách.
      */
-    renderSuggestedBooks: function(books) { // Use function keyword
+    renderSuggestedBooks: function(books) {
         if (!this.els.gridContainer) return;
 
-        if (books.length > 0) {
-            const booksHtml = books.map(book => this.renderBookCardHTML(book)).join(''); // Use this.renderBookCardHTML
+        if (books && books.length > 0) {
+            // Dùng bind(this) hoặc arrow function bên trong map để truy cập được this.getImageUrl
+            const booksHtml = books.map(book => this.renderBookCardHTML(book)).join('');
             this.els.gridContainer.innerHTML = booksHtml;
         } else {
-            this.els.gridContainer.innerHTML = '<p>Không tìm thấy sách gợi ý nào.</p>';
+            this.els.gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Không tìm thấy sách gợi ý nào.</p>';
         }
     },
 
@@ -88,8 +126,13 @@ const SuggestBookUI = {
      * Gắn event listener cho nút "Xem thêm".
      * @param {function} onLoadMore Callback khi nút được click.
      */
-    attachLoadMoreListener: function(onLoadMore) { // Use function keyword
+    attachLoadMoreListener: function(onLoadMore) {
         if (this.els.loadMoreButton) {
+            // Xóa listener cũ (nếu cần thiết để tránh double click) rồi mới thêm
+            const newBtn = this.els.loadMoreButton.cloneNode(true);
+            this.els.loadMoreButton.parentNode.replaceChild(newBtn, this.els.loadMoreButton);
+            this.els.loadMoreButton = newBtn;
+            
             this.els.loadMoreButton.addEventListener('click', onLoadMore);
         }
     }
