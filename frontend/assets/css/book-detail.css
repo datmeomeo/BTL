@@ -342,8 +342,12 @@ body {
 .policy-text {
     flex: 1;
     font-size: 13px;
+<<<<<<< HEAD
+    line-height: 1.5; 
+=======
     line-height: 1.4;
     color: #333;
+>>>>>>> 6a024c67c3d9ac6366e3fcb74327a42f32e38cf5
 }
 
 .policy-text strong {
