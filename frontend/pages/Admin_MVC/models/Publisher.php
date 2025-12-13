@@ -23,7 +23,7 @@ class Publisher
             $params[':email'] = "%$email%";
         }
 
-        $sql .= " ORDER BY ma_nxb DESC LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY ma_nxb LIMIT :limit OFFSET :offset";
         $stmt = $this->conn->prepare($sql);
 
         foreach ($params as $k => $v) {

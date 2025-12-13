@@ -104,6 +104,28 @@
             </form>
         </div>
 
+        <!-- PHÂN TRANG -->
+        <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
+            <div class="text-muted">
+                Tổng: <strong><?= $total ?></strong> người dùng | Trang <?= $page_current ?> / <?= $total_pages_view ?>
+            </div>
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item <?= $page_current<=1 ? 'disabled':'' ?>">
+                        <a class="page-link" href="?page=user&p=<?= $page_current-1 ?>&search_ten=<?= urlencode($search_ten) ?>&search_vaitro=<?= urlencode($search_vaitro) ?>&search_trangthai=<?= urlencode($search_trangthai) ?>">Trước</a>
+                    </li>
+                    <?php for($i=1; $i<=$total_pages_view; $i++): ?>
+                        <li class="page-item <?= $i==$page_current?'active':'' ?>">
+                            <a class="page-link" href="?page=user&p=<?= $i ?>&search_ten=<?= urlencode($search_ten) ?>&search_vaitro=<?= urlencode($search_vaitro) ?>&search_trangthai=<?= urlencode($search_trangthai) ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?= $page_current>=$total_pages_view?'disabled':'' ?>">
+                        <a class="page-link" href="?page=user&p=<?= $page_current+1 ?>&search_ten=<?= urlencode($search_ten) ?>&search_vaitro=<?= urlencode($search_vaitro) ?>&search_trangthai=<?= urlencode($search_trangthai) ?>">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
         <!-- BẢNG -->
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -157,28 +179,6 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        </div>
-
-        <!-- PHÂN TRANG -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Tổng: <strong><?= $total ?></strong> người dùng | Trang <?= $page_current ?> / <?= $total_pages_view ?>
-            </div>
-            <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item <?= $page_current<=1 ? 'disabled':'' ?>">
-                        <a class="page-link" href="?page=user&p=<?= $page_current-1 ?>&search_ten=<?= urlencode($search_ten) ?>&search_vaitro=<?= urlencode($search_vaitro) ?>&search_trangthai=<?= urlencode($search_trangthai) ?>">Trước</a>
-                    </li>
-                    <?php for($i=1; $i<=$total_pages_view; $i++): ?>
-                        <li class="page-item <?= $i==$page_current?'active':'' ?>">
-                            <a class="page-link" href="?page=user&p=<?= $i ?>&search_ten=<?= urlencode($search_ten) ?>&search_vaitro=<?= urlencode($search_vaitro) ?>&search_trangthai=<?= urlencode($search_trangthai) ?>"><?= $i ?></a>
-                        </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?= $page_current>=$total_pages_view?'disabled':'' ?>">
-                        <a class="page-link" href="?page=user&p=<?= $page_current+1 ?>&search_ten=<?= urlencode($search_ten) ?>&search_vaitro=<?= urlencode($search_vaitro) ?>&search_trangthai=<?= urlencode($search_trangthai) ?>">Sau</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
 
     </div>

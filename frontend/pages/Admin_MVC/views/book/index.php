@@ -160,6 +160,28 @@
             </form>
         </div>
 
+        <!-- PHÂN TRANG -->
+        <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
+            <div class="text-muted">
+                Tổng: <strong><?= $total ?></strong> sách | Trang <?= $page_current ?> / <?= $total_pages_view ?>
+            </div>
+            <?php if ($total_pages_view > 1): ?>
+                <ul class="pagination mb-0">
+                    <li class="page-item <?= $page_current <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=book<?= $search_params ?>&p=<?= $page_current - 1 ?>">Trước</a>
+                    </li>
+                    <?php for ($i = max(1, $page_current - 2); $i <= min($total_pages_view, $page_current + 2); $i++): ?>
+                        <li class="page-item <?= $i == $page_current ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=book<?= $search_params ?>&p=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?= $page_current >= $total_pages_view ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=book<?= $search_params ?>&p=<?= $page_current + 1 ?>">Sau</a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+        </div>
+
         <!-- BẢNG DANH SÁCH -->
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -208,27 +230,6 @@
             </table>
         </div>
 
-        <!-- PHÂN TRANG -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Tổng: <strong><?= $total ?></strong> sách | Trang <?= $page_current ?> / <?= $total_pages_view ?>
-            </div>
-            <?php if ($total_pages_view > 1): ?>
-                <ul class="pagination mb-0">
-                    <li class="page-item <?= $page_current <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=book<?= $search_params ?>&p=<?= $page_current - 1 ?>">Trước</a>
-                    </li>
-                    <?php for ($i = max(1, $page_current - 2); $i <= min($total_pages_view, $page_current + 2); $i++): ?>
-                        <li class="page-item <?= $i == $page_current ? 'active' : '' ?>">
-                            <a class="page-link" href="?page=book<?= $search_params ?>&p=<?= $i ?>"><?= $i ?></a>
-                        </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?= $page_current >= $total_pages_view ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=book<?= $search_params ?>&p=<?= $page_current + 1 ?>">Sau</a>
-                    </li>
-                </ul>
-            <?php endif; ?>
-        </div>
     </div>
 </div>
 
