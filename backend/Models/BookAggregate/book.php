@@ -16,7 +16,7 @@ class Book
     private ?string $id = null; 
     
     private string $name;
-    private int $publisherId; // ID của nhà xuất bản (khóa ngoại), phần này có thể mở rộng thành một Value Object.
+    private int $publisherId; 
     private int $numberOfPages;
     private string $coverType;
     private string $language;
@@ -105,7 +105,7 @@ class Book
     /**
      * Phương thức tạo mới một cuốn sách với các thuộc tính bắt buộc và tùy chọn.
      */
-    public static function CreateBook(
+    public static function createBook(
         string $name,
         int $publisherId,
         int $numberOfPages,
@@ -126,8 +126,8 @@ class Book
             $publicationYear,
             $isbnCode
         );
-        $book->UpdatePrice($sellingPrice, $originalPrice);
-        $book->UpdateStock($stockQuantity);
+        $book->updatePrice($sellingPrice, $originalPrice);
+        $book->updateStock($stockQuantity);
         return $book;
     }
     
@@ -135,7 +135,7 @@ class Book
      * Thêm một hình ảnh vào danh sách.
      * @param BookImage $image Đối tượng hình ảnh.
      */
-    public function AddImage(BookImage $image): void
+    public function addImage(BookImage $image): void
     {
         $this->imageList[] = $image;
     }
@@ -145,7 +145,7 @@ class Book
      * @param float $newSellingPrice Giá bán mới.
      * @param float $newOriginalPrice Giá gốc mới.
      */
-    public function UpdatePrice(float $newSellingPrice, float $newOriginalPrice): void
+    public function updatePrice(float $newSellingPrice, float $newOriginalPrice): void
     {
         if ($newSellingPrice <= 0 || $newOriginalPrice <= 0) {
             throw new InvalidArgumentException("Giá bán và giá gốc phải lớn hơn 0.");
@@ -159,7 +159,7 @@ class Book
      * Cập nhật số lượng tồn kho và trạng thái sách.
      * @param int $quantityChange Số lượng thay đổi (dương cho nhập, âm cho xuất).
      */
-    public function UpdateStock(int $quantityChange): void
+    public function updateStock(int $quantityChange): void
     {
         $newStock = $this->stockQuantity + $quantityChange;
         if ($newStock < 0) {
@@ -174,17 +174,17 @@ class Book
         }
     }
     
-    public function IncrementViews(): void
+    public function incrementViews(): void
     {
         $this->viewCount++;
     }
 
-    public function SetId(?int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function GetId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -193,7 +193,7 @@ class Book
      * Trả về danh sách hình ảnh (bản sao mảng).
      * @return BookImage[]
      */
-    public function GetImages(): array
+    public function getImages(): array
     {
         return $this->imageList;
     }

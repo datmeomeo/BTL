@@ -19,3 +19,4 @@ Những thành viên còn lại trước khi muốn tạo pull request vào main
 3. git push origin YourFunctionBranch
 4. Tạo pull request vào nhánh main
 Các thành viên không được code trên nhánh của nhau.
+alo12345

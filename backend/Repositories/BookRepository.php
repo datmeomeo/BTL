@@ -109,10 +109,10 @@ class BookRepository implements IBookRepository
 
             // Lấy ID mới và gán lại vào Aggregate Root
             $bookId = $this->db->lastInsertId();
-            $book->SetId($bookId); 
+            $book->setId($bookId); 
             
             // 2. INSERT BookImage
-            $this->insertImages($bookId, $book->GetImages());
+            $this->insertImages($bookId, $book->getImages());
 
             $this->db->commit();
             
@@ -167,7 +167,7 @@ class BookRepository implements IBookRepository
             $stmtDeleteImages->execute(['id' => $bookId]);
             
             // Thêm lại các hình ảnh mới
-            $this->insertImages($bookId, $book->GetImages());
+            $this->insertImages($bookId, $book->getImages());
 
             $this->db->commit();
             

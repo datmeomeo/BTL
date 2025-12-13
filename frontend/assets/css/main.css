@@ -231,6 +231,39 @@ body{
     font-weight: bold;
 }
 
+.mega-menu-wrapper:hover .mega-menu {
+    display: flex !important; /* Dùng flex để giữ layout 2 cột */
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* 2. Logic Chuyển Tab (Sidebar -> Content) */
+
+/* Mặc định ẩn tất cả nội dung bên phải */
+.mega-content {
+    display: none;
+}
+
+/* Chỉ hiện nội dung của Tab đang được Active (do JS thêm class active) */
+.mega-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease; /* Hiệu ứng hiện dần nhẹ nhàng */
+}
+
+/* Hiệu ứng khi Active mục bên trái (Sidebar) */
+.mega-menu-item.active {
+    background: white;
+    border-left-color: var(--primary-red);
+    color: var(--primary-red);
+    font-weight: 700;
+}
+
+/* Hiệu ứng Fade In cho mượt */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 /* GRID CATEGORY */
 .categories-grid{
     display: grid;
@@ -308,8 +341,6 @@ body{
     }
 }
 
-
-
 /* MAIN CONTENT */
 .main-content{
     background: #f5f5f5;
@@ -342,12 +373,24 @@ body{
     min-width: 100%;
     height: 100%;
     transition: opacity 0.8s ease, transform 0.8s ease;
+    display: none;
 }
 .carousel-slide img{
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
+}
+/* Chỉ hiện ảnh nào có class "active" */
+.carousel-slide.active {
+    display: block;
+    /* Thêm hiệu ứng hiện dần cho mượt mắt (nếu muốn) */
+    animation: hienDan 0.2s;
+}
+
+@keyframes hienDan {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
 }
 
 /* CAROUSEL BUTTONS */
@@ -874,6 +917,7 @@ body{
     line-height: 1.6;
 }
 
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 991px) {
     .footer-partners-vertical img {
@@ -920,3 +964,4 @@ body{
         flex-direction: column;
     }
 }
+

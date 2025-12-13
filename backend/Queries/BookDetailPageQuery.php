@@ -47,23 +47,36 @@ class BookDetailPageQuery
                       ORDER BY la_anh_chinh DESC, thu_tu ASC";
         $stmtImg = $this->db->prepare($sqlImages);
         $stmtImg->execute([$bookId]);
-        $rawImages = $stmtImg->fetchAll(PDO::FETCH_COLUMN); 
+        $rawImages = $stmtImg->fetchAll(PDO::FETCH_COLUMN);
 
-        $mainImage = $rawImages[0] ?? '../img/no-image.jpg';
-        $thumbnails = $rawImages; 
+        $imagePrefix = 'assets/img-book/'; // Phải chắc chắn dòng này đúng đường dẫn
+
+        $processedImages = [];
+        if (!empty($rawImages)) {
+            foreach ($rawImages as $imgName) {
+                if (strpos($imgName, 'http') === 0) {
+                    $processedImages[] = $imgName;
+                } else {
+                    // Phải có dòng nối chuỗi này
+                    $processedImages[] = $imagePrefix . $imgName;
+                }
+            }
+        }
+        $mainImage = !empty($processedImages) ? $processedImages[0] : 'assets/img/no-image.jpg';
+        $thumbnails = $processedImages;
 
         // 3. Get Related Data
         $categoryInfo = $this->getCategoryInfo($bookId);
         $reviews = $this->getReviews($bookId);
 
         return new BookDetailPageDto(
-            bookId: (int)$sach['ma_sach'],
+            bookId: (int) $sach['ma_sach'],
             bookName: $sach['ten_sach'],
             description: $sach['mo_ta'] ?? '',
-            isbn: $sach['ma_isbn'] ?? (string)$sach['ma_sach'],
-            sellingPrice: (float)$sach['gia_ban'],
-            originalPrice: (float)$sach['gia_goc'],
-            discountPercent: (int)($sach['phan_tram_giam'] ?? 0),
+            isbn: $sach['ma_isbn'] ?? (string) $sach['ma_sach'],
+            sellingPrice: (float) $sach['gia_ban'],
+            originalPrice: (float) $sach['gia_goc'],
+            discountPercent: (int) ($sach['phan_tram_giam'] ?? 0),
             categoryName: $categoryInfo['categoryName'],
             parentCategoryName: $categoryInfo['parentCategoryName'],
             authorName: $sach['tac_gia'] ?? 'Đang cập nhật',
@@ -71,14 +84,14 @@ class BookDetailPageQuery
             supplierName: $sach['ten_nxb'] ?? 'Nhà cung cấp',
             translatorName: $sach['nguoi_dich'] ?? null,
             language: $sach['ngon_ngu'] ?? 'Tiếng Việt',
-            publishYear: !empty($sach['nam_xuat_ban']) ? (int)$sach['nam_xuat_ban'] : null,
+            publishYear: !empty($sach['nam_xuat_ban']) ? (int) $sach['nam_xuat_ban'] : null,
             coverForm: $sach['hinh_thuc_bia'] ?? 'Bìa mềm',
-            weight: !empty($sach['trong_luong']) ? (int)$sach['trong_luong'] : null,
+            weight: !empty($sach['trong_luong']) ? (int) $sach['trong_luong'] : null,
             dimensions: $sach['kich_thuoc'] ?? null,
-            pageCount: !empty($sach['so_trang']) ? (int)$sach['so_trang'] : null,
-            stockQuantity: (int)$sach['so_luong_ton'],
-            averageRating: (float)($sach['diem_trung_binh'] ?? 0),
-            reviewCount: (int)$sach['so_luong_danh_gia'],
+            pageCount: !empty($sach['so_trang']) ? (int) $sach['so_trang'] : null,
+            stockQuantity: (int) $sach['so_luong_ton'],
+            averageRating: (float) ($sach['diem_trung_binh'] ?? 0),
+            reviewCount: (int) $sach['so_luong_danh_gia'],
             mainImage: $mainImage,
             thumbnails: $thumbnails,
             reviews: $reviews
@@ -121,7 +134,7 @@ class BookDetailPageQuery
                 INNER JOIN NGUOI_DUNG nd ON dg.ma_nguoi_dung = nd.ma_nguoi_dung
                 WHERE dg.ma_sach = ? AND dg.trang_thai = 'approved'
                 ORDER BY dg.ngay_danh_gia DESC
-                LIMIT 5"; 
+                LIMIT 5";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$bookId]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -130,9 +143,9 @@ class BookDetailPageQuery
         foreach ($rows as $row) {
             $result[] = [
                 'reviewerName' => $row['ho_ten'],
-                'rating'       => (int)$row['diem_danh_gia'],
-                'content'      => $row['noi_dung'],
-                'reviewDate'   => $row['ngay_danh_gia']
+                'rating' => (int) $row['diem_danh_gia'],
+                'content' => $row['noi_dung'],
+                'reviewDate' => $row['ngay_danh_gia']
             ];
         }
 

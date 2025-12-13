@@ -21,6 +21,8 @@ use Services\BookService;
 use Queries\BookDetailPageQuery;
 use Queries\SuggestBookQuery;
 
+use Queries\SearchProductPageQuery;
+
 
 function BookAPI(string $action, PDO $db)
 {
@@ -28,7 +30,8 @@ function BookAPI(string $action, PDO $db)
     $bookService = new BookService($bookRepository);
     $suggestBookQuery = new SuggestBookQuery($db);
     $bookDetailPageQuery = new BookDetailPageQuery($db);
-    $controller = new BookController($bookService, $bookDetailPageQuery, $suggestBookQuery);
+    $searchProductQuery = new SearchProductPageQuery($db);
+    $controller = new BookController($bookService, $bookDetailPageQuery, $suggestBookQuery,  $searchProductQuery);
     $controller->handleRequest($action);
 }
 
@@ -36,7 +39,8 @@ function CartAPI(string $action, PDO $db)
 {
     $cartRepo = new CartRepository($db);
     $sessionCartRepo = new SessionCartRepository();
-    $cartService = new CartService($cartRepo, $sessionCartRepo);
+    $bookRepository = new BookRepository($db);
+    $cartService = new CartService($cartRepo, $bookRepository, $sessionCartRepo);
     $controller = new CartController($cartService);
     $controller->handleRequest($action);
 }
@@ -49,7 +53,8 @@ function AuthAPI(string $action, PDO $db)
 
     $cartRepo = new CartRepository($db);
     $sessionCartRepo = new SessionCartRepository();
-    $cartService = new CartService($cartRepo, $sessionCartRepo);
+    $bookRepository = new BookRepository($db);
+    $cartService = new CartService($cartRepo, $bookRepository, $sessionCartRepo);
 
     $controller = new AuthController($authService, $cartService);
     $controller->handleRequest($action);
