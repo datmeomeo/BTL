@@ -42,11 +42,6 @@ class BookController extends BaseController
                 case 'suggest_book':
                     $this->getSuggestBooks();
                     break;
-<<<<<<< HEAD
-                case 'search':
-                    $this->getSearch();
-                    break;
-=======
                 case 'list':           // Lấy danh sách sách (có filter)
                     $this->getListBooks();
                     break;
@@ -59,7 +54,6 @@ class BookController extends BaseController
                 case 'book_types':     // Lấy loại sách (bìa cứng/mềm...)
                      $this->getBookTypes();
                      break;
->>>>>>> 6a024c67c3d9ac6366e3fcb74327a42f32e38cf5
                 default:
                     throw new Exception("Action not found");
             }
@@ -101,8 +95,6 @@ class BookController extends BaseController
         ]);
     }
 
-<<<<<<< HEAD
-=======
 // Trong hàm getListBooks()
     private function getListBooks()
     {
@@ -163,5 +155,4 @@ class BookController extends BaseController
         ]);
     }
 
->>>>>>> 6a024c67c3d9ac6366e3fcb74327a42f32e38cf5
 }

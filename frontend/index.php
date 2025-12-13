@@ -24,11 +24,7 @@
                 './pages/cart/cart.js'
             ],
         ],
-<<<<<<< HEAD
-        'searchProduct'=> [
-=======
         'search_product'=> [
->>>>>>> 6a024c67c3d9ac6366e3fcb74327a42f32e38cf5
             'css' => ['./assets/css/search-product.css'],
             'js'=> [
                 './pages/search-product/search-product.js',
@@ -73,11 +69,7 @@
             include './pages/login/login.php'; 
         } elseif ($page === 'cart') {
             include './pages/cart/cart.php';
-<<<<<<< HEAD
-        } elseif ($page == 'searchproduct'){
-=======
         } elseif ($page == 'search_product'){
->>>>>>> 6a024c67c3d9ac6366e3fcb74327a42f32e38cf5
             include './pages/search-product/search-product.php';
         } 
         else {
