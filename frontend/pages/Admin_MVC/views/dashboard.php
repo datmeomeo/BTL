@@ -38,6 +38,5 @@
                 <h3 class="text-danger"><?= $totalAuthors ?></h3>
             </div>
         </div>
-
     </div>
 </div>
