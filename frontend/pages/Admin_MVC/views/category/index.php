@@ -1,31 +1,5 @@
 <?php
-<<<<<<< HEAD:frontend/pages/Admin/category/category.php
-require_once '../them/connect.php';
-
-/* ==================== PHÂN TRANG ==================== */
-$per_page = 10;
-$page = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
-$offset = ($page - 1) * $per_page;
-
-$total = $conn->query("SELECT COUNT(*) FROM danh_muc")->fetchColumn();
-$total_page = ceil($total / $per_page);
-
-$stmt = $conn->prepare("
-    SELECT * FROM danh_muc 
-    ORDER BY ma_danh_muc
-    LIMIT :limit OFFSET :offset
-");
-$stmt->bindValue(':limit', $per_page, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-$category = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-/* ==================== THÔNG BÁO ==================== */
-$success = $_GET['success'] ?? '';
-$error = $_GET['error'] ?? '';
-=======
 // $categories, $success, $error, $page_current, $total_pages_view đã có từ controller
->>>>>>> ccb09361582e3960687bea65f7cd02a19f7b3b44:frontend/pages/Admin_MVC/views/category/index.php
 ?>
 
 <link rel="stylesheet" href="/bootstrap-5.0.2-dist/css/bootstrap.min.css">
@@ -142,30 +116,6 @@ $error = $_GET['error'] ?? '';
             </form>
         </div>
 
-<<<<<<< HEAD:frontend/pages/Admin/category/category.php
-        <!-- PHÂN TRANG GIỮ NGUYÊN -->
-        <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
-            <div class="text-muted">
-                Tổng: <b><?= $total ?></b> | Trang <?= $page ?>/<?= $total_page ?>
-            </div>
-
-            <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $page - 1 ?>">Trước</a>
-                    </li>
-
-                    <?php
-                    for ($i = max(1, $page - 2); $i <= min($total_page, $page + 2); $i++):
-                    ?>
-                    <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $i ?>"><?= $i ?></a>
-                    </li>
-                    <?php endfor; ?>
-
-                    <li class="page-item <?= $page >= $total_page ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=category&p=<?= $page + 1 ?>">Sau</a>
-=======
         <!-- PHÂN TRANG -->
         <div class="d-flex justify-content-between align-items-center mt-4" style="margin-bottom: 10px;">
             <div class="text-muted">
@@ -183,17 +133,12 @@ $error = $_GET['error'] ?? '';
                     <?php endfor; ?>
                     <li class="page-item <?= $page_current >= $total_pages_view ? 'disabled' : '' ?>">
                         <a class="page-link" href="?page=category&p=<?= $page_current + 1 ?>">Sau</a>
->>>>>>> ccb09361582e3960687bea65f7cd02a19f7b3b44:frontend/pages/Admin_MVC/views/category/index.php
                     </li>
                 </ul>
             </nav>
         </div>
 
-<<<<<<< HEAD:frontend/pages/Admin/category/category.php
-        <!-- BẢNG DANH MỤC -->
-=======
         <!-- BẢNG DANH SÁCH -->
->>>>>>> ccb09361582e3960687bea65f7cd02a19f7b3b44:frontend/pages/Admin_MVC/views/category/index.php
         <div class="table-responsive">
             <table class="table table-hover align-middle text-center">
                 <thead class="table-dark">
@@ -238,10 +183,6 @@ $error = $_GET['error'] ?? '';
                 </tbody>
             </table>
         </div>
-<<<<<<< HEAD:frontend/pages/Admin/category/category.php
-=======
-
->>>>>>> ccb09361582e3960687bea65f7cd02a19f7b3b44:frontend/pages/Admin_MVC/views/category/index.php
     </div>
 </div>
 
