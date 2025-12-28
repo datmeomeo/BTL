@@ -97,4 +97,13 @@ class UserController
         }
         exit;
     }
+
+    public function logout() {
+        session_unset();
+        session_destroy();
+        echo "<script>
+            window.location.href = '../../index.php?page=login';
+        </script>";
+        exit();
+    }
 }

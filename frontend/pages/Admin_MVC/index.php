@@ -1,5 +1,21 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    echo "<script>
+        localStorage.removeItem('user_info'); 
+        window.location.href = '../../index.php?page=login';
+    </script>";
+    exit(); 
+}
+
+$role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 0;
+
+if ((string)$role !== '1' && strtolower((string)$role) !== 'admin') {
+    echo "<script>
+        window.location.href = '../../index.php';
+    </script>";
+    exit();
+}
 
 // Kết nối CSDL
 require_once "them/connect.php";

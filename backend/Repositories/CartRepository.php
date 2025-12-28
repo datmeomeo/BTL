@@ -13,7 +13,6 @@ class CartRepository
     {
         $this->conn = $conn;
     }
-
     public function getCart(int $userId): Cart
     {
         $cart = new Cart();
@@ -41,19 +40,24 @@ class CartRepository
         $items = $stmtItems->fetchAll();
 
         foreach ($items as $item) {
+        $rawUrl = $item['duong_dan_hinh'] ?? ''; 
+        $finalUrl = './assets/img-book/' . ltrim($rawUrl, '/.'); 
+        if (empty($rawUrl)) {
+            $finalUrl = './assets/img/fahasa-logo.jpg';
+        }
+
             $cartItem = new CartItem(
                 (int)$item['ma_sach'],
                 (float)$item['gia_tai_thoi_diem'], 
                 (int)$item['so_luong'],
                 $item['ten_sach'],
-                $item['duong_dan_hinh'] ?? ''
+                $rawUrl 
             );
             $cart->addItem($cartItem); 
         }
 
         return $cart;
     }
-
     public function save(Cart $cart, int $userId): void
     {
         // 1. Ensure Cart Exists

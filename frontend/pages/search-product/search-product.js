@@ -16,12 +16,11 @@ const SearchProductPage = {
     },
 
     init() {
-        // 1. LẤY THAM SỐ TỪ URL
         const urlParams = new URLSearchParams(window.location.search);
         this.state.filters.keyword = urlParams.get('keyword') || '';
         this.state.filters.category_id = urlParams.get('category_id') || ''; 
 
-        // 2. Tải dữ liệu
+        // Tải dữ liệu
         this.loadCategories();
         this.loadAuthors();
         this.loadBooks(); 
@@ -32,8 +31,6 @@ const SearchProductPage = {
         const categories = await SearchProductService.getCategories();
         if(categories) {
             SearchProductUI.renderCategoryTree(categories);
-
-            // Highlight danh mục đang chọn nếu có
             const activeId = this.state.filters.category_id;
             if (activeId) {
                 SearchProductUI.highlightActiveCategory(activeId);
@@ -41,9 +38,7 @@ const SearchProductPage = {
         }
     },
     
-    // --- [QUAN TRỌNG] HÀM NÀY ĐÃ ĐƯỢC SỬA ---
     updateURL() {
-        // Lấy tất cả tham số hiện tại (bao gồm ?page=search_product)
         const params = new URLSearchParams(window.location.search);
         
         // Cập nhật Keyword
@@ -60,7 +55,13 @@ const SearchProductPage = {
             params.delete('category_id');
         }
 
-        // [QUAN TRỌNG] Đảm bảo tham số page luôn tồn tại để PHP Router hiểu
+        // Cập nhật Author (nếu muốn URL lưu cả tác giả)
+        if(this.state.filters.author) {
+            params.set('author', this.state.filters.author);
+        } else {
+            params.delete('author');
+        }
+
         if(!params.has('page')) {
             params.set('page', 'search_product');
         }
@@ -68,7 +69,6 @@ const SearchProductPage = {
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.pushState({path: newUrl}, '', newUrl);
     },
-    // ----------------------------------------
 
     async loadAuthors() {
         const authors = await SearchProductService.getAuthors();
@@ -76,7 +76,7 @@ const SearchProductPage = {
     },
 
     async loadBooks() {
-        this.updateURL(); // Cập nhật URL chuẩn trước khi tải
+        this.updateURL(); 
         
         const data = await SearchProductService.getBooks({
             page: this.state.pagination.page,
@@ -94,7 +94,7 @@ const SearchProductPage = {
     },
 
     bindEvents() {
-        // Các sự kiện giữ nguyên như cũ
+        // Lọc theo giá
         document.querySelector('.price-list')?.addEventListener('change', (e) => {
             if(e.target.name === 'price_filter') {
                 if (e.target.value !== 'all') {
@@ -110,6 +110,7 @@ const SearchProductPage = {
             }
         });
 
+        // Lọc theo tác giả
         document.getElementById('filter-author')?.addEventListener('change', (e) => {
             if(e.target.name === 'author_filter') {
                 this.state.filters.author = (e.target.value !== 'all') ? e.target.value : '';
@@ -118,18 +119,34 @@ const SearchProductPage = {
             }
         });
 
+        // --- SỬA CHÍNH: Xử lý click Danh mục ---
         document.getElementById('category-tree')?.addEventListener('click', (e) => {
             const link = e.target.closest('.cat-link'); 
             if(link) {
                 e.preventDefault(); 
+                
+                // Highlight UI
                 document.querySelectorAll('.cat-link').forEach(el => el.classList.remove('active'));
                 link.classList.add('active');
                 
+                // 1. Cập nhật Category ID mới
                 this.state.filters.category_id = link.dataset.id;
+
+                // 2. [QUAN TRỌNG] Reset các bộ lọc khác để tránh xung đột
+                this.state.filters.keyword = '';   // Xóa từ khóa tìm kiếm cũ
+                this.state.filters.author = '';    // Xóa lọc tác giả (nếu muốn)
+                this.state.filters.price_min = ''; 
+                this.state.filters.price_max = '';
+                
+                // Reset radio button trên UI về mặc định (nếu cần thiết)
+                const allAuthorRadio = document.getElementById('auth-all');
+                if(allAuthorRadio) allAuthorRadio.checked = true;
+
+                // 3. Load lại sách
                 this.state.pagination.page = 1;
                 this.loadBooks();
 
-                // Toggle menu con
+                // Toggle menu con (giữ nguyên logic cũ của bạn)
                 const parentItem = link.parentElement;
                 const childrenContainer = parentItem.querySelector('.children-container');
                 if(childrenContainer) {

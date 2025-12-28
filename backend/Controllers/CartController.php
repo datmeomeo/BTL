@@ -54,6 +54,9 @@ class CartController extends BaseController
 
     private function getCart(string $message = '')
     {
+        // 1. Lấy dữ liệu giỏ hàng từ Service
+        // Nếu Service hoặc Repository bị lỗi cú pháp, dòng này sẽ dừng chương trình.
+        // Hãy đảm bảo bạn đã undo (hoàn tác) các sửa đổi phức tạp bên Service/Repo nếu có.
         $cart = $this->cartService->getCart();
         
         $data = [
@@ -63,23 +66,32 @@ class CartController extends BaseController
         ];
 
         foreach ($cart->getItems() as $item) {
+            $rawImg = $item->getImage(); 
+            $finalImg = './assets/img/fahasa-logo.jpg'; 
+
+            if (!empty($rawImg)) {
+                if (strpos($rawImg, 'assets/') === false) {
+                    $finalImg = './assets/img-book/' . ltrim($rawImg, '/');
+                } else {
+                    $finalImg = $rawImg;
+                }
+            }
+
             $data['items'][] = [
                 'productId' => $item->getProductId(),
-                'name' => $item->getName(),
-                'price' => $item->getPrice(),
-                'quantity' => $item->getQuantity(),
-                'image' => $item->getImage(),
-                'total' => $item->getTotal()
+                'name'      => $item->getName(),
+                'price'     => $item->getPrice(),
+                'quantity'  => $item->getQuantity(),
+                'image'     => $finalImg, 
+                'total'     => $item->getTotal()
             ];
         }
-
         $this->jsonResponse([
             'status'=> 'success',
             'message'=> $message,
             'data'=> $data
         ]);
     }
-
     private function updateQuantity()
     {
         $productId = $this->getInput('productId');

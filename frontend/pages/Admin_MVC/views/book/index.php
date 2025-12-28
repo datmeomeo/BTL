@@ -262,7 +262,7 @@
             // DANH MỤC: chọn nhiều (multiple)
             const selectCat = document.getElementById("danh_muc");
             if (selectCat && d.danhmuc) {
-                const selectedCats = JSON.parse(d.danhmuc);
+                const selectedCats = JSON.parse(d.danhmuc).map(String); 
                 selectCat.querySelectorAll("option").forEach(opt => {
                     opt.selected = selectedCats.includes(opt.value);
                 });

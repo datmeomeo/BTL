@@ -49,14 +49,24 @@ class CartService
             throw new Exception("Sản phẩm không tồn tại");
         }
         $cart = $this->getCart();
-
         $imgUrl = '';
-        foreach ($product->getImages() as $img) {
+        $images = $product->getImages();
+        
+        foreach ($images as $img) {
             if ($img->isMainImage()) {
                 $imgUrl = $img->getUrl();
                 break;
             }
         }
+        if (empty($imgUrl) && count($images) > 0) {
+            $imgUrl = $images[0]->getUrl();
+        }
+        if (!empty($imgUrl)) {
+                $imgUrl = './assets/img-book/' . ltrim($imgUrl, '/.');
+            } else {
+                $imgUrl = './assets/img/fahasa-logo.jpg'; 
+            }
+
         $item = new CartItem($productId, $product->getSellingPrice(), $quantity, $product->getName(), $imgUrl);
         $cart->addItem($item);
         $this->saveCart($cart);
