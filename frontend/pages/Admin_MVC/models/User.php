@@ -28,7 +28,7 @@ class User
                 $params[':trangthai'] = $trangthai;
             }
             //sắp xếp lại 
-            $sql .= " ORDER BY ma_nguoi_dung DESC LIMIT :limit OFFSET :offset";
+            $sql .= " ORDER BY ma_nguoi_dung LIMIT :limit OFFSET :offset";
             $stmt = $this->conn->prepare($sql);
 
             foreach ($params as $key => $val) {

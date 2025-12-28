@@ -36,7 +36,7 @@ class Book
         $params[':nxb'] = $search_nxb;
     }
 
-    $sql .= " GROUP BY s.ma_sach ORDER BY s.ma_sach DESC LIMIT :limit OFFSET :offset";
+    $sql .= " GROUP BY s.ma_sach ORDER BY s.ma_sach LIMIT :limit OFFSET :offset";
 
     $stmt = $this->conn->prepare($sql);
 

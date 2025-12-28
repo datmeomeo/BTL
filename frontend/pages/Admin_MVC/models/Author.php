@@ -23,7 +23,7 @@ class Author
             $params[':quoc_tich'] = "%$quoc_tich%";
         }
 
-        $sql .= " ORDER BY ma_tac_gia DESC LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY ma_tac_gia LIMIT :limit OFFSET :offset";
         $stmt = $this->conn->prepare($sql);
 
         foreach ($params as $key => $val) {
