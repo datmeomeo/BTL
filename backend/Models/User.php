@@ -58,7 +58,7 @@ class User
             'id' => $this->id,
             'email' => $this->email,
             'role' => $this->role,
-            'fullName' => $this->fullName, // Quan trọng: Để lấy tên hiển thị
+            'fullName' => $this->fullName, 
         ];
     }
 }

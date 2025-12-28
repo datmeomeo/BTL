@@ -155,7 +155,9 @@ $content = $content ?? '';
                     <h4>Xin chào, <strong><?= htmlspecialchars($_SESSION['ten_dang_nhap'] ?? 'Admin') ?></strong>!</h4>
                     <small>Chào mừng quay lại khu vực quản trị</small>
                 </div>
-                <a href="../../index.php" class="logout-btn">Đăng xuất</a>
+                <a href="index.php?page=user&action=logout" class="nav-link">
+                    <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                </a>        
             </div>
         <?php endif; ?>
 

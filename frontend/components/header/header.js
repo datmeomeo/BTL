@@ -2,19 +2,22 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     loadMegaMenu();
-    setupMenuToggle(); // Xử lý nút bật/tắt menu mobile (nếu có)
+    setupMenuToggle(); 
     setupAccountDropdown();
-    notification(); //Xử lý ẩn hiện thông báo
+    notification(); 
+    setupSearch(); 
 });
 
 function notification(){
     const link = document.getElementById("linkNotify");
     const box = document.getElementById("header-icon-nofity");
 
-    link.addEventListener("click", (e) => {
-        e.preventDefault();          // chặn <a> nhảy trang
-        box.classList.toggle("hidden-box");  // hiện/ẩn hộp
-    });
+    if (link && box) {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();          
+            box.classList.toggle("hidden-box");  
+        });
+    }
 }
 
 function setupAccountDropdown() {
@@ -41,26 +44,17 @@ function setupAccountDropdown() {
 
     // 2. Xử lý Logic Hiển thị
     if (user) {
-        // --- TRẠNG THÁI: ĐÃ ĐĂNG NHẬP ---
-        
-        // Cập nhật tên hiển thị trên header (Frontend update ngay lập tức)
         if (headerName) headerName.textContent = getShortName(user.name);
         if (nameDisplay) nameDisplay.textContent = user.name;
     
-        // Đảm bảo thẻ a không chuyển trang
         if (accountLink) {
             accountLink.href = "javascript:void(0)"; 
             accountLink.style.cursor = "pointer";
         }
-        // Sự kiện Click: Bật/Tắt Dropdown
         if (accountWrapper) {
             accountWrapper.addEventListener('click', (e) => {
-                // Ngăn chặn sự kiện nổi bọt (để không bị document click tắt ngay lập tức)
                 e.stopPropagation();
-                // Ngăn thẻ a chuyển hướng (để chắc chắn)
                 e.preventDefault();
-
-                // Toggle hiển thị
                 const isVisible = dropdown.style.display === 'block';
                 dropdown.style.display = isVisible ? 'none' : 'block';
             }); 
@@ -68,29 +62,24 @@ function setupAccountDropdown() {
         const isAdmin = (user.role == 1 || user.role === 'admin' || user.role_id == 1);
         
         if (adminBtn && isAdmin) {
-            adminBtn.style.display = 'flex'; // Hiện nút lên nếu là admin
+            adminBtn.style.display = 'flex'; 
         }
-        // === SỰ KIỆN NÚT VỀ ADMIN ===
         if (adminBtn) {
             adminBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Ngăn đóng dropdown
-                // Chuyển về trang Admin (Đường dẫn chuẩn bạn đã cung cấp)
+                e.stopPropagation(); 
                 window.location.href = './pages/Admin_MVC/index.php';
             });
         }
-        // Sự kiện Logout
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async (e) => {
-                e.stopPropagation(); // Ngăn sự kiện click lan ra wrapper
-                
+                e.stopPropagation(); 
                 if(confirm('Bạn có chắc chắn muốn đăng xuất?')) {
                     try {
-                        await AuthService.logout(); // Gọi API PHP
+                        // Giả sử có AuthService
+                        if (typeof AuthService !== 'undefined') await AuthService.logout(); 
                     } catch (error) {
                         console.log("Lỗi logout server:", error);
                     }
-                    
-                    // Xóa bộ nhớ và reload
                     localStorage.removeItem('user_info');
                     window.location.href = 'index.php';
                 }
@@ -102,14 +91,11 @@ function setupAccountDropdown() {
         if (accountLink) {
             accountLink.href = 'index.php?page=login';
         }
-        // Ẩn dropdown nếu lỡ nó đang hiện
         if (dropdown) dropdown.style.display = 'none';
     }
 
-    // 3. Sự kiện bấm ra ngoài thì đóng dropdown
     document.addEventListener('click', (e) => {
         if (dropdown && dropdown.style.display === 'block') {
-            // Nếu click không nằm trong wrapper tài khoản
             if (!accountWrapper.contains(e.target)) {
                 dropdown.style.display = 'none';
             }
@@ -117,27 +103,21 @@ function setupAccountDropdown() {
     });
 }
 
-// Hàm phụ trợ: Cắt tên cho ngắn gọn nếu cần
 function getShortName(fullName) {
     if (!fullName) return 'Tài khoản';
     const parts = fullName.split(' ');
-    // Lấy 2 từ cuối cùng của tên (Ví dụ: Nguyễn Văn A -> Văn A)
     return parts.slice(-2).join(' ');
 }
-
-
 
 async function loadMegaMenu() {
     const menuContainer = document.getElementById('megaMenu');
     if (!menuContainer) return;
 
-    // 1. Cấu hình API
     const API_URL = 'http://localhost/BTL/backend/api.php?route=book&action=categories';
 
     try {
         const response = await fetch(API_URL);
         const result = await response.json();
-        console.log("Dữ liệu API danh mục:", result.data);
         if (result.status === 'success' && result.data.length > 0) {
             renderMegaMenuHTML(result.data, menuContainer);
         } else {
@@ -149,10 +129,7 @@ async function loadMegaMenu() {
     }
 }
 
-// frontend/components/header/header.js
-
 function renderMegaMenuHTML(categories, container) {
-    // Helper: Lấy ID an toàn (ưu tiên ma_danh_muc, sau đó id)
     const getId = (item) => item.ma_danh_muc || item.id || item.category_id;
     const getName = (item) => item.ten_danh_muc || item.name;
     const getParent = (item) => item.danh_muc_cha || item.parent_id || 0;
@@ -183,7 +160,6 @@ function renderMegaMenuHTML(categories, container) {
         const level2 = getChildren(rootId);
         level2.forEach(l2 => {
             const l2Id = getId(l2);
-            // Link chuẩn, chứa đầy đủ tham số page
             const linkUrl = `index.php?page=search_product&category_id=${l2Id}`;
 
             contentHTML += `
@@ -216,13 +192,10 @@ function setupMegaMenuInteractions() {
     const sidebarItems = document.querySelectorAll('.mega-menu-item');
     const contents = document.querySelectorAll('.mega-content');
 
-    // Hàm chuyển tab dùng chung
     const switchTab = (item) => {
-        // 1. Bỏ active cũ
         sidebarItems.forEach(el => el.classList.remove('active'));
         contents.forEach(el => el.classList.remove('active'));
 
-        // 2. Active cái mới
         item.classList.add('active');
         const targetId = item.getAttribute('data-menu');
         const targetContent = document.getElementById(targetId);
@@ -232,12 +205,9 @@ function setupMegaMenuInteractions() {
     };
 
     sidebarItems.forEach(item => {
-        // Sự kiện 1: Di chuột qua (Hover)
         item.addEventListener('mouseenter', () => switchTab(item));
-
-        // Sự kiện 2: Bấm vào (Click)
         item.addEventListener('click', (e) => {
-            e.preventDefault(); // Chặn thẻ a (nếu có)
+            e.preventDefault(); 
             switchTab(item);
         });
     });
@@ -248,17 +218,48 @@ function setupMenuToggle() {
     const menu = document.getElementById('megaMenu');
     if(btn && menu) {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Tránh đóng ngay lập tức
-            menu.classList.toggle('show'); // Bạn cần class 'show' trong CSS để hiện menu
-            // Hoặc nếu CSS dùng display: none/block thì toggle style
+            e.stopPropagation(); 
+            menu.classList.toggle('show'); 
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         });
 
-        // Đóng khi click ra ngoài
         document.addEventListener('click', (e) => {
             if (!menu.contains(e.target) && !btn.contains(e.target)) {
                 menu.style.display = 'none';
             }
         });
     }
+}
+function setupSearch() {
+    const input = document.getElementById('header-search-input');
+    const btn = document.getElementById('header-search-btn');
+    const form = document.getElementById('header-search-form');
+
+    if (!input || !btn) return;
+
+    const performSearch = () => {
+        const keyword = input.value.trim();
+        if (keyword) {
+            window.location.href = `index.php?page=search-product&keyword=${encodeURIComponent(keyword)}`;
+        }
+    };
+
+    btn.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        performSearch();
+    });
+
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            performSearch();
+        });
+    }
+    
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch();
+        }
+    });
 }

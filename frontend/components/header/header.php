@@ -65,10 +65,10 @@ $userRole = $isLoggedIn && isset($_SESSION['user_role']) ? $_SESSION['user_role'
             </div>
 
             <div class="col search-wrapper">
-                <form action="index.php" method="GET" class="search-box d-flex">
+                <form action="index.php" method="GET" class="search-box d-flex" id="header-search-form">
                     <input type="hidden" name="page" value="search_product">
-                    <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm sách...">
-                    <button class="btn btn-search" type="submit">
+                    <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm sách..." id="header-search-input">
+                    <button class="btn btn-search" type="submit" header-search-btn>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
