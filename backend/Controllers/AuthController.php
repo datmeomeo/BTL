@@ -9,7 +9,7 @@ use Exception;
 class AuthController extends BaseController
 {
     private AuthService $authService;
-    private ?CartService $cartService; // Optional dependency for merging cart
+    private ?CartService $cartService; 
 
     public function __construct(AuthService $authService, ?CartService $cartService = null)
     {
